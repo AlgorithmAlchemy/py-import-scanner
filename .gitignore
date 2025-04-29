@@ -1,0 +1,36 @@
+# Игнорирование виртуальных окружений
+.venv/
+venv/
+venv*/
+ven*/
+
+# Кэш и временные файлы Python
+__pycache__/
+*.py[cod]
+*.pyo
+
+# Кэш pip
+pip-wheel-metadata/
+*.egg-info/
+dist/
+build/
+
+# Логи и временные файлы
+*.log
+*.tmp
+
+# Файлы IDE
+.idea/
+.vscode/
+*.sublime-project
+*.sublime-workspace
+
+# Системные файлы
+.DS_Store
+Thumbs.db
+
+# Исключение папок, которые не нужны
+utils/
+external_libraries/
+external/
+libraries/

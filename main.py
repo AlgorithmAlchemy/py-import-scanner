@@ -1,0 +1,302 @@
+import os
+import re
+import threading
+from collections import Counter
+import matplotlib.pyplot as plt
+from tkinter import Tk, filedialog, Label, Button, Text, Scrollbar, Frame, Menu
+from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
+import pyperclip  # Для копирования в буфер обмена
+from colorama import init
+import queue
+from concurrent.futures import ThreadPoolExecutor, as_completed
+import ast
+init(autoreset=True)
+
+# Очередь для передачи данных между потоками
+imports_count = {}
+task_queue = queue.Queue()
+
+
+# =========================
+# Функции для анализа файлов
+# =========================
+
+def read_gitignore(directory):
+    gitignore_path = os.path.join(directory, '.gitignore')
+    ignored_paths = set()
+
+    if os.path.exists(gitignore_path):
+        with open(gitignore_path, 'r') as f:
+            for line in f:
+                line = line.strip()
+                if line and not line.startswith('#'):
+                    ignored_paths.add(line)
+    return ignored_paths
+
+
+def is_ignored(file_path, ignored_paths):
+    relative_path = os.path.relpath(file_path)
+    for ignored_path in ignored_paths:
+        if relative_path.startswith(ignored_path):
+            return True
+    return False
+
+def get_gitignore_excluded_dirs(gitignore_path='.gitignore'):
+    excluded_dirs = []
+    try:
+        with open(gitignore_path, 'r', encoding='utf-8') as f:
+            excluded_dirs = [line.strip() for line in f.readlines() if line.strip() and not line.startswith('#')]
+    except FileNotFoundError:
+        pass  # Если файл .gitignore не найден, просто не исключаем папки
+    return excluded_dirs
+
+
+def is_excluded_directory(directory, excluded_dirs):
+    # Исключаем папки, содержащие в названии venv, env, или из .gitignore
+    if any(excluded_dir in directory for excluded_dir in excluded_dirs):
+        return True
+    return False
+
+
+def find_imports_in_file(file_path):
+    imports = []
+    excluded = {
+        '__future__', 'warnings', 'io', 'typing', 'collections', 'contextlib', 'types', 'abc', 'forwarding',
+        'ssl', 'distutils', 'operator', 'pathlib', 'dataclasses', 'inspect', 'socket', 'shutil', 'attr',
+        'tempfile', 'zipfile', 'betterproto', 'the', 'struct', 'base64', 'optparse', 'textwrap', 'setuptools',
+        'pkg_resources', 'multidict', 'enum', 'copy', 'importlib', 'traceback', 'six', 'binascii', 'stat',
+        'errno', 'grpclib', 'posixpath', 'zlib', 'pytz', 'bisect', 'weakref', 'winreg', 'fnmatch', 'site',
+        'email', 'html', 'mimetypes', 'locale', 'calendar', 'shlex', 'unicodedata', 'babel', 'pkgutil', 'ipaddress',
+        'arq', 'rsa', 'handlers', 'opentele', 'states'
+    }
+
+    try:
+        with open(file_path, 'r', encoding='utf-8', errors='ignore') as f:
+            tree = ast.parse(f.read(), filename=file_path)
+
+        for node in ast.walk(tree):
+            if isinstance(node, ast.Import):
+                for alias in node.names:
+                    lib = alias.name.split('.')[0]
+                    if lib and lib not in excluded and lib.isidentifier():
+                        imports.append(lib)
+            elif isinstance(node, ast.ImportFrom):
+                if node.module:
+                    lib = node.module.split('.')[0]
+                    if lib and lib not in excluded and lib.isidentifier():
+                        imports.append(lib)
+
+    except Exception:
+        pass  # игнорируем битые файлы, ошибки парсинга
+
+    return imports
+
+
+
+def scan_directory_for_imports_parallel(directory, progress_label, output_text):
+    global imports_count, total_imports
+
+    ignored_paths = read_gitignore(directory)
+    all_imports = []
+    file_paths = []
+
+    for root, dirs, files in os.walk(directory):
+        # Исключаем папки venv, .venv, env, .env прямо на месте
+        dirs[:] = [d for d in dirs if d not in ('venv', '.venv', 'env', '.env') and not is_ignored(os.path.join(root, d), ignored_paths)]
+
+        for file in files:
+            file_path = os.path.join(root, file)
+
+            # Пропускаем файлы в venv-подобных папках ИЛИ те, что в .gitignore
+            if ('venv' in file_path or '.venv' in file_path or 'env' in file_path or '.env' in file_path):
+                continue
+            if file.endswith('.py') and not is_ignored(file_path, ignored_paths):
+                file_paths.append(file_path)
+
+    total_files = len(file_paths)
+    progress_label.config(text=f"Найдено {total_files} файлов для обработки...")
+    progress_label.update()
+
+    imports_list = []
+
+    def process_file(file_path):
+        return find_imports_in_file(file_path)
+
+    with ThreadPoolExecutor(max_workers=20) as executor:
+        futures = {executor.submit(process_file, fp): fp for fp in file_paths}
+
+        processed_files = 0
+        for future in as_completed(futures):
+            imports = future.result()
+            imports_list.extend(imports)
+
+            processed_files += 1
+            if processed_files % 50 == 0 or processed_files == total_files:
+                task_queue.put(f"Обработано {processed_files}/{total_files} файлов.")
+
+    imports_count = dict(Counter(imports_list))
+    total_imports = sum(imports_count.values())
+
+    task_queue.put(('stats', imports_count, total_imports))
+
+
+
+
+# =========================
+# Работа с интерфейсом
+# =========================
+
+def browse_directory():
+    directory = filedialog.askdirectory()
+    if directory:
+        excluded_dirs = get_gitignore_excluded_dirs()  # Получаем исключенные директории из .gitignore
+        threading.Thread(target=scan_directory_for_imports_parallel,
+                         args=(directory, progress_label, output_text),  # Передаем только 3 аргумента
+                         daemon=True).start()
+
+
+
+
+# =========================
+# Функции для вывода
+# =========================
+
+def plot_import_statistics(imports_count, total_imports, plot_type="both"):
+    # Сортируем библиотеки по убыванию использования
+    sorted_imports = sorted(imports_count.items(), key=lambda x: x[1], reverse=True)
+
+    # Ограничиваем вывод до 30 библиотек
+    top_imports = sorted_imports[:30]
+    others_count = sum(count for lib, count in sorted_imports[30:])
+
+    libraries_sorted = [lib for lib, _ in top_imports]
+    counts_sorted = [count for _, count in top_imports]
+    percentages_sorted = [(count / total_imports) * 100 for count in counts_sorted]
+
+    # Добавляем "Прочее"
+    if others_count > 0:
+        libraries_sorted.append('Прочее')
+        counts_sorted.append(others_count)
+        percentages_sorted.append((others_count / total_imports) * 100)
+
+    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(15, 8))
+
+    if plot_type == "both" or plot_type == "bar":
+        # Гистограмма
+        ax1.barh(libraries_sorted, counts_sorted, color='skyblue')
+        ax1.set_xlabel('Количество использований')
+        ax1.set_ylabel('Библиотеки')
+        ax1.set_title('Частота использования библиотек')
+
+        # Логарифмическая шкала для графика
+        ax1.set_xscale('log')
+
+    if plot_type == "both" or plot_type == "pie":
+        # Круговая диаграмма
+        ax2.pie(counts_sorted, labels=libraries_sorted, autopct='%1.1f%%', startangle=90)
+        ax2.axis('equal')
+        ax2.set_title('Распределение по библиотекам')
+
+    canvas = FigureCanvasTkAgg(fig, master=window)
+    canvas.draw()
+    canvas.get_tk_widget().pack(side="top", fill="both", expand=True)
+
+
+def print_import_statistics(imports_count, total_imports, output_text):
+    output_text.delete(1.0, "end")
+    output_text.insert("insert", f"Общее количество импортов: {total_imports}\n")
+
+    # Сортируем библиотеки по количеству
+    sorted_imports = sorted(imports_count.items(), key=lambda x: x[1], reverse=True)
+
+    # Ограничиваем вывод до 80 библиотек
+    top_imports = sorted_imports[:80]
+    others_count = sum(count for lib, count in sorted_imports[80:])
+
+    # Выводим топ 80 библиотек
+    for lib, count in top_imports:
+        percentage = (count / total_imports) * 100
+        output_text.insert("insert", f"{lib}: {count} ({percentage:.2f}%)\n")
+
+    # Выводим "Прочее" для остальных
+    if others_count > 0:
+        output_text.insert("insert", f"Прочее: {others_count} ({(others_count / total_imports) * 100:.2f}%)\n")
+
+
+
+
+# =========================
+# Копирование в буфер обмена
+# =========================
+
+def on_copy(event=None):
+    selected_text = output_text.get("sel.first", "sel.last")
+    pyperclip.copy(selected_text)  # Копируем выделенный текст в буфер обмена
+
+
+def update_gui():
+    try:
+        message = task_queue.get_nowait()
+        if isinstance(message, str):
+            progress_label.config(text=message)
+        elif isinstance(message, tuple) and message[0] == 'stats':
+            imports_count, total_imports = message[1], message[2]
+            print_import_statistics(imports_count, total_imports, output_text)
+            plot_import_statistics(imports_count, total_imports)
+    except queue.Empty:
+        pass
+    window.after(100, update_gui)  # Обновляем GUI каждую сотую долю секунды
+
+
+# =========================
+# GUI
+# =========================
+
+window = Tk()
+window.title("Статистика импортов в проектах")
+window.geometry("1200x800")
+
+frame = Frame(window)
+frame.pack(pady=20)
+
+btn_browse = Button(frame, text="Выбрать директорию", command=browse_directory)
+btn_browse.pack()
+
+output_text = Text(window, wrap="word", width=80, height=15)
+output_text.pack(padx=20, pady=20)
+
+scrollbar = Scrollbar(window, command=output_text.yview)
+scrollbar.pack(side="right", fill="y")
+output_text.config(yscrollcommand=scrollbar.set)
+
+output_text.tag_configure("green", foreground="green")
+output_text.tag_configure("cyan", foreground="cyan")
+output_text.tag_configure("red", foreground="red")
+
+# Кнопки для переключения между графиками
+btn_bar_chart = Button(window, text="Гистограмма", command=lambda: plot_import_statistics(imports_count, total_imports, "bar"))
+btn_bar_chart.pack(side="left", padx=10)
+
+btn_pie_chart = Button(window, text="Круговая диаграмма", command=lambda: plot_import_statistics(imports_count, total_imports, "pie"))
+btn_pie_chart.pack(side="left", padx=10)
+
+
+# Добавляем контекстное меню для копирования
+context_menu = Menu(window, tearoff=0)
+context_menu.add_command(label="Копировать", command=on_copy)
+
+
+def show_context_menu(event):
+    context_menu.post(event.x_root, event.y_root)
+
+
+output_text.bind("<Button-3>", show_context_menu)  # Правый клик мыши
+output_text.bind("<Control-c>", on_copy)  # Ctrl+C для копирования
+
+progress_label = Label(window, text="Готов к работе.", font=("Arial", 12))
+progress_label.pack(pady=10)
+
+# Запуск функции обновления GUI
+window.after(100, update_gui)
+
+window.mainloop()
