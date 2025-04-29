@@ -1,5 +1,3 @@
-Вот пример файла `README.md` для твоего проекта:
-
 ```markdown
 # py-import-scanner
 
