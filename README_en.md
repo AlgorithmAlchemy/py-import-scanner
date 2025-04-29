@@ -1,4 +1,3 @@
-```markdown
 # py-import-scanner
 
 ## Description
