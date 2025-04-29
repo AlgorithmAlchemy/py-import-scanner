@@ -4,7 +4,8 @@
         ENG READMY
     </button>
 </a>
-![438860809-a214e6f8-a24d-4876-b6e9-e8011808152a](https://github.com/user-attachments/assets/7dc56c7a-8f11-4ecd-80d2-80fc43f392b8)
+
+![438860809-a214e6f8-a24d-4876-b6e9-e8011808152a](https://github.com/user-attachments/assets/6300214f-3c32-4dc5-be5b-c2f8e44a7ae9)
 
 ```markdown
 # py-import-scanner
