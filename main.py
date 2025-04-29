@@ -155,11 +155,67 @@ def browse_directory():
                          daemon=True).start()
 
 
+# =========================
+# Функция для вывода прочих библиотек
+# =========================
+
+def show_others(imports_count, total_imports, output_text):
+    # Сортируем библиотеки по количеству
+    sorted_imports = sorted(imports_count.items(), key=lambda x: x[1], reverse=True)
+
+    # Ограничиваем вывод до 200 библиотек
+    top_imports = sorted_imports[:200]
+    others_count = sum(count for lib, count in sorted_imports[200:])
+
+    # Очищаем вывод
+    output_text.delete(1.0, "end")
+
+    # Выводим "Прочее" для остальных
+    if others_count > 0:
+        output_text.insert("insert", f"Прочее:\n")
+        for lib, count in sorted_imports[200:]:
+            percentage = (count / total_imports) * 100
+            output_text.insert("insert", f"{lib}: {count} ({percentage:.2f}%)\n")
+    else:
+        output_text.insert("insert", "Прочее: Нет дополнительных библиотек.\n")
 
 
 # =========================
 # Функции для вывода
 # =========================
+
+def show_main_libs(imports_count, total_imports, output_text):
+    output_text.delete(1.0, "end")
+    output_text.insert("insert", "Топ 100 популярных библиотек:\n")
+
+    sorted_imports = sorted(imports_count.items(), key=lambda x: x[1], reverse=True)
+    top_imports = sorted_imports[:100]
+
+    for lib, count in top_imports:
+        percentage = (count / total_imports) * 100
+        output_text.insert("insert", f"{lib}: {count} ({percentage:.2f}%)\n")
+
+
+def print_import_statistics(imports_count, total_imports, output_text):
+    output_text.delete(1.0, "end")
+    output_text.insert("insert", f"Общее количество импортов: {total_imports}\n")
+
+    # Сортируем библиотеки по количеству
+    sorted_imports = sorted(imports_count.items(), key=lambda x: x[1], reverse=True)
+
+    # Ограничиваем вывод до 100 библиотек
+    top_imports = sorted_imports[:100]
+    others_count = sum(count for lib, count in sorted_imports[100:])
+
+    # Выводим топ 100 библиотек
+    for lib, count in top_imports:
+        percentage = (count / total_imports) * 100
+        output_text.insert("insert", f"{lib}: {count} ({percentage:.2f}%)\n")
+
+    # Выводим "Прочее" для остальных
+    if others_count > 0:
+        output_text.insert("insert", f"Прочее: {others_count} ({(others_count / total_imports) * 100:.2f}%)\n")
+
 
 def plot_import_statistics(imports_count, total_imports, plot_type="both"):
     # Сортируем библиотеки по убыванию использования
@@ -202,25 +258,6 @@ def plot_import_statistics(imports_count, total_imports, plot_type="both"):
     canvas.get_tk_widget().pack(side="top", fill="both", expand=True)
 
 
-def print_import_statistics(imports_count, total_imports, output_text):
-    output_text.delete(1.0, "end")
-    output_text.insert("insert", f"Общее количество импортов: {total_imports}\n")
-
-    # Сортируем библиотеки по количеству
-    sorted_imports = sorted(imports_count.items(), key=lambda x: x[1], reverse=True)
-
-    # Ограничиваем вывод до 80 библиотек
-    top_imports = sorted_imports[:80]
-    others_count = sum(count for lib, count in sorted_imports[80:])
-
-    # Выводим топ 80 библиотек
-    for lib, count in top_imports:
-        percentage = (count / total_imports) * 100
-        output_text.insert("insert", f"{lib}: {count} ({percentage:.2f}%)\n")
-
-    # Выводим "Прочее" для остальных
-    if others_count > 0:
-        output_text.insert("insert", f"Прочее: {others_count} ({(others_count / total_imports) * 100:.2f}%)\n")
 
 
 
@@ -252,6 +289,9 @@ def update_gui():
 # GUI
 # =========================
 
+
+
+
 window = Tk()
 window.title("Статистика импортов в проектах")
 window.geometry("1200x800")
@@ -273,13 +313,25 @@ output_text.tag_configure("green", foreground="green")
 output_text.tag_configure("cyan", foreground="cyan")
 output_text.tag_configure("red", foreground="red")
 
-# Кнопки для переключения между графиками
-btn_bar_chart = Button(window, text="Гистограмма", command=lambda: plot_import_statistics(imports_count, total_imports, "bar"))
+# Первый ряд: графики
+chart_frame = Frame(window)
+chart_frame.pack(pady=5)
+
+btn_bar_chart = Button(chart_frame, text="Гистограмма", command=lambda: plot_import_statistics(imports_count, total_imports, "bar"))
 btn_bar_chart.pack(side="left", padx=10)
 
-btn_pie_chart = Button(window, text="Круговая диаграмма", command=lambda: plot_import_statistics(imports_count, total_imports, "pie"))
+btn_pie_chart = Button(chart_frame, text="Круговая диаграмма", command=lambda: plot_import_statistics(imports_count, total_imports, "pie"))
 btn_pie_chart.pack(side="left", padx=10)
 
+# Второй ряд: основные и прочие библиотеки
+lib_frame = Frame(window)
+lib_frame.pack(pady=5)
+
+btn_main_libs = Button(lib_frame, text="Показать основные библиотеки", command=lambda: show_main_libs(imports_count, total_imports, output_text))
+btn_main_libs.pack(side="left", padx=10)
+
+btn_others = Button(lib_frame, text="Показать прочие библиотеки", command=lambda: show_others(imports_count, total_imports, output_text))
+btn_others.pack(side="left", padx=10)
 
 # Добавляем контекстное меню для копирования
 context_menu = Menu(window, tearoff=0)
@@ -300,3 +352,4 @@ progress_label.pack(pady=10)
 window.after(100, update_gui)
 
 window.mainloop()
+
