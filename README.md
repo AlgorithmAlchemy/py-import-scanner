@@ -7,7 +7,7 @@
 
 **Program provides**:
 
-<img src="https://github.com/user-attachments/assets/6300214f-3c32-4dc5-be5b-c2f8e44a7ae9" width="600" height="600" />
+<img src="https://github.com/user-attachments/assets/6300214f-3c32-4dc5-be5b-c2f8e44a7ae9" width="700" height="700" />
 
 
 # py-import-scanner
