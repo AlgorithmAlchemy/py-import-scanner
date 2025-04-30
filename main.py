@@ -1,6 +1,9 @@
+# main.py
+
 import os
 import re
 import threading
+from threading import Event
 from collections import Counter
 import matplotlib.pyplot as plt
 from tkinter import Tk, filedialog, Label, Button, Text, Scrollbar, Frame, Menu
@@ -10,36 +13,25 @@ from colorama import init
 import queue
 from concurrent.futures import ThreadPoolExecutor, as_completed
 import ast
+from stats_window import open_stats_window, analyze_project_structure, parse_python_files
+
+from utils import read_gitignore, is_ignored
+
 init(autoreset=True)
+stop_event = Event()
 
 # Очередь для передачи данных между потоками
 imports_count = {}
 task_queue = queue.Queue()
 
 
+
+
 # =========================
 # Функции для анализа файлов
 # =========================
 
-def read_gitignore(directory):
-    gitignore_path = os.path.join(directory, '.gitignore')
-    ignored_paths = set()
 
-    if os.path.exists(gitignore_path):
-        with open(gitignore_path, 'r') as f:
-            for line in f:
-                line = line.strip()
-                if line and not line.startswith('#'):
-                    ignored_paths.add(line)
-    return ignored_paths
-
-
-def is_ignored(file_path, ignored_paths):
-    relative_path = os.path.relpath(file_path)
-    for ignored_path in ignored_paths:
-        if relative_path.startswith(ignored_path):
-            return True
-    return False
 
 def get_gitignore_excluded_dirs(gitignore_path='.gitignore'):
     excluded_dirs = []
@@ -93,7 +85,7 @@ def find_imports_in_file(file_path):
 
 
 
-def scan_directory_for_imports_parallel(directory, progress_label, output_text):
+def scan_directory_for_imports_parallel(directory, progress_label, output_text,task_queue, stop_event):
     global imports_count, total_imports
 
     ignored_paths = read_gitignore(directory)
@@ -120,6 +112,8 @@ def scan_directory_for_imports_parallel(directory, progress_label, output_text):
     imports_list = []
 
     def process_file(file_path):
+        if stop_event.is_set():
+            return []
         return find_imports_in_file(file_path)
 
     with ThreadPoolExecutor(max_workers=20) as executor:
@@ -139,6 +133,11 @@ def scan_directory_for_imports_parallel(directory, progress_label, output_text):
 
     task_queue.put(('stats', imports_count, total_imports))
 
+    progress_label.config(text="Анализ структуры проекта...")
+    progress_label.update()
+    # После анализа импортов
+    analyze_project_structure(directory, task_queue)
+
 
 
 
@@ -151,7 +150,7 @@ def browse_directory():
     if directory:
         excluded_dirs = get_gitignore_excluded_dirs()  # Получаем исключенные директории из .gitignore
         threading.Thread(target=scan_directory_for_imports_parallel,
-                         args=(directory, progress_label, output_text),  # Передаем только 3 аргумента
+                         args=(directory, progress_label, output_text, task_queue, stop_event),  # Передаем только 3 аргумента
                          daemon=True).start()
 
 
@@ -274,27 +273,46 @@ def on_copy(event=None):
 def update_gui():
     try:
         message = task_queue.get_nowait()
+
         if isinstance(message, str):
             progress_label.config(text=message)
+
         elif isinstance(message, tuple) and message[0] == 'stats':
             imports_count, total_imports = message[1], message[2]
             print_import_statistics(imports_count, total_imports, output_text)
             plot_import_statistics(imports_count, total_imports)
+
+        elif isinstance(message, tuple) and message[0] == 'project_stats':
+            structure = message[1]
+            output_text.insert("insert", "\n--- Статистика проекта ---\n")
+            output_text.insert("insert", f"Всего файлов: {structure['total_files']}\n")
+            output_text.insert("insert", f"Всего директорий: {structure['total_dirs']}\n")
+            output_text.insert("insert", f"Python файлов: {structure['py_files']} (моего кода)\n")
+            output_text.insert("insert", f"Python файлов в виртуальных/служебных папках: {structure['py_files_venv']}\n")
+            output_text.insert("insert", f"Прочих файлов: {structure['other_files']}\n")
+            output_text.insert("insert", f"\nСписок директорий:\n")
+            for folder in structure['folders']:
+                output_text.insert("insert", f" - {folder}\n")
+
     except queue.Empty:
         pass
-    window.after(100, update_gui)  # Обновляем GUI каждую сотую долю секунды
 
+    window.after(100, update_gui)
 
 # =========================
 # GUI
 # =========================
 
+def on_closing():
+    stop_event.set()  # Сигнал остановки для потоков
+    window.destroy()  # Закрытие окна
 
 
 
 window = Tk()
 window.title("Статистика импортов в проектах")
 window.geometry("1200x800")
+window.protocol("WM_DELETE_WINDOW", on_closing)
 
 frame = Frame(window)
 frame.pack(pady=20)
@@ -333,6 +351,16 @@ btn_main_libs.pack(side="left", padx=10)
 btn_others = Button(lib_frame, text="Показать прочие библиотеки", command=lambda: show_others(imports_count, total_imports, output_text))
 btn_others.pack(side="left", padx=10)
 
+# Получаем данные о проектах для анализа
+default_project_path = "E:/Code/PYTHON/projects"  # <-- путь к проектам
+project_data = list(parse_python_files(default_project_path).values())
+
+
+# Новая кнопка: временной анализ проектов
+btn_stats_by_date = Button(lib_frame, text="Анализ проектов по дате", command=lambda: open_stats_window(window, project_data) )
+btn_stats_by_date.pack(side="left", padx=10)
+
+
 # Добавляем контекстное меню для копирования
 context_menu = Menu(window, tearoff=0)
 context_menu.add_command(label="Копировать", command=on_copy)
@@ -349,7 +377,10 @@ progress_label = Label(window, text="Готов к работе.", font=("Arial"
 progress_label.pack(pady=10)
 
 # Запуск функции обновления GUI
-window.after(100, update_gui)
+def periodic_check():
+    update_gui()
+    window.after(100, periodic_check)  # каждые 100 мс проверяем очередь
 
+# Запуск Tkinter
+periodic_check()
 window.mainloop()
-
