@@ -1,5 +1,25 @@
 import os
 
+# =========================
+# Функции для анализа файлов
+# =========================
+
+def find_projects(root_dir):
+    projects = []
+    visited = set()
+
+    for root, dirs, files in os.walk(root_dir):
+        # Пропустить уже отмеченные как проекты папки
+        if any(root.startswith(p) for p in visited):
+            continue
+
+        # Если есть хотя бы один .py файл — это проект
+        if any(f.endswith('.py') for f in files):
+            projects.append(root)
+            visited.add(root)
+
+    return projects
+
 
 def read_gitignore(directory):
     gitignore_path = os.path.join(directory, '.gitignore')

@@ -8,7 +8,8 @@ import os
 import ast
 import datetime
 
-from utils import read_gitignore, is_ignored
+from utils import read_gitignore, is_ignored, find_projects
+
 
 def analyze_project_structure(directory, task_queue):
     ignored_paths = read_gitignore(directory)
@@ -48,12 +49,15 @@ def analyze_project_structure(directory, task_queue):
 
 
 
-"""
+
 def parse_python_files(projects_dir):
     project_stats = {}
 
-    for root, dirs, files in os.walk(projects_dir):
-        project_name = os.path.relpath(root, projects_dir).split(os.sep)[0]
+    # Используем find_projects для поиска папок с проектами
+    projects = find_projects(projects_dir)
+
+    for project_dir in projects:
+        project_name = os.path.relpath(project_dir, projects_dir).split(os.sep)[0]
 
         if project_name not in project_stats:
             project_stats[project_name] = {
@@ -63,40 +67,42 @@ def parse_python_files(projects_dir):
                 "dirs": set()
             }
 
-        for file in files:
-            if file.endswith(".py"):
-                file_path = os.path.join(root, file)
+        # Склонение директорий с проектами
+        for root, dirs, files in os.walk(project_dir):
+            for file in files:
+                if file.endswith(".py"):
+                    file_path = os.path.join(root, file)
 
-                # Обновляем счётчик Python файлов
-                project_stats[project_name]["py_count"] += 1
+                    # Обновляем счётчик Python файлов
+                    project_stats[project_name]["py_count"] += 1
 
-                # Обновляем дату создания проекта
-                creation_time = os.path.getctime(file_path)
-                creation_date = datetime.datetime.fromtimestamp(creation_time)
+                    # Обновляем дату создания проекта
+                    creation_time = os.path.getctime(file_path)
+                    creation_date = datetime.datetime.fromtimestamp(creation_time)
 
-                current_created = project_stats[project_name]["created"]
-                if current_created is None or creation_date < current_created:
-                    project_stats[project_name]["created"] = creation_date
+                    current_created = project_stats[project_name]["created"]
+                    if current_created is None or creation_date < current_created:
+                        project_stats[project_name]["created"] = creation_date
 
-                # Сбор директорий
-                rel_dir = os.path.relpath(root, os.path.join(projects_dir, project_name))
-                if rel_dir != ".":
-                    project_stats[project_name]["dirs"].add(rel_dir)
+                    # Сбор директорий
+                    rel_dir = os.path.relpath(root, os.path.join(projects_dir, project_name))
+                    if rel_dir != ".":
+                        project_stats[project_name]["dirs"].add(rel_dir)
 
-                # Парсим файл для библиотек
-                try:
-                    with open(file_path, "r", encoding="utf-8") as f:
-                        node = ast.parse(f.read(), filename=file_path)
+                    # Парсим файл для библиотек
+                    try:
+                        with open(file_path, "r", encoding="utf-8") as f:
+                            node = ast.parse(f.read(), filename=file_path)
 
-                    for sub_node in ast.walk(node):
-                        if isinstance(sub_node, ast.Import):
-                            for alias in sub_node.names:
-                                project_stats[project_name]["libs"].add(alias.name.split('.')[0])
-                        elif isinstance(sub_node, ast.ImportFrom):
-                            if sub_node.module:
-                                project_stats[project_name]["libs"].add(sub_node.module.split('.')[0])
-                except Exception:
-                    continue
+                        for sub_node in ast.walk(node):
+                            if isinstance(sub_node, ast.Import):
+                                for alias in sub_node.names:
+                                    project_stats[project_name]["libs"].add(alias.name.split('.')[0])
+                            elif isinstance(sub_node, ast.ImportFrom):
+                                if sub_node.module:
+                                    project_stats[project_name]["libs"].add(sub_node.module.split('.')[0])
+                    except Exception:
+                        continue
 
     # Приведение к нужному формату
     for proj in project_stats:
@@ -106,7 +112,6 @@ def parse_python_files(projects_dir):
             project_stats[proj]["created"] = project_stats[proj]["created"].strftime("%Y-%m-%d %H:%M:%S")
 
     return project_stats
-"""
 
 
 def open_stats_window(root, project_data: list[dict]):
@@ -114,12 +119,23 @@ def open_stats_window(root, project_data: list[dict]):
     stats_win.title("Статистика проектов")
     stats_win.geometry("800x600")
 
+    # Проверка наличия данных в project_data
+    if not project_data:
+        tk.Label(stats_win, text="Нет данных для отображения статистики.").pack(pady=20)
+        return
+
     df = pd.DataFrame(project_data)
+
+    # Если данных в столбце 'date' нет, выводим сообщение
     if df.empty or 'date' not in df.columns:
         tk.Label(stats_win, text="Недостаточно данных для отображения статистики.").pack(pady=20)
         return
 
-    df['date'] = pd.to_datetime(df['date'])
+    # Конвертируем 'date' в формат datetime для графиков
+    df['date'] = pd.to_datetime(df['date'], errors='coerce')
+
+    # Убираем записи с некорректными датами
+    df = df.dropna(subset=['date'])
 
     stats_canvas = tk.Frame(stats_win)
     stats_canvas.pack(fill="both", expand=True)

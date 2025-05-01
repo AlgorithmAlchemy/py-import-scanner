@@ -15,7 +15,7 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 import ast
 from stats_window import open_stats_window, analyze_project_structure, parse_python_files
 
-from utils import read_gitignore, is_ignored
+from utils import read_gitignore, is_ignored, find_projects
 
 init(autoreset=True)
 stop_event = Event()
@@ -24,14 +24,28 @@ stop_event = Event()
 imports_count = {}
 task_queue = queue.Queue()
 
+# Глобальная переменная для хранения данных о проектах
+project_data = {}
+project_data_ready = False
 
+import os
+
+# Получаем путь к директории исполняемого файла
+script_dir = os.path.dirname(os.path.abspath(__file__))
+# Определяем путь к проектам относительно директории исполняемого файла
+default_project_path = os.path.join(script_dir)
+
+# Выводим путь для проверки
+print(f"Путь к папке projects: {default_project_path}")
+
+# Проверка, существует ли эта директория
+if not os.path.isdir(default_project_path):
+    raise FileNotFoundError(f"Директория 'projects' не найдена по пути: {default_project_path}")
 
 
 # =========================
 # Функции для анализа файлов
 # =========================
-
-
 
 def get_gitignore_excluded_dirs(gitignore_path='.gitignore'):
     excluded_dirs = []
@@ -86,7 +100,7 @@ def find_imports_in_file(file_path):
 
 
 def scan_directory_for_imports_parallel(directory, progress_label, output_text,task_queue, stop_event):
-    global imports_count, total_imports
+    global imports_count, total_imports, project_data
 
     ignored_paths = read_gitignore(directory)
     all_imports = []
@@ -136,10 +150,43 @@ def scan_directory_for_imports_parallel(directory, progress_label, output_text,t
     progress_label.config(text="Анализ структуры проекта...")
     progress_label.update()
     # После анализа импортов
+
     analyze_project_structure(directory, task_queue)
 
 
 
+    # Вставляем данные в вывод, если необходимо
+    output_text.insert("end", f"Проектные данные: {project_data}")
+    output_text.update()
+
+    try:
+        # Сканируем директории и отбираем папки для анализа
+        projects = find_projects(directory)
+
+        # Проводим анализ каждого проекта
+        project_info = parse_python_files(directory)
+        project_data = list(project_info.values())
+
+        # Переименование поля
+        for item in project_data:
+            item['date'] = item.pop('created')
+
+        project_data_ready = True
+
+        formatted_data = "\n".join(
+            [f"Проект: {project}\n"
+             f"  Кол-во .py: {data['py_count']}\n"
+             f"  Библиотеки: {', '.join(data['libs'])}\n"
+             f"  Создан: {data['date']}\n"
+             f"  Директории: {', '.join(data['dirs'])}\n"
+             for project, data in project_info.items()]
+        )
+
+        output_text.insert("end", f"\nПроектные данные:\n{formatted_data}")
+        output_text.update()
+
+    except Exception as e:
+        task_queue.put(f"Ошибка при анализе структуры проектов: {e}")
 
 # =========================
 # Работа с интерфейсом
@@ -351,13 +398,11 @@ btn_main_libs.pack(side="left", padx=10)
 btn_others = Button(lib_frame, text="Показать прочие библиотеки", command=lambda: show_others(imports_count, total_imports, output_text))
 btn_others.pack(side="left", padx=10)
 
-# Получаем данные о проектах для анализа
-default_project_path = "E:/Code/PYTHON/projects"  # <-- путь к проектам
-project_data = list(parse_python_files(default_project_path).values())
-
 
 # Новая кнопка: временной анализ проектов
+# btn_stats_by_date = Button(lib_frame, text="Анализ проектов по дате", command=lambda: open_stats_window(window, project_data) )
 btn_stats_by_date = Button(lib_frame, text="Анализ проектов по дате", command=lambda: open_stats_window(window, project_data) )
+
 btn_stats_by_date.pack(side="left", padx=10)
 
 
