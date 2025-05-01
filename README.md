@@ -20,11 +20,6 @@
 ## Принцип работы
 <img src="https://github.com/user-attachments/assets/2a8bd464-d3ed-41d0-88bc-ce51682ba76e" style="width: 50%;" />
 
-## Принцип работы
-<img src="https://github.com/user-attachments/assets/2a8bd464-d3ed-41d0-88bc-ce51682ba76e" style="width: 50%;" />
-
-
-
 ## Функциональность
 
 - Сканирует Python-скрипты в указанной директории.
