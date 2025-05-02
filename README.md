@@ -21,7 +21,10 @@
 
 **Program provides**:
 
-<img src="https://github.com/user-attachments/assets/6300214f-3c32-4dc5-be5b-c2f8e44a7ae9" style="width: 90%;" />
+<img src="https://github.com/user-attachments/assets/e045a4b6-c672-4a9a-8c36-c3299c6f8f69" style="width: 90%;" />
+
+<img src="https://github.com/user-attachments/assets/62ecec76-3f0f-477d-9876-85d2d1c2c3f7" style="width: 90%;" />
+
 
 # py-import-scanner
 
