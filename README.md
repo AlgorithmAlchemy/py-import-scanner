@@ -11,12 +11,12 @@
 - 🌐 project_stats.html — визуально отформатированная таблица, открываемая в браузере
 ➡ Посмотреть полный [Changelog](CHANGELOG.md)
 
-#
+
 
 <a href="https://github.com/AlgorithmAlchemy/py-import-scanner/blob/main/README_en.md" style="text-decoration: none;">
     <button style="background-color: #4CAF50; color: white; padding: 10px 20px; text-align: center; display: inline-block; font-size: 16px; margin: 4px 2px; cursor: pointer; border: none;">
         <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/be/Flag_of_England.svg/32px-Flag_of_England.svg.png" alt="English" style="vertical-align: middle; padding-right: 8px;" />
-        ENG READMY
+        # ENG READMY
     </button>
 </a>
 
