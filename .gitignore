@@ -34,3 +34,5 @@ utils/
 external_libraries/
 external/
 libraries/
+/project_stats.csv
+/project_stats.html

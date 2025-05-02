@@ -164,8 +164,7 @@ def scan_directory_for_imports_parallel(directory, progress_label, output_text,t
         projects = find_projects(directory)
 
         # Проводим анализ каждого проекта
-        project_info = parse_python_files(directory)
-        project_data = list(project_info.values())
+        project_data = parse_python_files(directory)
 
         # Переименование поля
         for item in project_data:
@@ -355,7 +354,6 @@ def on_closing():
     window.destroy()  # Закрытие окна
 
 
-
 window = Tk()
 window.title("Статистика импортов в проектах")
 window.geometry("1200x800")
@@ -429,3 +427,4 @@ def periodic_check():
 # Запуск Tkinter
 periodic_check()
 window.mainloop()
+
