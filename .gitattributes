@@ -1,0 +1,28 @@
+# Универсальное поведение строк
+* text=auto
+
+# Windows
+*.bat text eol=crlf
+*.cmd text eol=crlf
+
+# Явное указание для популярных расширений
+*.py text eol=lf
+*.js text eol=lf
+*.ts text eol=lf
+*.sh text eol=lf
+*.html text eol=lf
+*.css text eol=lf
+*.md text eol=lf
+*.yml text eol=lf
+*.json text eol=lf
+
+# Исключаем двоичные файлы (оставляем как есть)
+*.jpg binary
+*.png binary
+*.gif binary
+*.ico binary
+*.pdf binary
+*.zip binary
+*.rar binary
+*.exe binary
+*.dll binary
