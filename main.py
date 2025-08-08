@@ -1,20 +1,24 @@
 # main.py
 
 import os
-import re
-import threading
+import datetime
+import time
 from threading import Event
 from collections import Counter
-import matplotlib.pyplot as plt
-from tkinter import Tk, filedialog, Label, Button, Text, Scrollbar, Frame, Menu
-from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
+import matplotlib
+matplotlib.use('Agg')  # Используем Agg backend для совместимости
+from PySide6.QtWidgets import (QApplication, QMainWindow, QWidget, QVBoxLayout, 
+                               QHBoxLayout, QPushButton, QTextEdit, QLabel, 
+                               QFileDialog, QMenu, QMessageBox, QProgressBar)
+from PySide6.QtCore import Qt, QThread, Signal
+from PySide6.QtGui import QFont, QAction
 import pyperclip  # Для копирования в буфер обмена
 from colorama import init
 import queue
 from concurrent.futures import ThreadPoolExecutor, as_completed
 import ast
-from stats_window import open_stats_window, analyze_project_structure, parse_python_files
-
+from gui.stats_window import StatsWindow
+from gui.chart_windows import BarChartWindow, PieChartWindow
 from utils import read_gitignore, is_ignored, find_projects
 
 init(autoreset=True)
@@ -28,7 +32,21 @@ task_queue = queue.Queue()
 project_data = {}
 project_data_ready = False
 
-import os
+# Кэш для исключенных библиотек (оптимизация)
+EXCLUDED_LIBS = frozenset({
+    '__future__', 'warnings', 'io', 'typing', 'collections', 'contextlib', 'types', 'abc', 'forwarding',
+    'ssl', 'distutils', 'operator', 'pathlib', 'dataclasses', 'inspect', 'socket', 'shutil', 'attr',
+    'tempfile', 'zipfile', 'betterproto', 'the', 'struct', 'base64', 'optparse', 'textwrap', 'setuptools',
+    'pkg_resources', 'multidict', 'enum', 'copy', 'importlib', 'traceback', 'six', 'binascii', 'stat',
+    'errno', 'grpclib', 'posixpath', 'zlib', 'pytz', 'bisect', 'weakref', 'winreg', 'fnmatch', 'site',
+    'email', 'html', 'mimetypes', 'locale', 'calendar', 'shlex', 'unicodedata', 'babel', 'pkgutil', 'ipaddress',
+    'arq', 'rsa', 'handlers', 'opentele', 'states', 'os', 'sys', 're', 'json', 'datetime', 'time',
+    'math', 'random', 'itertools', 'functools', 'logging', 'subprocess', 'threading', 'multiprocessing'
+})
+
+# Кэш для исключенных директорий
+EXCLUDED_DIRS = frozenset({'venv', '.venv', 'env', '.env', '__pycache__', '.git', 'node_modules', 
+                           'build', 'dist', '.pytest_cache', '.coverage', '.tox', '.mypy_cache'})
 
 # Получаем путь к директории исполняемого файла
 script_dir = os.path.dirname(os.path.abspath(__file__))
@@ -64,33 +82,48 @@ def is_excluded_directory(directory, excluded_dirs):
     return False
 
 
-def find_imports_in_file(file_path):
+def find_imports_in_file_optimized(file_path):
+    """Оптимизированная версия поиска импортов с ранним выходом"""
     imports = []
-    excluded = {
-        '__future__', 'warnings', 'io', 'typing', 'collections', 'contextlib', 'types', 'abc', 'forwarding',
-        'ssl', 'distutils', 'operator', 'pathlib', 'dataclasses', 'inspect', 'socket', 'shutil', 'attr',
-        'tempfile', 'zipfile', 'betterproto', 'the', 'struct', 'base64', 'optparse', 'textwrap', 'setuptools',
-        'pkg_resources', 'multidict', 'enum', 'copy', 'importlib', 'traceback', 'six', 'binascii', 'stat',
-        'errno', 'grpclib', 'posixpath', 'zlib', 'pytz', 'bisect', 'weakref', 'winreg', 'fnmatch', 'site',
-        'email', 'html', 'mimetypes', 'locale', 'calendar', 'shlex', 'unicodedata', 'babel', 'pkgutil', 'ipaddress',
-        'arq', 'rsa', 'handlers', 'opentele', 'states'
-    }
-
+    
     try:
-        with open(file_path, 'r', encoding='utf-8', errors='ignore') as f:
-            tree = ast.parse(f.read(), filename=file_path)
+        # Быстрое чтение файла с автоматическим определением кодировки
+        try:
+            with open(file_path, 'r', encoding='utf-8') as f:
+                content = f.read()
+        except UnicodeDecodeError:
+            try:
+                with open(file_path, 'r', encoding='cp1251') as f:
+                    content = f.read()
+            except UnicodeDecodeError:
+                return imports
+        
+        # Быстрая проверка на наличие импортов (оптимизация)
+        if 'import ' not in content and 'from ' not in content:
+            return imports
+            
+        # Парсинг AST с оптимизацией
+        try:
+            tree = ast.parse(content, filename=file_path)
+        except (SyntaxError, ValueError):
+            return imports
 
+        # Быстрый обход AST с ранним выходом
         for node in ast.walk(tree):
             if isinstance(node, ast.Import):
                 for alias in node.names:
                     lib = alias.name.split('.')[0]
-                    if lib and lib not in excluded and lib.isidentifier():
+                    if lib and lib not in EXCLUDED_LIBS and lib.isidentifier():
                         imports.append(lib)
             elif isinstance(node, ast.ImportFrom):
                 if node.module:
                     lib = node.module.split('.')[0]
-                    if lib and lib not in excluded and lib.isidentifier():
+                    if lib and lib not in EXCLUDED_LIBS and lib.isidentifier():
                         imports.append(lib)
+                        
+            # Ранний выход если нашли достаточно импортов
+            if len(imports) > 50:  # Большинство файлов не имеют больше 50 импортов
+                break
 
     except Exception:
         pass  # игнорируем битые файлы, ошибки парсинга
@@ -98,333 +131,494 @@ def find_imports_in_file(file_path):
     return imports
 
 
-
-def scan_directory_for_imports_parallel(directory, progress_label, output_text,task_queue, stop_event):
+def scan_directory_for_imports_parallel(directory, progress_callback, task_queue, stop_event):
+    """Максимально оптимизированная версия сканирования"""
     global imports_count, total_imports, project_data
-
+    
+    start_time = time.time()
+    progress_callback("Поиск Python файлов...")
+    
     ignored_paths = read_gitignore(directory)
-    all_imports = []
     file_paths = []
 
+    # Сверхбыстрый поиск файлов с предварительной фильтрацией
     for root, dirs, files in os.walk(directory):
-        # Исключаем папки venv, .venv, env, .env прямо на месте
-        dirs[:] = [d for d in dirs if d not in ('venv', '.venv', 'env', '.env') and not is_ignored(os.path.join(root, d), ignored_paths)]
+        if stop_event.is_set():
+            return {}, 0, []
+            
+        # Мгновенная фильтрация директорий
+        dirs[:] = [d for d in dirs if d not in EXCLUDED_DIRS 
+                   and not is_ignored(os.path.join(root, d), ignored_paths)]
 
+        # Быстрая фильтрация Python файлов
         for file in files:
-            file_path = os.path.join(root, file)
-
-            # Пропускаем файлы в venv-подобных папках ИЛИ те, что в .gitignore
-            if ('venv' in file_path or '.venv' in file_path or 'env' in file_path or '.env' in file_path):
-                continue
-            if file.endswith('.py') and not is_ignored(file_path, ignored_paths):
-                file_paths.append(file_path)
+            if file.endswith('.py'):
+                file_path = os.path.join(root, file)
+                if not is_ignored(file_path, ignored_paths):
+                    file_paths.append(file_path)
 
     total_files = len(file_paths)
-    progress_label.config(text=f"Найдено {total_files} файлов для обработки...")
-    progress_label.update()
+    progress_callback(f"Найдено {total_files} файлов для обработки...")
 
+    if total_files == 0:
+        return {}, 0, []
+
+    # Оптимизация: группируем файлы в батчи для лучшей производительности
+    batch_size = 100
     imports_list = []
+    
+    def process_batch(file_batch):
+        """Обработка батча файлов"""
+        batch_imports = []
+        for file_path in file_batch:
+            if stop_event.is_set():
+                break
+            batch_imports.extend(find_imports_in_file_optimized(file_path))
+        return batch_imports
 
-    def process_file(file_path):
-        if stop_event.is_set():
-            return []
-        return find_imports_in_file(file_path)
+    # Создаем батчи файлов
+    file_batches = [file_paths[i:i + batch_size] for i in range(0, len(file_paths), batch_size)]
+    
+    # Максимальное количество потоков для ускорения
+    max_workers = min(100, len(file_batches), os.cpu_count() * 4)
+    
+    progress_callback(f"Запуск {max_workers} потоков для обработки...")
+    
+    with ThreadPoolExecutor(max_workers=max_workers) as executor:
+        futures = {executor.submit(process_batch, batch): i for i, batch in enumerate(file_batches)}
 
-    with ThreadPoolExecutor(max_workers=20) as executor:
-        futures = {executor.submit(process_file, fp): fp for fp in file_paths}
-
-        processed_files = 0
+        processed_batches = 0
         for future in as_completed(futures):
-            imports = future.result()
-            imports_list.extend(imports)
+            if stop_event.is_set():
+                break
+                
+            batch_imports = future.result()
+            imports_list.extend(batch_imports)
 
-            processed_files += 1
-            if processed_files % 50 == 0 or processed_files == total_files:
-                task_queue.put(f"Обработано {processed_files}/{total_files} файлов.")
+            processed_batches += 1
+            processed_files = processed_batches * batch_size
+            if processed_files % 500 == 0 or processed_batches == len(file_batches):
+                elapsed = time.time() - start_time
+                rate = processed_files / elapsed if elapsed > 0 else 0
+                progress_callback(f"Обработано {min(processed_files, total_files)}/{total_files} файлов "
+                               f"({rate:.1f} файл/сек)...")
 
+    # Подсчет результатов
     imports_count = dict(Counter(imports_list))
     total_imports = sum(imports_count.values())
 
-    task_queue.put(('stats', imports_count, total_imports))
+    total_time = time.time() - start_time
+    progress_callback(f"Сканирование завершено за {total_time:.2f} сек ({total_files/total_time:.1f} файл/сек)")
 
-    progress_label.config(text="Анализ структуры проекта...")
-    progress_label.update()
-    # После анализа импортов
-
-    analyze_project_structure(directory, task_queue)
-
-
-
-    # Вставляем данные в вывод, если необходимо
-    output_text.insert("end", f"Проектные данные: {project_data}")
-    output_text.update()
-
+    # Быстрый анализ структуры проекта
+    progress_callback("Анализ структуры проекта...")
     try:
+        from gui.stats_window import analyze_project_structure, parse_python_files
+        analyze_project_structure(directory, task_queue)
+
         # Сканируем директории и отбираем папки для анализа
         projects = find_projects(directory)
 
         # Проводим анализ каждого проекта
         project_data = parse_python_files(directory)
 
-        # Переименование поля
+        # Переименование поля (если оно существует)
         for item in project_data:
-            item['date'] = item.pop('created')
+            if 'created' in item:
+                item['date'] = item.pop('created')
 
         project_data_ready = True
 
-        formatted_data = "\n".join(
-            [f"Проект: {project}\n"
-             f"  Кол-во .py: {data['py_count']}\n"
-             f"  Библиотеки: {', '.join(data['libs'])}\n"
-             f"  Создан: {data['date']}\n"
-             f"  Директории: {', '.join(data['dirs'])}\n"
-             for project, data in project_info.items()]
-        )
-
-        output_text.insert("end", f"\nПроектные данные:\n{formatted_data}")
-        output_text.update()
-
     except Exception as e:
-        task_queue.put(f"Ошибка при анализе структуры проектов: {e}")
+        print(f"Ошибка при анализе структуры проектов: {e}")
+        project_data = []
+    
+    return imports_count, total_imports, project_data
 
-# =========================
-# Работа с интерфейсом
-# =========================
 
-def browse_directory():
-    directory = filedialog.askdirectory()
-    if directory:
-        excluded_dirs = get_gitignore_excluded_dirs()  # Получаем исключенные директории из .gitignore
-        threading.Thread(target=scan_directory_for_imports_parallel,
-                         args=(directory, progress_label, output_text, task_queue, stop_event),  # Передаем только 3 аргумента
-                         daemon=True).start()
+# Обратная совместимость
+def find_imports_in_file(file_path):
+    return find_imports_in_file_optimized(file_path)
 
 
 # =========================
-# Функция для вывода прочих библиотек
+# Класс для работы с интерфейсом
 # =========================
 
-def show_others(imports_count, total_imports, output_text):
-    # Сортируем библиотеки по количеству
-    sorted_imports = sorted(imports_count.items(), key=lambda x: x[1], reverse=True)
+class ScanWorker(QThread):
+    """Поток для сканирования файлов"""
+    progress_updated = Signal(str)
+    scan_completed = Signal(dict)
+    error_occurred = Signal(str)
+    
+    def __init__(self, directory, stop_event):
+        super().__init__()
+        self.directory = directory
+        self.stop_event = stop_event
+        
+    def run(self):
+        try:
+            # Создаем локальную очередь для потокобезопасности
+            local_task_queue = queue.Queue()
+            
+            # Запускаем сканирование с оптимизированной функцией
+            imports_count, total_imports, project_data = scan_directory_for_imports_parallel(
+                self.directory, 
+                self.progress_updated.emit, 
+                local_task_queue, 
+                self.stop_event
+            )
+            
+            if not self.stop_event.is_set():
+                result = {
+                    'imports_count': imports_count,
+                    'total_imports': total_imports,
+                    'project_data': project_data
+                }
+                self.scan_completed.emit(result)
+                
+        except Exception as e:
+            import traceback
+            traceback.print_exc()
+            self.error_occurred.emit(str(e))
 
-    # Ограничиваем вывод до 200 библиотек
-    top_imports = sorted_imports[:200]
-    others_count = sum(count for lib, count in sorted_imports[200:])
 
-    # Очищаем вывод
-    output_text.delete(1.0, "end")
+class MainWindow(QMainWindow):
+    def __init__(self):
+        super().__init__()
+        self.scan_worker = None
+        self.stop_event = Event()
+        self.init_ui()
+        self.setup_styles()
+        self.setup_context_menu()
 
-    # Выводим "Прочее" для остальных
-    if others_count > 0:
-        output_text.insert("insert", f"Прочее:\n")
-        for lib, count in sorted_imports[200:]:
+    def init_ui(self):
+        self.setWindowTitle("Анализатор импортов Python - Ультра-быстрая версия")
+        self.setGeometry(100, 100, 800, 600)
+
+        # Центральный виджет
+        central_widget = QWidget()
+        self.setCentralWidget(central_widget)
+
+        # Главный layout
+        main_layout = QVBoxLayout(central_widget)
+        main_layout.setSpacing(20)
+        main_layout.setContentsMargins(30, 30, 30, 30)
+
+        # Заголовок
+        title_label = QLabel("🚀 Анализатор импортов Python")
+        title_label.setAlignment(Qt.AlignCenter)
+        title_label.setFont(QFont("Arial", 24, QFont.Bold))
+        main_layout.addWidget(title_label)
+
+        # Подзаголовок
+        subtitle_label = QLabel("Ультра-быстрое сканирование проектов")
+        subtitle_label.setAlignment(Qt.AlignCenter)
+        subtitle_label.setFont(QFont("Arial", 12))
+        subtitle_label.setStyleSheet("color: #666; margin-bottom: 20px;")
+        main_layout.addWidget(subtitle_label)
+
+        # Кнопки
+        button_layout = QHBoxLayout()
+        button_layout.setSpacing(15)
+
+        # Кнопка выбора директории
+        self.browse_button = QPushButton("📁 Выбрать директорию")
+        self.browse_button.setFont(QFont("Arial", 12, QFont.Bold))
+        self.browse_button.clicked.connect(self.browse_directory)
+        button_layout.addWidget(self.browse_button)
+
+        # Кнопка сканирования
+        self.scan_button = QPushButton("🔍 Сканировать")
+        self.scan_button.setFont(QFont("Arial", 12, QFont.Bold))
+        self.scan_button.clicked.connect(lambda: self.start_scan(default_project_path))
+        button_layout.addWidget(self.scan_button)
+
+        # Кнопка остановки
+        self.stop_button = QPushButton("⏹ Остановить")
+        self.stop_button.setFont(QFont("Arial", 12, QFont.Bold))
+        self.stop_button.clicked.connect(self.stop_scan)
+        self.stop_button.setEnabled(False)
+        button_layout.addWidget(self.stop_button)
+
+        main_layout.addLayout(button_layout)
+
+        # Прогресс бар
+        self.progress_bar = QProgressBar()
+        self.progress_bar.setVisible(False)
+        self.progress_bar.setFont(QFont("Arial", 10))
+        main_layout.addWidget(self.progress_bar)
+
+        # Область результатов
+        self.results_text = QTextEdit()
+        self.results_text.setFont(QFont("Consolas", 10))
+        self.results_text.setPlaceholderText("Результаты сканирования появятся здесь...")
+        main_layout.addWidget(self.results_text)
+
+        # Кнопки для графиков
+        chart_layout = QHBoxLayout()
+        chart_layout.setSpacing(10)
+
+        self.bar_chart_button = QPushButton("📊 Гистограмма")
+        self.bar_chart_button.setFont(QFont("Arial", 11))
+        self.bar_chart_button.clicked.connect(lambda: self.plot_import_statistics("bar"))
+        chart_layout.addWidget(self.bar_chart_button)
+
+        self.pie_chart_button = QPushButton("🥧 Круговая диаграмма")
+        self.pie_chart_button.setFont(QFont("Arial", 11))
+        self.pie_chart_button.clicked.connect(lambda: self.plot_import_statistics("pie"))
+        chart_layout.addWidget(self.pie_chart_button)
+
+        self.stats_button = QPushButton("📈 Статистика проектов")
+        self.stats_button.setFont(QFont("Arial", 11))
+        self.stats_button.clicked.connect(self.show_stats)
+        chart_layout.addWidget(self.stats_button)
+
+        main_layout.addLayout(chart_layout)
+
+        # Статус
+        self.status_label = QLabel("Готов к сканированию")
+        self.status_label.setAlignment(Qt.AlignCenter)
+        self.status_label.setFont(QFont("Arial", 10))
+        self.status_label.setStyleSheet("color: #666; padding: 10px;")
+        main_layout.addWidget(self.status_label)
+
+    def setup_styles(self):
+        # Современный стиль для всего приложения
+        self.setStyleSheet("""
+            QMainWindow {
+                background: qlineargradient(x1:0, y1:0, x2:1, y2:1,
+                    stop:0 #f8f9fa, stop:1 #e9ecef);
+            }
+            
+            QPushButton {
+                background: qlineargradient(x1:0, y1:0, x2:0, y2:1,
+                    stop:0 #007bff, stop:1 #0056b3);
+                color: white;
+                border: none;
+                padding: 12px 24px;
+                border-radius: 8px;
+                font-weight: bold;
+                min-height: 20px;
+            }
+            
+            QPushButton:hover {
+                background: qlineargradient(x1:0, y1:0, x2:0, y2:1,
+                    stop:0 #0056b3, stop:1 #004085);
+                transform: translateY(-2px);
+            }
+            
+            QPushButton:pressed {
+                background: qlineargradient(x1:0, y1:0, x2:0, y2:1,
+                    stop:0 #004085, stop:1 #002752);
+            }
+            
+            QPushButton:disabled {
+                background: #6c757d;
+                color: #adb5bd;
+            }
+            
+            QTextEdit {
+                background: white;
+                border: 2px solid #dee2e6;
+                border-radius: 8px;
+                padding: 15px;
+                font-family: 'Consolas', monospace;
+                selection-background-color: #007bff;
+            }
+            
+            QTextEdit:focus {
+                border-color: #007bff;
+            }
+            
+            QProgressBar {
+                border: 2px solid #dee2e6;
+                border-radius: 8px;
+                text-align: center;
+                background: white;
+                color: #495057;
+                font-weight: bold;
+            }
+            
+            QProgressBar::chunk {
+                background: qlineargradient(x1:0, y1:0, x2:1, y2:0,
+                    stop:0 #28a745, stop:1 #20c997);
+                border-radius: 6px;
+            }
+            
+            QLabel {
+                color: #495057;
+            }
+        """)
+
+    def browse_directory(self):
+        try:
+            directory = QFileDialog.getExistingDirectory(
+                self, 
+                "Выберите директорию для сканирования",
+                default_project_path
+            )
+            if directory:
+                self.start_scan(directory)
+        except Exception as e:
+            import traceback
+            traceback.print_exc()
+            QMessageBox.critical(self, "Ошибка", f"Ошибка при выборе директории: {str(e)}")
+
+    def start_scan(self, directory):
+        try:
+            self.stop_event.clear()
+            self.scan_button.setEnabled(False)
+            self.browse_button.setEnabled(False)
+            self.stop_button.setEnabled(True)
+            self.progress_bar.setVisible(True)
+            self.progress_bar.setRange(0, 0)  # Неопределенный прогресс
+            self.results_text.clear()
+            self.status_label.setText("Сканирование...")
+            
+            # Запускаем сканирование в отдельном потоке
+            self.scan_worker = ScanWorker(directory, self.stop_event)
+            self.scan_worker.progress_updated.connect(self.update_progress)
+            self.scan_worker.scan_completed.connect(self.scan_completed)
+            self.scan_worker.error_occurred.connect(self.scan_error)
+            self.scan_worker.start()
+            
+        except Exception as e:
+            import traceback
+            traceback.print_exc()
+            QMessageBox.critical(self, "Ошибка", f"Ошибка при запуске сканирования: {str(e)}")
+
+    def stop_scan(self):
+        self.stop_event.set()
+        if self.scan_worker and self.scan_worker.isRunning():
+            self.scan_worker.quit()
+            self.scan_worker.wait()
+        
+        self.scan_button.setEnabled(True)
+        self.browse_button.setEnabled(True)
+        self.stop_button.setEnabled(False)
+        self.progress_bar.setVisible(False)
+        self.status_label.setText("Сканирование остановлено")
+
+    def update_progress(self, message):
+        self.status_label.setText(message)
+        self.results_text.append(f"[{datetime.datetime.now().strftime('%H:%M:%S')}] {message}")
+
+    def scan_completed(self, data):
+        global imports_count, total_imports, project_data
+        
+        imports_count = data['imports_count']
+        total_imports = data['total_imports']
+        project_data = data['project_data']
+        
+        self.scan_button.setEnabled(True)
+        self.browse_button.setEnabled(True)
+        self.stop_button.setEnabled(False)
+        self.progress_bar.setVisible(False)
+        self.status_label.setText("Сканирование завершено")
+        
+        self.display_results()
+
+    def scan_error(self, error_message):
+        import traceback
+        traceback.print_exc()
+        QMessageBox.critical(self, "Ошибка", f"Ошибка при сканировании: {error_message}")
+        
+        self.scan_button.setEnabled(True)
+        self.browse_button.setEnabled(True)
+        self.stop_button.setEnabled(False)
+        self.progress_bar.setVisible(False)
+        self.status_label.setText("Ошибка сканирования")
+
+    def display_results(self):
+        if not imports_count:
+            self.results_text.append("Импорты не найдены.")
+            return
+
+        # Сортируем по количеству импортов
+        sorted_imports = sorted(imports_count.items(), key=lambda x: x[1], reverse=True)
+
+        self.results_text.append(f"\n{'='*60}")
+        self.results_text.append(f"РЕЗУЛЬТАТЫ СКАНИРОВАНИЯ")
+        self.results_text.append(f"{'='*60}")
+        self.results_text.append(f"Всего импортов: {total_imports}")
+        self.results_text.append(f"Уникальных библиотек: {len(imports_count)}")
+        self.results_text.append(f"Время сканирования: {datetime.datetime.now().strftime('%H:%M:%S')}")
+        self.results_text.append(f"\nТОП-20 БИБЛИОТЕК:")
+        self.results_text.append(f"{'='*60}")
+
+        for i, (lib, count) in enumerate(sorted_imports[:20], 1):
             percentage = (count / total_imports) * 100
-            output_text.insert("insert", f"{lib}: {count} ({percentage:.2f}%)\n")
-    else:
-        output_text.insert("insert", "Прочее: Нет дополнительных библиотек.\n")
+            self.results_text.append(f"{i:2d}. {lib:<25} {count:>5} ({percentage:5.1f}%)")
+
+        if len(sorted_imports) > 20:
+            self.results_text.append(f"\n... и еще {len(sorted_imports) - 20} библиотек")
+
+    def plot_import_statistics(self, plot_type="bar"):
+        if not imports_count:
+            QMessageBox.warning(self, "Предупреждение", "Нет данных для построения графика")
+            return
+
+        try:
+            if plot_type == "bar":
+                chart_window = BarChartWindow(imports_count, self)
+            else:
+                chart_window = PieChartWindow(imports_count, self)
+            
+            chart_window.show()
+        except Exception as e:
+            import traceback
+            traceback.print_exc()
+            QMessageBox.critical(self, "Ошибка", f"Ошибка при создании графика: {str(e)}")
+
+    def show_stats(self):
+        global project_data_ready
+        
+        if not project_data or len(project_data) == 0:
+            QMessageBox.warning(self, "Предупреждение", "Нет данных о проектах для отображения. Сначала выполните сканирование.")
+            return
+
+        try:
+            # Устанавливаем флаг готовности данных
+            project_data_ready = True
+            
+            stats_window = StatsWindow(project_data, self)
+            stats_window.show()
+        except Exception as e:
+            import traceback
+            traceback.print_exc()
+            QMessageBox.critical(self, "Ошибка", f"Ошибка при отображении статистики: {str(e)}")
+
+    def setup_context_menu(self):
+        self.results_text.setContextMenuPolicy(Qt.CustomContextMenu)
+        self.results_text.customContextMenuRequested.connect(self.show_context_menu)
+
+    def show_context_menu(self, position):
+        context_menu = QMenu(self)
+        
+        copy_action = QAction("Копировать", self)
+        copy_action.triggered.connect(self.copy_to_clipboard)
+        context_menu.addAction(copy_action)
+        
+        context_menu.exec_(self.results_text.mapToGlobal(position))
+
+    def copy_to_clipboard(self):
+        try:
+            text = self.results_text.toPlainText()
+            if text:
+                pyperclip.copy(text)
+                self.status_label.setText("Текст скопирован в буфер обмена")
+        except Exception as e:
+            QMessageBox.warning(self, "Ошибка", f"Не удалось скопировать текст: {str(e)}")
 
 
-# =========================
-# Функции для вывода
-# =========================
-
-def show_main_libs(imports_count, total_imports, output_text):
-    output_text.delete(1.0, "end")
-    output_text.insert("insert", "Топ 100 популярных библиотек:\n")
-
-    sorted_imports = sorted(imports_count.items(), key=lambda x: x[1], reverse=True)
-    top_imports = sorted_imports[:100]
-
-    for lib, count in top_imports:
-        percentage = (count / total_imports) * 100
-        output_text.insert("insert", f"{lib}: {count} ({percentage:.2f}%)\n")
+def main():
+    app = QApplication([])
+    window = MainWindow()
+    window.show()
+    app.exec()
 
 
-def print_import_statistics(imports_count, total_imports, output_text):
-    output_text.delete(1.0, "end")
-    output_text.insert("insert", f"Общее количество импортов: {total_imports}\n")
-
-    # Сортируем библиотеки по количеству
-    sorted_imports = sorted(imports_count.items(), key=lambda x: x[1], reverse=True)
-
-    # Ограничиваем вывод до 100 библиотек
-    top_imports = sorted_imports[:100]
-    others_count = sum(count for lib, count in sorted_imports[100:])
-
-    # Выводим топ 100 библиотек
-    for lib, count in top_imports:
-        percentage = (count / total_imports) * 100
-        output_text.insert("insert", f"{lib}: {count} ({percentage:.2f}%)\n")
-
-    # Выводим "Прочее" для остальных
-    if others_count > 0:
-        output_text.insert("insert", f"Прочее: {others_count} ({(others_count / total_imports) * 100:.2f}%)\n")
-
-
-def plot_import_statistics(imports_count, total_imports, plot_type="both"):
-    # Сортируем библиотеки по убыванию использования
-    sorted_imports = sorted(imports_count.items(), key=lambda x: x[1], reverse=True)
-
-    # Ограничиваем вывод до 30 библиотек
-    top_imports = sorted_imports[:30]
-    others_count = sum(count for lib, count in sorted_imports[30:])
-
-    libraries_sorted = [lib for lib, _ in top_imports]
-    counts_sorted = [count for _, count in top_imports]
-    percentages_sorted = [(count / total_imports) * 100 for count in counts_sorted]
-
-    # Добавляем "Прочее"
-    if others_count > 0:
-        libraries_sorted.append('Прочее')
-        counts_sorted.append(others_count)
-        percentages_sorted.append((others_count / total_imports) * 100)
-
-    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(15, 8))
-
-    if plot_type == "both" or plot_type == "bar":
-        # Гистограмма
-        ax1.barh(libraries_sorted, counts_sorted, color='skyblue')
-        ax1.set_xlabel('Количество использований')
-        ax1.set_ylabel('Библиотеки')
-        ax1.set_title('Частота использования библиотек')
-
-        # Логарифмическая шкала для графика
-        ax1.set_xscale('log')
-
-    if plot_type == "both" or plot_type == "pie":
-        # Круговая диаграмма
-        ax2.pie(counts_sorted, labels=libraries_sorted, autopct='%1.1f%%', startangle=90)
-        ax2.axis('equal')
-        ax2.set_title('Распределение по библиотекам')
-
-    canvas = FigureCanvasTkAgg(fig, master=window)
-    canvas.draw()
-    canvas.get_tk_widget().pack(side="top", fill="both", expand=True)
-
-
-
-
-
-
-# =========================
-# Копирование в буфер обмена
-# =========================
-
-def on_copy(event=None):
-    selected_text = output_text.get("sel.first", "sel.last")
-    pyperclip.copy(selected_text)  # Копируем выделенный текст в буфер обмена
-
-
-def update_gui():
-    try:
-        message = task_queue.get_nowait()
-
-        if isinstance(message, str):
-            progress_label.config(text=message)
-
-        elif isinstance(message, tuple) and message[0] == 'stats':
-            imports_count, total_imports = message[1], message[2]
-            print_import_statistics(imports_count, total_imports, output_text)
-            plot_import_statistics(imports_count, total_imports)
-
-        elif isinstance(message, tuple) and message[0] == 'project_stats':
-            structure = message[1]
-            output_text.insert("insert", "\n--- Статистика проекта ---\n")
-            output_text.insert("insert", f"Всего файлов: {structure['total_files']}\n")
-            output_text.insert("insert", f"Всего директорий: {structure['total_dirs']}\n")
-            output_text.insert("insert", f"Python файлов: {structure['py_files']} (моего кода)\n")
-            output_text.insert("insert", f"Python файлов в виртуальных/служебных папках: {structure['py_files_venv']}\n")
-            output_text.insert("insert", f"Прочих файлов: {structure['other_files']}\n")
-            output_text.insert("insert", f"\nСписок директорий:\n")
-            for folder in structure['folders']:
-                output_text.insert("insert", f" - {folder}\n")
-
-    except queue.Empty:
-        pass
-
-    window.after(100, update_gui)
-
-# =========================
-# GUI
-# =========================
-
-def on_closing():
-    stop_event.set()  # Сигнал остановки для потоков
-    window.destroy()  # Закрытие окна
-
-
-window = Tk()
-window.title("Статистика импортов в проектах")
-window.geometry("1200x800")
-window.protocol("WM_DELETE_WINDOW", on_closing)
-
-frame = Frame(window)
-frame.pack(pady=20)
-
-btn_browse = Button(frame, text="Выбрать директорию", command=browse_directory)
-btn_browse.pack()
-
-output_text = Text(window, wrap="word", width=80, height=15)
-output_text.pack(padx=20, pady=20)
-
-scrollbar = Scrollbar(window, command=output_text.yview)
-scrollbar.pack(side="right", fill="y")
-output_text.config(yscrollcommand=scrollbar.set)
-
-output_text.tag_configure("green", foreground="green")
-output_text.tag_configure("cyan", foreground="cyan")
-output_text.tag_configure("red", foreground="red")
-
-# Первый ряд: графики
-chart_frame = Frame(window)
-chart_frame.pack(pady=5)
-
-btn_bar_chart = Button(chart_frame, text="Гистограмма", command=lambda: plot_import_statistics(imports_count, total_imports, "bar"))
-btn_bar_chart.pack(side="left", padx=10)
-
-btn_pie_chart = Button(chart_frame, text="Круговая диаграмма", command=lambda: plot_import_statistics(imports_count, total_imports, "pie"))
-btn_pie_chart.pack(side="left", padx=10)
-
-# Второй ряд: основные и прочие библиотеки
-lib_frame = Frame(window)
-lib_frame.pack(pady=5)
-
-btn_main_libs = Button(lib_frame, text="Показать основные библиотеки", command=lambda: show_main_libs(imports_count, total_imports, output_text))
-btn_main_libs.pack(side="left", padx=10)
-
-btn_others = Button(lib_frame, text="Показать прочие библиотеки", command=lambda: show_others(imports_count, total_imports, output_text))
-btn_others.pack(side="left", padx=10)
-
-
-# Новая кнопка: временной анализ проектов
-# btn_stats_by_date = Button(lib_frame, text="Анализ проектов по дате", command=lambda: open_stats_window(window, project_data) )
-btn_stats_by_date = Button(lib_frame, text="Анализ проектов по дате", command=lambda: open_stats_window(window, project_data) )
-
-btn_stats_by_date.pack(side="left", padx=10)
-
-
-# Добавляем контекстное меню для копирования
-context_menu = Menu(window, tearoff=0)
-context_menu.add_command(label="Копировать", command=on_copy)
-
-
-def show_context_menu(event):
-    context_menu.post(event.x_root, event.y_root)
-
-
-output_text.bind("<Button-3>", show_context_menu)  # Правый клик мыши
-output_text.bind("<Control-c>", on_copy)  # Ctrl+C для копирования
-
-progress_label = Label(window, text="Готов к работе.", font=("Arial", 12))
-progress_label.pack(pady=10)
-
-# Запуск функции обновления GUI
-def periodic_check():
-    update_gui()
-    window.after(100, periodic_check)  # каждые 100 мс проверяем очередь
-
-# Запуск Tkinter
-periodic_check()
-window.mainloop()
+if __name__ == "__main__":
+    main()
 
