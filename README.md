@@ -2,7 +2,7 @@
 
 > 📅 Дата релиза: 2025-05-02
 
-- ✅ Новый модуль статистики
+- ☑️ Новый модуль статистики (Анализ проектов по дате) -- <u><b>очень сырой</b></u>
 - 📈 Графики по времени создания проектов
 - 📚 Анализ импортируемых библиотек
 - 🛡 Поддержка вложенных структур
@@ -12,16 +12,22 @@
 ➡ Посмотреть полный [Changelog](CHANGELOG.md)
 
 
+#
+
+
 <a href="https://github.com/AlgorithmAlchemy/py-import-scanner/blob/main/README_en.md" style="text-decoration: none;">
     <button style="background-color: #4CAF50; color: white; padding: 10px 20px; text-align: center; display: inline-block; font-size: 16px; margin: 4px 2px; cursor: pointer; border: none;">
         <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/be/Flag_of_England.svg/32px-Flag_of_England.svg.png" alt="English" style="vertical-align: middle; padding-right: 8px;" />
-        ENG READMY
+         ENG READMY
     </button>
 </a>
 
 **Program provides**:
 
-<img src="https://github.com/user-attachments/assets/6300214f-3c32-4dc5-be5b-c2f8e44a7ae9" style="width: 90%;" />
+<img src="https://github.com/user-attachments/assets/e045a4b6-c672-4a9a-8c36-c3299c6f8f69" style="width: 90%;" />
+
+<img src="https://github.com/user-attachments/assets/62ecec76-3f0f-477d-9876-85d2d1c2c3f7" style="width: 90%;" />
+
 
 # py-import-scanner
 
@@ -107,5 +113,3 @@
 
 Этот проект распространяется под лицензией MIT. Подробности можно найти в файле `LICENSE`.
 ```
-
-Теперь ты можешь скопировать и вставить этот файл `README.md` в свой репозиторий!
