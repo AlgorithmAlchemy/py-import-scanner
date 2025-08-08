@@ -1,189 +1,38 @@
-# -------------------------
-# Python bytecode & cache
-# -------------------------
-__pycache__/
-__pycache__
-*/__pycache__/
-__pycache__/**/
-**/__pycache__/
-*.py[cod]
-*$py.class
-*.pyo
-*.pyd
-*.pyc
-
-# Common typo/mistake variants
-pycache/
-PyCache/
-pycahce/
-PYCACHE/
-.PYCACHE/
-.cache/
-.cache/**/
-
-# -------------------------
-# C extensions / builds
-# -------------------------
-*.so
-*.dll
-*.dylib
-*.o
-*.a
-
-# -------------------------
-# Virtualenvs / Python environments
-# -------------------------
-.env
-.venv
-env/
+# Игнорирование виртуальных окружений
+.venv/
 venv/
-ENV/
-env.bak/
-venv.bak/
-.venv.bak/
-env.bak/
-python_env/
-venv_env/
+venv*/
+ven*/
 
-# -------------------------
-# Packaging
-# -------------------------
-.Python
-build/
-dist/
-sdist/
-wheels/
-downloads/
-.eggs/
-*.egg
+# Кэш и временные файлы Python
+__pycache__/
+*.py[cod]
+*.pyo
+
+# Кэш pip
+pip-wheel-metadata/
 *.egg-info/
-.installed.cfg
-MANIFEST
+dist/
+build/
 
-# -------------------------
-# Logs & Installer files
-# -------------------------
+# Логи и временные файлы
 *.log
-pip-log.txt
-pip-delete-this-directory.txt
+*.tmp
 
-# -------------------------
-# PyInstaller
-# -------------------------
-*.spec
-*.manifest
-
-# -------------------------
-# Unit test / Coverage
-# -------------------------
-.tox/
-.nox/
-.pytest_cache/
-.coverage
-.coverage.*
-*.cover
-*.py,cover
-nosetests.xml
-coverage.xml
-htmlcov/
-.hypothesis/
-.coverage_cache/
-
-# -------------------------
-# Type checkers
-# -------------------------
-.mypy_cache/
-.dmypy.json
-.dmypy.json
-.pytype/
-.pyre/
-.ruff_cache/
-
-# -------------------------
-# Jupyter / IPython
-# -------------------------
-.ipynb_checkpoints
-profile_default/
-ipython_config.py
-
-# -------------------------
-# Documentation
-# -------------------------
-docs/_build/
-site/
-
-# -------------------------
-# IDEs
-# -------------------------
+# Файлы IDE
 .idea/
 .vscode/
-.spyderproject
-.spyproject
-.ropeproject
+*.sublime-project
+*.sublime-workspace
 
-# -------------------------
-# Build tools / dependency managers
-# -------------------------
-.pybuilder/
-target/
-python-build/
-.pdm-build/
-.pdm-python
-.pdm.toml
-pdm.lock
-Pipfile.lock
-poetry.lock
-
-# -------------------------
-# pyenv
-# -------------------------
-.python-version
-
-# -------------------------
-# PEP 582
-# -------------------------
-__pypackages__/
-
-# -------------------------
-# Frameworks
-# -------------------------
-# Django
-local_settings.py
-db.sqlite3
-db.sqlite3-journal
-
-# Flask
-instance/
-.webassets-cache
-
-# Scrapy
-.scrapy
-
-# Celery
-celerybeat-schedule
-celerybeat.pid
-
-# SageMath
-*.sage.py
-
-# -------------------------
-# PyPI / Private config
-# -------------------------
-.pypirc
-
-# -------------------------
-# Custom project crap
-# -------------------------
+# Системные файлы
 .DS_Store
 Thumbs.db
-*.swp
-*.swo
-*.tmp
-*~
-*.bak
 
-# -------------------------
-# Example custom ignored file
-# -------------------------
-/data/steam_market_price.sqlite
-_showyourwork.sqlite
+# Исключение папок, которые не нужны
+utils/
+external_libraries/
+external/
+libraries/
+/project_stats.csv
+/project_stats.html
