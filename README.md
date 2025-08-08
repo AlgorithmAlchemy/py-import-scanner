@@ -22,10 +22,11 @@
 
 **Program provides**:
 
-<img src="https://github.com/user-attachments/assets/e045a4b6-c672-4a9a-8c36-c3299c6f8f69" style="width: 90%;" />
-
-<img src="https://github.com/user-attachments/assets/62ecec76-3f0f-477d-9876-85d2d1c2c3f7" style="width: 90%;" />
-
+![2025-08-08_20-02_1.png](data/git_photo/2025-08-08_20-02_1.png)
+![2025-08-08_20-03.png](data/git_photo/2025-08-08_20-03.png)
+![2025-08-08_20-03_1.png](data/git_photo/2025-08-08_20-03_1.png)
+![2025-08-08_20-03_2.png](data/git_photo/2025-08-08_20-03_2.png)
+![2025-08-08_20-03_3.png](data/git_photo/2025-08-08_20-03_3.png)
 
 # py-import-scanner
 
