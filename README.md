@@ -22,11 +22,7 @@
 
 **Program provides**:
 
-![2025-08-08_20-02_1.png](data/git_photo/2025-08-08_20-02_1.png)
-![2025-08-08_20-03.png](data/git_photo/2025-08-08_20-03.png)
-![2025-08-08_20-03_1.png](data/git_photo/2025-08-08_20-03_1.png)
-![2025-08-08_20-03_2.png](data/git_photo/2025-08-08_20-03_2.png)
-![2025-08-08_20-03_3.png](data/git_photo/2025-08-08_20-03_3.png)
+![ezgif.com-animated-gif-maker.gif](data/ezgif.com-animated-gif-maker.gif)
 
 # py-import-scanner
 
