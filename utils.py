@@ -26,11 +26,25 @@ def read_gitignore(directory):
     ignored_paths = set()
 
     if os.path.exists(gitignore_path):
-        with open(gitignore_path, 'r') as f:
-            for line in f:
-                line = line.strip()
-                if line and not line.startswith('#'):
-                    ignored_paths.add(line)
+        try:
+            # Пробуем UTF-8
+            with open(gitignore_path, 'r', encoding='utf-8') as f:
+                for line in f:
+                    line = line.strip()
+                    if line and not line.startswith('#'):
+                        ignored_paths.add(line)
+        except UnicodeDecodeError:
+            try:
+                # Пробуем cp1251 (Windows-1251)
+                with open(gitignore_path, 'r', encoding='cp1251') as f:
+                    for line in f:
+                        line = line.strip()
+                        if line and not line.startswith('#'):
+                            ignored_paths.add(line)
+            except UnicodeDecodeError:
+                # Если не получается, игнорируем файл
+                print(f"Предупреждение: не удалось прочитать .gitignore в {directory}")
+                return ignored_paths
     return ignored_paths
 
 
