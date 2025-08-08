@@ -7,19 +7,161 @@ import ast
 import datetime
 import pandas as pd
 import matplotlib.pyplot as plt
+# Используем Agg backend для совместимости
+import matplotlib
+matplotlib.use('Qt5Agg')
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
 from matplotlib.figure import Figure
+import numpy as np
 from PySide6.QtWidgets import (QMainWindow, QWidget, QVBoxLayout, QHBoxLayout, 
                                QPushButton, QLabel, QTabWidget, QTableWidget,
-                               QTableWidgetItem, QFrame, QScrollArea, QTextEdit)
+                               QTableWidgetItem, QTextEdit)
 from PySide6.QtCore import Qt, QThread, Signal
-from PySide6.QtGui import QFont, QPixmap
-import seaborn as sns
+from PySide6.QtGui import QFont
 
-from utils import read_gitignore, is_ignored, find_projects
+from utils import read_gitignore, is_ignored
 
 IGNORED_DIRS = {'.git', '__pycache__', '.idea', '.vscode', '.venv', '.eggs'}
 
+
+# =========================
+# СТАНДАРТНЫЕ ФУНКЦИИ ДЛЯ ИМПОРТА
+# =========================
+
+def analyze_project_structure(directory, task_queue):
+    """Анализ структуры проекта - функция для импорта из main.py"""
+    ignored_paths = read_gitignore(directory)
+
+    structure = {
+        'total_files': 0,
+        'total_dirs': 0,
+        'py_files': 0,
+        'py_files_venv': 0,
+        'other_files': 0,
+        'folders': []
+    }
+
+    venv_like = ('venv', '.venv', 'env', '.env', '__pycache__', '.git', '.idea', '.vscode', '.mypy_cache')
+
+    for root, dirs, files in os.walk(directory):
+        # исключаем сразу ненужные папки
+        dirs[:] = [d for d in dirs if d not in venv_like and not is_ignored(os.path.join(root, d), ignored_paths)]
+
+        structure['total_dirs'] += len(dirs)
+        structure['total_files'] += len(files)
+
+        for file in files:
+            file_path = os.path.join(root, file)
+            if file.endswith('.py'):
+                if any(p in file_path for p in venv_like) or is_ignored(file_path, ignored_paths):
+                    structure['py_files_venv'] += 1
+                else:
+                    structure['py_files'] += 1
+            else:
+                structure['other_files'] += 1
+
+        relative_root = os.path.relpath(root, directory)
+        structure['folders'].append(relative_root)
+
+    task_queue.put(('project_stats', structure))
+
+
+def parse_python_files(projects_dir, export=True, max_files=5000, max_depth=6):
+    """Парсинг Python файлов - функция для импорта из main.py"""
+    project_stats = {}
+    scanned_files = 0
+
+    for root, dirs, files in os.walk(projects_dir):
+        # Удаление игнорируемых директорий
+        dirs[:] = [d for d in dirs if d not in IGNORED_DIRS]
+
+        # Ограничение глубины
+        rel_root = os.path.relpath(root, projects_dir)
+        depth = rel_root.count(os.sep)
+        if depth > max_depth:
+            continue
+
+        py_files = [f for f in files if f.endswith(".py")]
+        if not py_files:
+            continue
+
+        project_name = rel_root.replace(os.sep, " / ") if rel_root != "." else "ROOT"
+
+        if project_name not in project_stats:
+            project_stats[project_name] = {
+                "py_count": 0,
+                "libs": set(),
+                "created": None,
+                "dirs": set()
+            }
+
+        for file in py_files:
+            file_path = os.path.join(root, file)
+            scanned_files += 1
+            project_stats[project_name]["py_count"] += 1
+
+            # Обработка даты
+            try:
+                creation_time = os.path.getctime(file_path)
+                creation_date = datetime.datetime.fromtimestamp(creation_time)
+                current_created = project_stats[project_name]["created"]
+                if current_created is None or creation_date < current_created:
+                    project_stats[project_name]["created"] = creation_date
+            except Exception:
+                pass
+
+            # Добавление относительной директории
+            rel_dir = os.path.relpath(root, projects_dir)
+            if rel_dir != ".":
+                project_stats[project_name]["dirs"].add(rel_dir)
+
+            # Парсинг импортов
+            try:
+                with open(file_path, "r", encoding="utf-8") as f:
+                    content = f.read()
+                node = ast.parse(content, filename=file_path)
+                for sub_node in ast.walk(node):
+                    if isinstance(sub_node, ast.Import):
+                        for alias in sub_node.names:
+                            project_stats[project_name]["libs"].add(alias.name.split('.')[0])
+                    elif isinstance(sub_node, ast.ImportFrom) and sub_node.module:
+                        project_stats[project_name]["libs"].add(sub_node.module.split('.')[0])
+            except Exception:
+                continue
+
+        print(f"[✓] {project_name} — {len(py_files)} файлов")
+
+    # Финальная сборка
+    result = []
+    for proj, data in project_stats.items():
+        date_str = data["created"].strftime("%Y-%m-%d %H:%M:%S") if data["created"] else None
+        result.append({
+            "name": proj,
+            "stack": sorted(data["libs"]),
+            "dirs": sorted(data["dirs"]),
+            "date": date_str,
+            "py_count": data["py_count"]
+        })
+
+    if not result:
+        print("⚠ Не найдено проектов с .py файлами.")
+        return []
+
+    df = pd.DataFrame(result)
+    df["date"] = pd.to_datetime(df["date"], errors="coerce")
+
+    if export:
+        df.to_csv("project_stats.csv", index=False, encoding="utf-8-sig")
+        df.to_html("project_stats.html", index=False)
+
+    print("==== Итог ====")
+    print(df[["name", "date"]])
+    return df.to_dict("records")
+
+
+# =========================
+# КЛАССЫ ДЛЯ GUI
+# =========================
 
 class StatsWorker(QThread):
     """Поток для анализа статистики"""
@@ -164,13 +306,47 @@ class StatsWorker(QThread):
 class StatsWindow(QMainWindow):
     """Окно статистики"""
     
-    def __init__(self, imports_count, parent=None):
+    def __init__(self, project_data, parent=None):
         super().__init__(parent)
-        self.imports_count = imports_count
+        self.project_data = project_data
+        self.imports_count = {}  # Будет заполнено из project_data
         self.stats_worker = None
+        
+        # Извлекаем данные об импортах из project_data
+        self.extract_imports_data()
         
         self.init_ui()
         self.setup_styles()
+        
+    def extract_imports_data(self):
+        """Извлечение данных об импортах из project_data"""
+        if not self.project_data:
+            self.imports_count = {}
+            return
+            
+        # Собираем все импорты из всех проектов
+        all_imports = []
+        
+        # Проверяем, является ли project_data pandas DataFrame
+        if hasattr(self.project_data, 'to_dict'):
+            # Это pandas DataFrame
+            project_list = self.project_data.to_dict('records')
+        else:
+            # Это уже список словарей
+            project_list = self.project_data
+            
+        for project in project_list:
+            # Проверяем разные возможные ключи для импортов
+            if 'stack' in project and project['stack']:
+                all_imports.extend(project['stack'])
+            elif 'imports' in project and project['imports']:
+                all_imports.extend(project['imports'])
+            elif 'libs' in project and project['libs']:
+                all_imports.extend(project['libs'])
+        
+        # Подсчитываем количество каждого импорта
+        from collections import Counter
+        self.imports_count = dict(Counter(all_imports))
         
     def init_ui(self):
         """Инициализация пользовательского интерфейса"""
@@ -218,6 +394,9 @@ class StatsWindow(QMainWindow):
                 color: white;
             }
         """)
+        
+        # Вкладка с обзором
+        self.create_overview_tab()
         
         # Вкладка с графиками
         self.create_charts_tab()
@@ -281,19 +460,142 @@ class StatsWindow(QMainWindow):
             }
         """)
         
+    def create_overview_tab(self):
+        """Создание вкладки с обзором"""
+        overview_widget = QWidget()
+        overview_layout = QVBoxLayout(overview_widget)
+        
+        # Заголовок обзора
+        overview_title = QLabel("📋 Обзор статистики")
+        overview_title.setFont(QFont("Segoe UI", 16, QFont.Bold))
+        overview_title.setAlignment(Qt.AlignCenter)
+        overview_layout.addWidget(overview_title)
+        
+        # Основная статистика
+        stats_text = QTextEdit()
+        stats_text.setReadOnly(True)
+        stats_text.setFont(QFont("Consolas", 11))
+        stats_text.setStyleSheet("""
+            QTextEdit {
+                background-color: #f8f9fa;
+                border: 1px solid #dee2e6;
+                border-radius: 5px;
+                padding: 15px;
+                color: #2c3e50;
+            }
+        """)
+        
+        # Формируем статистику
+        stats_content = self.generate_overview_stats()
+        stats_text.setPlainText(stats_content)
+        
+        overview_layout.addWidget(stats_text)
+        
+        self.tab_widget.addTab(overview_widget, "📋 Обзор")
+        
+    def generate_overview_stats(self):
+        """Генерация текста обзора статистики"""
+        if not self.imports_count:
+            return "Нет данных для анализа"
+            
+        total_imports = sum(self.imports_count.values())
+        unique_libraries = len(self.imports_count)
+        
+        # Топ-10 библиотек
+        sorted_imports = sorted(self.imports_count.items(), key=lambda x: x[1], reverse=True)
+        top_10 = sorted_imports[:10]
+        
+        stats = f"""
+╔══════════════════════════════════════════════════════════════════════════════╗
+║                           ОБЗОР СТАТИСТИКИ ИМПОРТОВ                          ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+
+📊 ОБЩАЯ СТАТИСТИКА:
+   • Общее количество импортов: {total_imports:,}
+   • Уникальных библиотек: {unique_libraries:,}
+   • Среднее использование на библиотеку: {total_imports/unique_libraries:.1f}
+
+🏆 ТОП-10 САМЫХ ПОПУЛЯРНЫХ БИБЛИОТЕК:
+"""
+        
+        for i, (lib, count) in enumerate(top_10, 1):
+            percentage = (count / total_imports) * 100
+            stats += f"   {i:2d}. {lib:<20} {count:>8,} импортов ({percentage:>5.1f}%)\n"
+        
+        stats += f"""
+📈 ДОПОЛНИТЕЛЬНАЯ ИНФОРМАЦИЯ:
+   • Библиотеки с 1 импортом: {sum(1 for count in self.imports_count.values() if count == 1):,}
+   • Библиотеки с 2-5 импортами: {sum(1 for count in self.imports_count.values() if 2 <= count <= 5):,}
+   • Библиотеки с 6-10 импортами: {sum(1 for count in self.imports_count.values() if 6 <= count <= 10):,}
+   • Библиотеки с 10+ импортами: {sum(1 for count in self.imports_count.values() if count > 10):,}
+
+💡 РЕКОМЕНДАЦИИ:
+   • Самые используемые библиотеки: {', '.join(lib for lib, _ in top_10[:3])}
+   • Рассмотрите возможность оптимизации импортов
+   • Проверьте неиспользуемые зависимости
+"""
+        
+        return stats
+        
     def create_charts_tab(self):
         """Создание вкладки с графиками"""
         charts_widget = QWidget()
         charts_layout = QVBoxLayout(charts_widget)
         
-        # Создание графиков
-        self.create_imports_chart()
-        self.create_pie_chart()
+        # Заголовок
+        charts_title = QLabel("📈 Графики статистики")
+        charts_title.setFont(QFont("Segoe UI", 16, QFont.Bold))
+        charts_title.setAlignment(Qt.AlignCenter)
+        charts_layout.addWidget(charts_title)
         
-        charts_layout.addWidget(self.imports_canvas)
-        charts_layout.addWidget(self.pie_canvas)
+        # Информация о том, что графики открываются в отдельных окнах
+        info_label = QLabel("💡 Графики открываются в отдельных окнах для лучшего просмотра")
+        info_label.setFont(QFont("Segoe UI", 10))
+        info_label.setAlignment(Qt.AlignCenter)
+        info_label.setStyleSheet("color: #666; padding: 10px;")
+        charts_layout.addWidget(info_label)
+        
+        # Кнопки для открытия графиков
+        buttons_layout = QHBoxLayout()
+        
+        bar_button = QPushButton("📊 Открыть гистограмму")
+        bar_button.setFont(QFont("Segoe UI", 11))
+        bar_button.clicked.connect(self.open_bar_chart)
+        buttons_layout.addWidget(bar_button)
+        
+        pie_button = QPushButton("🥧 Открыть круговую диаграмму")
+        pie_button.setFont(QFont("Segoe UI", 11))
+        pie_button.clicked.connect(self.open_pie_chart)
+        buttons_layout.addWidget(pie_button)
+        
+        charts_layout.addLayout(buttons_layout)
+        
+        # Добавляем растягивающийся виджет для заполнения пространства
+        charts_layout.addStretch()
         
         self.tab_widget.addTab(charts_widget, "📈 Графики")
+        
+    def open_bar_chart(self):
+        """Открыть гистограмму в отдельном окне"""
+        try:
+            from gui.chart_windows import BarChartWindow
+            chart_window = BarChartWindow(self.imports_count, self)
+            chart_window.show()
+        except Exception as e:
+            import traceback
+            traceback.print_exc()
+            QMessageBox.critical(self, "Ошибка", f"Ошибка при открытии гистограммы: {str(e)}")
+    
+    def open_pie_chart(self):
+        """Открыть круговую диаграмму в отдельном окне"""
+        try:
+            from gui.chart_windows import PieChartWindow
+            chart_window = PieChartWindow(self.imports_count, self)
+            chart_window.show()
+        except Exception as e:
+            import traceback
+            traceback.print_exc()
+            QMessageBox.critical(self, "Ошибка", f"Ошибка при открытии круговой диаграммы: {str(e)}")
         
     def create_table_tab(self):
         """Создание вкладки с таблицей"""
@@ -448,39 +750,73 @@ class StatsWindow(QMainWindow):
         
     def populate_details(self):
         """Заполнение детальной информации"""
-        if not self.imports_count:
+        if not self.project_data:
+            self.details_text.setText("Нет данных о проектах для отображения")
             return
             
-        total_imports = sum(self.imports_count.values())
-        unique_libs = len(self.imports_count)
-        
+        # Проверяем, является ли project_data pandas DataFrame
+        if hasattr(self.project_data, 'to_dict'):
+            # Это pandas DataFrame
+            project_list = self.project_data.to_dict('records')
+        else:
+            # Это уже список словарей
+            project_list = self.project_data
+            
         details = f"""
-📊 ДЕТАЛЬНАЯ СТАТИСТИКА ИМПОРТОВ
-{'='*50}
+📊 ДЕТАЛЬНАЯ СТАТИСТИКА ПРОЕКТОВ
+{'='*60}
 
 📈 ОБЩАЯ ИНФОРМАЦИЯ:
-• Всего уникальных библиотек: {unique_libs}
-• Общее количество импортов: {total_imports}
-• Среднее количество импортов на библиотеку: {total_imports/unique_libs:.1f}
+• Всего проектов: {len(project_list)}
+• Всего уникальных библиотек: {len(self.imports_count)}
+• Общее количество импортов: {sum(self.imports_count.values())}
 
-🏆 ТОП-20 САМЫХ ПОПУЛЯРНЫХ БИБЛИОТЕК:
-{'='*50}
+🏗️ АНАЛИЗ ПРОЕКТОВ:
+{'='*60}
 """
         
-        sorted_imports = sorted(self.imports_count.items(), key=lambda x: x[1], reverse=True)
+        # Группируем проекты по типам
+        project_types = {}
+        for project in project_list:
+            project_type = project.get('type', 'Неизвестно')
+            if project_type not in project_types:
+                project_types[project_type] = []
+            project_types[project_type].append(project)
         
-        for i, (lib, count) in enumerate(sorted_imports[:20], 1):
-            percentage = (count / total_imports) * 100
-            details += f"{i:2d}. {lib:25s} - {count:4d} импортов ({percentage:5.1f}%)\n"
+        details += f"\n📁 РАСПРЕДЕЛЕНИЕ ПО ТИПАМ ПРОЕКТОВ:\n"
+        for project_type, projects in project_types.items():
+            details += f"• {project_type}: {len(projects)} проектов\n"
+        
+        details += f"\n📋 СПИСОК ВСЕХ ПРОЕКТОВ:\n"
+        details += f"{'='*60}\n"
+        
+        for i, project in enumerate(project_list, 1):
+            name = project.get('name', 'Неизвестно')
+            date = project.get('date', 'Неизвестно')
+            py_count = project.get('py_count', 0)
             
-        details += f"""
-📋 ПОЛНЫЙ СПИСОК БИБЛИОТЕК:
-{'='*50}
-"""
-        
-        for i, (lib, count) in enumerate(sorted_imports, 1):
-            percentage = (count / total_imports) * 100
-            details += f"{i:3d}. {lib:25s} - {count:4d} ({percentage:5.1f}%)\n"
+            # Определяем количество импортов
+            imports_list = []
+            if 'stack' in project and project['stack']:
+                imports_list = project['stack']
+            elif 'imports' in project and project['imports']:
+                imports_list = project['imports']
+            elif 'libs' in project and project['libs']:
+                imports_list = list(project['libs'])
+            
+            imports_count = len(imports_list)
+            
+            details += f"{i:3d}. {name}\n"
+            details += f"     📅 Дата: {date}\n"
+            details += f"     📄 Python файлов: {py_count}\n"
+            details += f"     📦 Импортов: {imports_count}\n"
+            
+            if imports_list:
+                # Показываем топ-5 импортов
+                top_imports = imports_list[:5]
+                details += f"     🔝 Топ импорты: {', '.join(top_imports)}\n"
+            
+            details += "\n"
             
         self.details_text.setText(details)
         
@@ -518,8 +854,8 @@ class StatsWindow(QMainWindow):
 
 
 # Функция для открытия окна статистики (совместимость с существующим кодом)
-def open_stats_window(parent, imports_count):
+def open_stats_window(parent, project_data):
     """Открытие окна статистики"""
-    stats_window = StatsWindow(imports_count, parent)
+    stats_window = StatsWindow(project_data, parent)
     stats_window.show()
     return stats_window
