@@ -1,3 +1,8 @@
+[![Python](https://img.shields.io/badge/Python-3.13+-blue.svg)](https://www.python.org/downloads/)
+[![PySide6](https://img.shields.io/badge/PySide6-Qt%206-blueviolet)](https://pypi.org/project/PySide6/)
+[![Matplotlib](https://img.shields.io/badge/Matplotlib-3.8+-orange)](https://matplotlib.org/stable/)
+[![License](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Platform](https://img.shields.io/badge/Platform-Windows%20%7C%20Linux%20%7C%20macOS-critical)]()
 ## 🔄 Последнее обновление — v2.2.0
 
 > 📅 Дата релиза: 2025-01-27
