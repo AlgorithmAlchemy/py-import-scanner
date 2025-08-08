@@ -21,8 +21,7 @@
 </a>
 
 **Program provides**:
-
-![ezgif.com-animated-gif-maker.gif](data/ezgif.com-animated-gif-maker.gif)
+<img src="data/ezgif.com-animated-gif-maker.gif" style="width: 50%;" />
 
 # py-import-scanner
 
