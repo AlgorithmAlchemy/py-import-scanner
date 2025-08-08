@@ -1,3 +1,4 @@
+[![Python](https://img.shields.io/badge/Python-3.13+-blue.svg)](https://www.python.org/downloads/)
 ## 🔄 Последнее обновление — v2.2.0
 
 > 📅 Дата релиза: 2025-08-08
