@@ -9,8 +9,8 @@ import matplotlib
 matplotlib.use('Agg')  # Используем Agg backend для совместимости
 from PySide6.QtWidgets import (QApplication, QMainWindow, QWidget, QVBoxLayout, 
                                QHBoxLayout, QPushButton, QTextEdit, QLabel, 
-                               QFileDialog, QMenu, QMessageBox, QProgressBar)
-from PySide6.QtCore import Qt, QThread, Signal
+                               QFileDialog, QMenu, QMessageBox, QProgressBar, QComboBox)
+from PySide6.QtCore import Qt, QThread, Signal, QTranslator, QLocale
 from PySide6.QtGui import QFont, QAction
 import pyperclip  # Для копирования в буфер обмена
 from colorama import init
@@ -288,9 +288,109 @@ class MainWindow(QMainWindow):
         super().__init__()
         self.scan_worker = None
         self.stop_event = Event()
+        self.current_language = "ru"  # Язык по умолчанию
+        
+        # Инициализация переводчика
+        self.translator = QTranslator()
+        self.current_language = "ru"
+        
         self.init_ui()
         self.setup_styles()
         self.setup_context_menu()
+        
+    def change_language(self, index):
+        """Изменение языка интерфейса"""
+        print(f"\n\n*** СМЕНА ЯЗЫКА: индекс={index} ***\n\n")
+        lang_code = self.lang_combo.itemData(index)
+        print(f"Выбранный код языка: {lang_code}")
+        print(f"Текущий язык: {self.current_language}")
+        
+        if lang_code == self.current_language:
+            print("Язык не изменился, выход из метода")
+            return
+            
+        self.current_language = lang_code
+        print(f"Установлен новый язык: {self.current_language}")
+        self.retranslateUi()
+        print(f"Обновление текстов UI выполнено")
+        
+    def retranslateUi(self):
+        """Обновление текстов интерфейса в соответствии с выбранным языком"""
+        texts = self.get_ui_texts()
+        
+        # Обновление заголовка окна
+        self.setWindowTitle(texts["window_title"])
+        
+        # Обновление кнопок
+        self.browse_button.setText(texts["browse_btn"])
+        self.scan_button.setText(texts["scan_btn"])
+        self.stop_button.setText(texts["stop_btn"])
+        self.stats_button.setText(texts["stats_btn"])
+        
+        # Обновление статусной строки
+        if self.status_label.text() == "Готов к работе" or self.status_label.text() == "Ready to work":
+            self.status_label.setText(texts["ready_status"])
+            
+    def get_ui_texts(self):
+        """Получение текстов интерфейса в соответствии с выбранным языком"""
+        texts = {
+            "ru": {
+                "window_title": "Python Import Parser - Анализ импортов",
+                "browse_btn": "📁 Выбрать папку",
+                "scan_btn": "🔍 Сканировать",
+                "stop_btn": "⏹ Остановить",
+                "stats_btn": "📊 Статистика",
+                "ready_status": "Готов к работе",
+                "folder_selected": "Выбрана папка: {}",
+                "warning_title": "Предупреждение",
+                "warning_select_folder": "Сначала выберите папку для сканирования!",
+                "scan_started": "🔍 Начинаю сканирование...",
+                "scan_stopped": "Сканирование остановлено",
+                "scan_completed": "Сканирование завершено",
+                "error_title": "Ошибка",
+                "error_message": "Произошла ошибка при сканировании:\n{}",
+                "no_imports": "❌ Импорты не найдены",
+                "found_libraries": "✅ Найдено {} уникальных библиотек",
+                "total_imports": "📊 Общее количество импортов: {}",
+                "top_libraries": "🏆 Топ-10 самых популярных библиотек:",
+                "more_libraries": "... и еще {} библиотек",
+                "info_title": "Информация",
+                "scan_first": "Сначала выполните сканирование!",
+                "stats_next_update": "Окно статистики будет реализовано в следующем обновлении!",
+                "copy_action": "📋 Копировать",
+                "clear_action": "🗑 Очистить",
+                "copied_to_clipboard": "Текст скопирован в буфер обмена"
+            },
+            "en": {
+                "window_title": "Python Import Parser - Import Analysis",
+                "browse_btn": "📁 Select Folder",
+                "scan_btn": "🔍 Scan",
+                "stop_btn": "⏹ Stop",
+                "stats_btn": "📊 Statistics",
+                "ready_status": "Ready to work",
+                "folder_selected": "Selected folder: {}",
+                "warning_title": "Warning",
+                "warning_select_folder": "Please select a folder to scan first!",
+                "scan_started": "🔍 Starting scan...",
+                "scan_stopped": "Scan stopped",
+                "scan_completed": "Scan completed",
+                "error_title": "Error",
+                "error_message": "An error occurred during scanning:\n{}",
+                "no_imports": "❌ No imports found",
+                "found_libraries": "✅ Found {} unique libraries",
+                "total_imports": "📊 Total number of imports: {}",
+                "top_libraries": "🏆 Top 10 most popular libraries:",
+                "more_libraries": "... and {} more libraries",
+                "info_title": "Information",
+                "scan_first": "Please run a scan first!",
+                "stats_next_update": "Statistics window will be implemented in the next update!",
+                "copy_action": "📋 Copy",
+                "clear_action": "🗑 Clear",
+                "copied_to_clipboard": "Text copied to clipboard"
+            }
+        }
+        
+        return texts.get(self.current_language, texts["ru"])
 
     def init_ui(self):
         self.setWindowTitle("Анализатор импортов Python - Ультра-быстрая версия")
@@ -340,6 +440,14 @@ class MainWindow(QMainWindow):
         self.stop_button.clicked.connect(self.stop_scan)
         self.stop_button.setEnabled(False)
         button_layout.addWidget(self.stop_button)
+        
+        # Выпадающий список для выбора языка
+        self.lang_combo = QComboBox()
+        self.lang_combo.addItem("Русский", "ru")
+        self.lang_combo.addItem("English", "en")
+        self.lang_combo.setCurrentIndex(0)
+        self.lang_combo.currentIndexChanged.connect(self.change_language)
+        button_layout.addWidget(self.lang_combo)
 
         main_layout.addLayout(button_layout)
 
@@ -383,6 +491,39 @@ class MainWindow(QMainWindow):
         self.status_label.setStyleSheet("color: #666; padding: 10px;")
         main_layout.addWidget(self.status_label)
 
+    def change_language(self, index):
+        lang_code = self.lang_combo.itemData(index)
+        print(f"Изменение языка на: {lang_code}, индекс: {index}")
+        
+        # Загружаем переводчик для выбранного языка
+        if lang_code == "en":
+            # Для английского языка загружаем переводчик
+            print("Загрузка английского языка")
+            self.current_language = "en"
+        else:
+            # Для русского языка используем исходные строки
+            print("Загрузка русского языка")
+            self.current_language = "ru"
+        
+        # Обновляем тексты интерфейса
+        self.retranslateUi()
+        print("Тексты интерфейса обновлены")
+    
+    def retranslateUi(self):
+        texts = self.get_ui_texts()
+        
+        # Обновляем тексты в интерфейсе
+        self.setWindowTitle(texts["window_title"])
+        self.browse_button.setText(texts["browse_btn"])
+        self.scan_button.setText(texts["scan_btn"])
+        self.stop_button.setText(texts["stop_btn"])
+        self.stats_button.setText(texts["stats_btn"])
+        self.status_label.setText(texts["ready_status"])
+        
+        # Обновляем тексты для кнопок графиков
+        self.bar_chart_button.setText("📊 " + ("Histogram" if self.current_language == "en" else "Гистограмма"))
+        self.pie_chart_button.setText("🥧 " + ("Pie Chart" if self.current_language == "en" else "Круговая диаграмма"))
+        
     def setup_styles(self):
         # Современный стиль для всего приложения
         self.setStyleSheet("""
@@ -449,13 +590,53 @@ class MainWindow(QMainWindow):
             QLabel {
                 color: #495057;
             }
+            
+            QComboBox {
+                background: qlineargradient(x1:0, y1:0, x2:0, y2:1,
+                    stop:0 #007bff, stop:1 #0056b3);
+                color: white;
+                border: none;
+                padding: 12px 24px;
+                border-radius: 8px;
+                font-weight: bold;
+                min-height: 20px;
+                selection-background-color: #0056b3;
+            }
+            
+            QComboBox:hover {
+                background: qlineargradient(x1:0, y1:0, x2:0, y2:1,
+                    stop:0 #0056b3, stop:1 #004085);
+            }
+            
+            QComboBox:on {
+                background: qlineargradient(x1:0, y1:0, x2:0, y2:1,
+                    stop:0 #004085, stop:1 #002752);
+            }
+            
+            QComboBox::drop-down {
+                subcontrol-origin: padding;
+                subcontrol-position: center right;
+                width: 20px;
+                border-left-width: 0px;
+                border-top-right-radius: 8px;
+                border-bottom-right-radius: 8px;
+            }
+            
+            QComboBox QAbstractItemView {
+                background-color: #f8f9fa;
+                border: 2px solid #007bff;
+                border-radius: 8px;
+                selection-background-color: #007bff;
+                selection-color: white;
+            }
         """)
 
     def browse_directory(self):
         try:
+            texts = self.get_ui_texts()
             directory = QFileDialog.getExistingDirectory(
                 self, 
-                "Выберите директорию для сканирования",
+                texts["browse_btn"].replace("📁 ", ""),
                 default_project_path
             )
             if directory:
@@ -463,10 +644,12 @@ class MainWindow(QMainWindow):
         except Exception as e:
             import traceback
             traceback.print_exc()
-            QMessageBox.critical(self, "Ошибка", f"Ошибка при выборе директории: {str(e)}")
+            QMessageBox.critical(self, texts["error_title"], f"{texts['error_message'].format(str(e))}")
 
     def start_scan(self, directory):
         try:
+            texts = self.get_ui_texts()
+            
             self.stop_event.clear()
             self.scan_button.setEnabled(False)
             self.browse_button.setEnabled(False)
@@ -474,7 +657,7 @@ class MainWindow(QMainWindow):
             self.progress_bar.setVisible(True)
             self.progress_bar.setRange(0, 0)  # Неопределенный прогресс
             self.results_text.clear()
-            self.status_label.setText("Сканирование...")
+            self.status_label.setText(texts["scan_started"])
             
             # Запускаем сканирование в отдельном потоке
             self.scan_worker = ScanWorker(directory, self.stop_event)
@@ -613,6 +796,7 @@ class MainWindow(QMainWindow):
 
 
 def main():
+    print("Запуск приложения...")
     app = QApplication([])
     window = MainWindow()
     window.show()
