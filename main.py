@@ -359,7 +359,12 @@ class MainWindow(QMainWindow):
                 "stats_next_update": "Окно статистики будет реализовано в следующем обновлении!",
                 "copy_action": "📋 Копировать",
                 "clear_action": "🗑 Очистить",
-                "copied_to_clipboard": "Текст скопирован в буфер обмена"
+                "copied_to_clipboard": "Текст скопирован в буфер обмена",
+                "bar_chart": "📊 Гистограмма",
+                "pie_chart": "🥧 Круговая диаграмма",
+                "results_placeholder": "Результаты сканирования появятся здесь...",
+                "title": "🚀 Анализатор импортов Python",
+                "subtitle": "Ультра-быстрое сканирование проектов"
             },
             "en": {
                 "window_title": "Python Import Parser - Import Analysis",
@@ -379,14 +384,19 @@ class MainWindow(QMainWindow):
                 "no_imports": "❌ No imports found",
                 "found_libraries": "✅ Found {} unique libraries",
                 "total_imports": "📊 Total number of imports: {}",
-                "top_libraries": "🏆 Top 10 most popular libraries:",
+                "top_libraries": "🏆 Top-10 most popular libraries:",
                 "more_libraries": "... and {} more libraries",
                 "info_title": "Information",
                 "scan_first": "Please run a scan first!",
                 "stats_next_update": "Statistics window will be implemented in the next update!",
                 "copy_action": "📋 Copy",
                 "clear_action": "🗑 Clear",
-                "copied_to_clipboard": "Text copied to clipboard"
+                "copied_to_clipboard": "Text copied to clipboard",
+                "bar_chart": "📊 Histogram",
+                "pie_chart": "🥧 Pie Chart",
+                "results_placeholder": "Scan results will appear here...",
+                "title": "🚀 Python Import Analyzer",
+                "subtitle": "Ultra-fast project scanning"
             }
         }
         
@@ -520,9 +530,19 @@ class MainWindow(QMainWindow):
         self.stats_button.setText(texts["stats_btn"])
         self.status_label.setText(texts["ready_status"])
         
+        # Обновляем заголовки
+        for widget in self.centralWidget().findChildren(QLabel):
+            if widget.font().pointSize() == 24:  # Заголовок
+                widget.setText(texts["title"])
+            elif widget.font().pointSize() == 12 and widget != self.status_label:  # Подзаголовок
+                widget.setText(texts["subtitle"])
+        
         # Обновляем тексты для кнопок графиков
-        self.bar_chart_button.setText("📊 " + ("Histogram" if self.current_language == "en" else "Гистограмма"))
-        self.pie_chart_button.setText("🥧 " + ("Pie Chart" if self.current_language == "en" else "Круговая диаграмма"))
+        self.bar_chart_button.setText(texts["bar_chart"])
+        self.pie_chart_button.setText(texts["pie_chart"])
+        
+        # Обновляем плейсхолдер для текстового поля
+        self.results_text.setPlaceholderText(texts["results_placeholder"])
         
     def setup_styles(self):
         # Современный стиль для всего приложения
@@ -596,10 +616,11 @@ class MainWindow(QMainWindow):
                     stop:0 #007bff, stop:1 #0056b3);
                 color: white;
                 border: none;
-                padding: 12px 24px;
+                padding: 10px 20px;
                 border-radius: 8px;
                 font-weight: bold;
-                min-height: 20px;
+                min-height: 16px;
+                max-width: 120px;
                 selection-background-color: #0056b3;
             }
             
@@ -677,11 +698,12 @@ class MainWindow(QMainWindow):
             self.scan_worker.quit()
             self.scan_worker.wait()
         
+        texts = self.get_ui_texts()
         self.scan_button.setEnabled(True)
         self.browse_button.setEnabled(True)
         self.stop_button.setEnabled(False)
         self.progress_bar.setVisible(False)
-        self.status_label.setText("Сканирование остановлено")
+        self.status_label.setText(texts["scan_stopped"])
 
     def update_progress(self, message):
         self.status_label.setText(message)
@@ -694,40 +716,43 @@ class MainWindow(QMainWindow):
         total_imports = data['total_imports']
         project_data = data['project_data']
         
+        texts = self.get_ui_texts()
         self.scan_button.setEnabled(True)
         self.browse_button.setEnabled(True)
         self.stop_button.setEnabled(False)
         self.progress_bar.setVisible(False)
-        self.status_label.setText("Сканирование завершено")
+        self.status_label.setText(texts["scan_completed"])
         
         self.display_results()
 
     def scan_error(self, error_message):
         import traceback
         traceback.print_exc()
-        QMessageBox.critical(self, "Ошибка", f"Ошибка при сканировании: {error_message}")
+        texts = self.get_ui_texts()
+        QMessageBox.critical(self, texts["error_title"], f"{texts['error_message'].format(error_message)}")
         
         self.scan_button.setEnabled(True)
         self.browse_button.setEnabled(True)
         self.stop_button.setEnabled(False)
         self.progress_bar.setVisible(False)
-        self.status_label.setText("Ошибка сканирования")
+        self.status_label.setText(texts["error_title"])
 
     def display_results(self):
+        texts = self.get_ui_texts()
         if not imports_count:
-            self.results_text.append("Импорты не найдены.")
+            self.results_text.append(texts["no_imports"])
             return
 
         # Сортируем по количеству импортов
         sorted_imports = sorted(imports_count.items(), key=lambda x: x[1], reverse=True)
 
         self.results_text.append(f"\n{'='*60}")
-        self.results_text.append(f"РЕЗУЛЬТАТЫ СКАНИРОВАНИЯ")
+        self.results_text.append(f"{texts['window_title'].upper()}")
         self.results_text.append(f"{'='*60}")
-        self.results_text.append(f"Всего импортов: {total_imports}")
-        self.results_text.append(f"Уникальных библиотек: {len(imports_count)}")
-        self.results_text.append(f"Время сканирования: {datetime.datetime.now().strftime('%H:%M:%S')}")
-        self.results_text.append(f"\nТОП-20 БИБЛИОТЕК:")
+        self.results_text.append(texts["total_imports"].format(total_imports))
+        self.results_text.append(texts["found_libraries"].format(len(imports_count)))
+        self.results_text.append(f"{datetime.datetime.now().strftime('%H:%M:%S')}")
+        self.results_text.append(f"\n{texts['top_libraries']}")
         self.results_text.append(f"{'='*60}")
 
         for i, (lib, count) in enumerate(sorted_imports[:20], 1):
@@ -735,11 +760,13 @@ class MainWindow(QMainWindow):
             self.results_text.append(f"{i:2d}. {lib:<25} {count:>5} ({percentage:5.1f}%)")
 
         if len(sorted_imports) > 20:
-            self.results_text.append(f"\n... и еще {len(sorted_imports) - 20} библиотек")
+            self.results_text.append(f"\n{texts['more_libraries'].format(len(sorted_imports) - 20)}")
+
 
     def plot_import_statistics(self, plot_type="bar"):
+        texts = self.get_ui_texts()
         if not imports_count:
-            QMessageBox.warning(self, "Предупреждение", "Нет данных для построения графика")
+            QMessageBox.warning(self, texts["warning_title"], texts["scan_first"])
             return
 
         try:
@@ -752,13 +779,14 @@ class MainWindow(QMainWindow):
         except Exception as e:
             import traceback
             traceback.print_exc()
-            QMessageBox.critical(self, "Ошибка", f"Ошибка при создании графика: {str(e)}")
+            QMessageBox.critical(self, texts["error_title"], f"{texts['error_message'].format(str(e))}")
 
     def show_stats(self):
         global project_data_ready
+        texts = self.get_ui_texts()
         
         if not project_data or len(project_data) == 0:
-            QMessageBox.warning(self, "Предупреждение", "Нет данных о проектах для отображения. Сначала выполните сканирование.")
+            QMessageBox.warning(self, texts["warning_title"], texts["scan_first"])
             return
 
         try:
@@ -770,16 +798,17 @@ class MainWindow(QMainWindow):
         except Exception as e:
             import traceback
             traceback.print_exc()
-            QMessageBox.critical(self, "Ошибка", f"Ошибка при отображении статистики: {str(e)}")
+            QMessageBox.critical(self, texts["error_title"], f"{texts['error_message'].format(str(e))}")
 
     def setup_context_menu(self):
         self.results_text.setContextMenuPolicy(Qt.CustomContextMenu)
         self.results_text.customContextMenuRequested.connect(self.show_context_menu)
 
     def show_context_menu(self, position):
+        texts = self.get_ui_texts()
         context_menu = QMenu(self)
         
-        copy_action = QAction("Копировать", self)
+        copy_action = QAction(texts["copy_action"], self)
         copy_action.triggered.connect(self.copy_to_clipboard)
         context_menu.addAction(copy_action)
         
@@ -787,12 +816,13 @@ class MainWindow(QMainWindow):
 
     def copy_to_clipboard(self):
         try:
+            texts = self.get_ui_texts()
             text = self.results_text.toPlainText()
             if text:
                 pyperclip.copy(text)
-                self.status_label.setText("Текст скопирован в буфер обмена")
+                self.status_label.setText(texts["copied_to_clipboard"])
         except Exception as e:
-            QMessageBox.warning(self, "Ошибка", f"Не удалось скопировать текст: {str(e)}")
+            QMessageBox.warning(self, texts["error_title"], f"{texts['error_message'].format(str(e))}")
 
 
 def main():
