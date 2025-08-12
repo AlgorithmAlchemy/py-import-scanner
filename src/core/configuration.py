@@ -1,7 +1,7 @@
 """
 Модуль конфигурации приложения
 """
-from typing import Set
+from typing import Set, Dict, List, Any, Optional
 from pathlib import Path
 import json
 from .interfaces import IConfiguration
@@ -10,8 +10,9 @@ from .interfaces import IConfiguration
 class Configuration(IConfiguration):
     """Класс конфигурации приложения"""
     
-    def __init__(self, config_file: Path = None):
-        self.config_file = config_file or Path("config.json")
+    def __init__(self, config_file: Optional[Path] = None) -> None:
+        self.config_file: Path = config_file or Path("config.json")
+        self._config: Dict[str, Any] = {}
         self._load_config()
     
     def _load_config(self) -> None:
@@ -34,7 +35,7 @@ class Configuration(IConfiguration):
         except IOError:
             pass  # Игнорируем ошибки сохранения
     
-    def _get_default_config(self) -> dict:
+    def _get_default_config(self) -> Dict[str, Any]:
         """Возвращает конфигурацию по умолчанию"""
         return {
             "excluded_libraries": [
@@ -147,11 +148,11 @@ class Configuration(IConfiguration):
         """Возвращает максимальное количество потоков"""
         return self._config.get("max_workers", 4)
     
-    def get_supported_encodings(self) -> list:
+    def get_supported_encodings(self) -> List[str]:
         """Возвращает поддерживаемые кодировки"""
         return self._config.get("supported_encodings", ["utf-8"])
     
-    def get_file_extensions(self) -> list:
+    def get_file_extensions(self) -> List[str]:
         """Возвращает поддерживаемые расширения файлов"""
         return self._config.get("file_extensions", [".py"])
     
@@ -159,7 +160,7 @@ class Configuration(IConfiguration):
         """Возвращает интервал обновления прогресса"""
         return self._config.get("progress_update_interval", 500)
     
-    def update_config(self, key: str, value) -> None:
+    def update_config(self, key: str, value: Any) -> None:
         """Обновляет значение конфигурации"""
         self._config[key] = value
         self._save_config()
@@ -169,33 +170,33 @@ class Configuration(IConfiguration):
         self._config = self._get_default_config()
         self._save_config()
     
-    def get_logging_config(self) -> dict:
+    def get_logging_config(self) -> Dict[str, Any]:
         """Возвращает конфигурацию логирования"""
         return self._config.get("logging", {})
     
-    def update_logging_config(self, key: str, value) -> None:
+    def update_logging_config(self, key: str, value: Any) -> None:
         """Обновляет настройку логирования"""
         if "logging" not in self._config:
             self._config["logging"] = {}
         self._config["logging"][key] = value
         self._save_config()
     
-    def get_security_config(self) -> dict:
+    def get_security_config(self) -> Dict[str, Any]:
         """Возвращает конфигурацию безопасности"""
         return self._config.get("security", {})
     
-    def update_security_config(self, key: str, value) -> None:
+    def update_security_config(self, key: str, value: Any) -> None:
         """Обновляет настройку безопасности"""
         if "security" not in self._config:
             self._config["security"] = {}
         self._config["security"][key] = value
         self._save_config()
     
-    def get_performance_config(self) -> dict:
+    def get_performance_config(self) -> Dict[str, Any]:
         """Возвращает конфигурацию производительности"""
         return self._config.get("performance", {})
     
-    def update_performance_config(self, key: str, value) -> None:
+    def update_performance_config(self, key: str, value: Any) -> None:
         """Обновляет настройку производительности"""
         if "performance" not in self._config:
             self._config["performance"] = {}

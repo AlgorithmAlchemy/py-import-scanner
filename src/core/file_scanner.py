@@ -3,9 +3,9 @@
 """
 import time
 import datetime
-from typing import List, Dict, Optional
+from typing import List, Dict, Optional, Any, Callable, Set
 from pathlib import Path
-from concurrent.futures import ThreadPoolExecutor, as_completed
+from concurrent.futures import ThreadPoolExecutor, as_completed, Future
 from collections import Counter
 import os
 
@@ -23,28 +23,28 @@ class FileScanner(IFileScanner):
     
     def __init__(self, config: Configuration, 
                  import_parser: ImportParser,
-                 project_analyzer: ProjectAnalyzer):
-        self.config = config
-        self.import_parser = import_parser
-        self.project_analyzer = project_analyzer
-        self._excluded_dirs = config.get_excluded_directories()
-        self._max_file_size = config.get_max_file_size()
-        self._batch_size = config.get_batch_size()
-        self._max_workers = config.get_max_workers()
-        self._supported_encodings = config.get_supported_encodings()
+                 project_analyzer: ProjectAnalyzer) -> None:
+        self.config: Configuration = config
+        self.import_parser: ImportParser = import_parser
+        self.project_analyzer: ProjectAnalyzer = project_analyzer
+        self._excluded_dirs: Set[str] = config.get_excluded_directories()
+        self._max_file_size: int = config.get_max_file_size()
+        self._batch_size: int = config.get_batch_size()
+        self._max_workers: int = config.get_max_workers()
+        self._supported_encodings: List[str] = config.get_supported_encodings()
         
         # Инициализация логгера
         self.logger = get_logger("FileScanner")
         
         # Инициализация безопасности
-        security_config_dict = config.get_security_config()
-        security_config = SecurityConfig(**security_config_dict)
-        self.security_manager = SecurityManager(security_config)
+        security_config_dict: Dict[str, Any] = config.get_security_config()
+        security_config: SecurityConfig = SecurityConfig(**security_config_dict)
+        self.security_manager: SecurityManager = SecurityManager(security_config)
         
         # Инициализация производительности
-        performance_config_dict = config.get_performance_config()
-        performance_config = PerformanceConfig(**performance_config_dict)
-        self.performance_manager = PerformanceManager(performance_config)
+        performance_config_dict: Dict[str, Any] = config.get_performance_config()
+        performance_config: PerformanceConfig = PerformanceConfig(**performance_config_dict)
+        self.performance_manager: PerformanceManager = PerformanceManager(performance_config)
         
         self.logger.info("FileScanner инициализирован", 
                         extra_data={
@@ -54,7 +54,7 @@ class FileScanner(IFileScanner):
                         })
     
     def scan_directory(self, directory: Path, 
-                      progress_callback=None) -> ScanResult:
+                      progress_callback: Optional[Callable[[str, Optional[float]], None]] = None) -> ScanResult:
         """
         Сканирует директорию и возвращает результаты
         
@@ -68,14 +68,14 @@ class FileScanner(IFileScanner):
         self.logger.info("Начало сканирования директории", 
                         extra_data={"directory": str(directory)})
         
-        start_time = time.time()
+        start_time: float = time.time()
         
         if progress_callback:
             progress_callback("Поиск Python файлов...")
         
         # Поиск всех Python файлов
         self.logger.info("Поиск Python файлов")
-        file_paths = self._find_python_files(directory)
+        file_paths: List[Path] = self._find_python_files(directory)
         
         self.logger.info("Поиск файлов завершен", 
                         extra_data={"files_found": len(file_paths)})
@@ -89,20 +89,20 @@ class FileScanner(IFileScanner):
         
         # Сканирование файлов
         self.logger.info("Начало параллельного сканирования файлов")
-        all_imports = self._scan_files_parallel(file_paths, progress_callback)
+        all_imports: Dict[str, int] = self._scan_files_parallel(file_paths, progress_callback)
         
         # Анализ проектов
         if progress_callback:
             progress_callback("Анализ структуры проектов...")
         
         self.logger.info("Анализ структуры проектов")
-        projects_data = self.project_analyzer.analyze_project_structure(directory)
+        projects_data: List[ProjectData] = self.project_analyzer.analyze_project_structure(directory)
         
         # Обновление данных проектов с импортами
         self._update_projects_with_imports(projects_data, all_imports)
         
         # Создание результата
-        scan_duration = time.time() - start_time
+        scan_duration: float = time.time() - start_time
         
         self.logger.info("Сканирование завершено", 
                         extra_data={
@@ -132,12 +132,12 @@ class FileScanner(IFileScanner):
             Список найденных библиотек
         """
         # Генерация ключа кэша
-        cache_key = self.performance_manager.generate_cache_key(
+        cache_key: str = self.performance_manager.generate_cache_key(
             "scan_file", str(file_path), file_path.stat().st_mtime
         )
         
         # Попытка получить из кэша
-        cached_result = self.performance_manager.get_cached_result(cache_key)
+        cached_result: Optional[List[str]] = self.performance_manager.get_cached_result(cache_key)
         if cached_result is not None:
             self.logger.debug("Результат найден в кэше", 
                             extra_data={"file": str(file_path)})
@@ -145,6 +145,8 @@ class FileScanner(IFileScanner):
         
         try:
             # Валидация безопасности
+            is_valid: bool
+            message: str
             is_valid, message = self.security_manager.validate_file(file_path)
             if not is_valid:
                 self.logger.warning("Файл не прошел валидацию безопасности", 
@@ -152,11 +154,12 @@ class FileScanner(IFileScanner):
                 return []
             
             # Чтение файла с поддержкой разных кодировок
-            content = self._read_file_content(file_path)
+            content: Optional[str] = self._read_file_content(file_path)
             if not content:
                 return []
             
             # Валидация и санитизация содержимого
+            sanitized_content: str
             is_valid, message, sanitized_content = self.security_manager.validate_and_sanitize_content(content, file_path)
             if not is_valid:
                 self.logger.warning("Содержимое файла не прошло валидацию", 
@@ -164,7 +167,7 @@ class FileScanner(IFileScanner):
                 return []
             
             # Парсинг импортов
-            imports = self.import_parser.parse_imports(sanitized_content, file_path)
+            imports: List[str] = self.import_parser.parse_imports(sanitized_content, file_path)
             
             # Валидация импортов
             is_valid, message = self.security_manager.validate_imports(imports, file_path)
@@ -193,7 +196,7 @@ class FileScanner(IFileScanner):
         Returns:
             Список путей к Python файлам
         """
-        file_paths = []
+        file_paths: List[Path] = []
         
         for root, dirs, files in os.walk(directory):
             # Фильтрация директорий
@@ -202,7 +205,7 @@ class FileScanner(IFileScanner):
             # Поиск Python файлов
             for file in files:
                 if file.endswith('.py'):
-                    file_path = Path(root) / file
+                    file_path: Path = Path(root) / file
                     file_paths.append(file_path)
         
         return file_paths
@@ -227,7 +230,7 @@ class FileScanner(IFileScanner):
         return None
     
     def _scan_files_parallel(self, file_paths: List[Path], 
-                           progress_callback=None) -> Dict[str, int]:
+                           progress_callback: Optional[Callable[[str, Optional[float]], None]] = None) -> Dict[str, int]:
         """
         Сканирует файлы параллельно с оптимизацией производительности
         
@@ -242,8 +245,8 @@ class FileScanner(IFileScanner):
         self.performance_manager.start_profiling("parallel_scan")
         
         # Получение оптимальных параметров
-        optimal_threads = self.performance_manager.get_optimal_threads(len(file_paths))
-        chunk_size = self.performance_manager.get_chunk_size(len(file_paths), optimal_threads)
+        optimal_threads: int = self.performance_manager.get_optimal_threads(len(file_paths))
+        chunk_size: int = self.performance_manager.get_chunk_size(len(file_paths), optimal_threads)
         
         self.logger.info("Оптимизированное сканирование", 
                         extra_data={
@@ -252,22 +255,22 @@ class FileScanner(IFileScanner):
                             "chunk_size": chunk_size
                         })
         
-        all_imports = []
+        all_imports: List[str] = []
         
         # Создание батчей с оптимальным размером
-        batches = [file_paths[i:i + chunk_size] 
+        batches: List[List[Path]] = [file_paths[i:i + chunk_size] 
                   for i in range(0, len(file_paths), chunk_size)]
         
         if progress_callback:
             progress_callback(f"Запуск {optimal_threads} потоков...")
         
         with ThreadPoolExecutor(max_workers=optimal_threads) as executor:
-            futures = {executor.submit(self._process_batch, batch): i 
+            futures: Dict[Future[List[str]], int] = {executor.submit(self._process_batch, batch): i 
                       for i, batch in enumerate(batches)}
             
-            processed_batches = 0
+            processed_batches: int = 0
             for future in as_completed(futures):
-                batch_imports = future.result()
+                batch_imports: List[str] = future.result()
                 all_imports.extend(batch_imports)
                 
                 processed_batches += 1
@@ -276,11 +279,11 @@ class FileScanner(IFileScanner):
                 self.performance_manager.optimize_memory()
                 
                 if progress_callback and processed_batches % 5 == 0:
-                    processed_files = processed_batches * chunk_size
+                    processed_files: int = processed_batches * chunk_size
                     progress_callback(f"Обработано {min(processed_files, len(file_paths))}/{len(file_paths)} файлов...")
         
         # Завершение профилирования
-        scan_duration = self.performance_manager.end_profiling("parallel_scan")
+        scan_duration: float = self.performance_manager.end_profiling("parallel_scan")
         
         self.logger.info("Параллельное сканирование завершено", 
                         extra_data={
@@ -301,10 +304,10 @@ class FileScanner(IFileScanner):
         Returns:
             Список всех импортов из батча
         """
-        batch_imports = []
+        batch_imports: List[str] = []
         
         for file_path in file_batch:
-            imports = self.scan_file(file_path)
+            imports: List[str] = self.scan_file(file_path)
             batch_imports.extend(imports)
         
         return batch_imports
@@ -319,7 +322,7 @@ class FileScanner(IFileScanner):
             all_imports: Словарь с импортами
         """
         # Группировка импортов по проектам
-        project_imports = {}
+        project_imports: Dict[str, Set[str]] = {}
         
         for project in projects_data:
             project_imports[project.name] = set()
@@ -328,15 +331,15 @@ class FileScanner(IFileScanner):
         # какие импорты принадлежат каким проектам
         # Пока просто распределяем равномерно
         
-        total_projects = len(projects_data)
+        total_projects: int = len(projects_data)
         if total_projects > 0:
-            imports_per_project = len(all_imports) // total_projects
+            imports_per_project: int = len(all_imports) // total_projects
             
             for i, project in enumerate(projects_data):
-                start_idx = i * imports_per_project
-                end_idx = start_idx + imports_per_project if i < total_projects - 1 else len(all_imports)
+                start_idx: int = i * imports_per_project
+                end_idx: int = start_idx + imports_per_project if i < total_projects - 1 else len(all_imports)
                 
-                project_libraries = list(all_imports.keys())[start_idx:end_idx]
+                project_libraries: List[str] = list(all_imports.keys())[start_idx:end_idx]
                 project.libraries = set(project_libraries)
                 project.total_imports = sum(all_imports[lib] for lib in project_libraries)
                 project.unique_libraries = len(project_libraries)
@@ -351,11 +354,11 @@ class FileScanner(IFileScanner):
         Returns:
             Словарь с данными об импортах
         """
-        total_imports = sum(imports_counter.values())
+        total_imports: int = sum(imports_counter.values())
         
-        imports_data = {}
+        imports_data: Dict[str, ImportData] = {}
         for library, count in imports_counter.items():
-            percentage = (count / total_imports * 100) if total_imports > 0 else 0
+            percentage: float = (count / total_imports * 100) if total_imports > 0 else 0
             
             imports_data[library] = ImportData(
                 library=library,

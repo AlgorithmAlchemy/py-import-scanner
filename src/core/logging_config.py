@@ -7,7 +7,7 @@ import json
 import sys
 from pathlib import Path
 from datetime import datetime
-from typing import Dict, Any, Optional
+from typing import Dict, Any, Optional, Union, List
 from dataclasses import dataclass
 
 
@@ -30,10 +30,10 @@ class LogConfig:
 class StructuredFormatter(logging.Formatter):
     """Структурированный форматтер для логов"""
     
-    def __init__(self, format_type: str = "json", include_extra: bool = True):
+    def __init__(self, format_type: str = "json", include_extra: bool = True) -> None:
         super().__init__()
-        self.format_type = format_type
-        self.include_extra = include_extra
+        self.format_type: str = format_type
+        self.include_extra: bool = include_extra
     
     def format(self, record: logging.LogRecord) -> str:
         """Форматирует запись лога в структурированном виде"""
@@ -46,7 +46,7 @@ class StructuredFormatter(logging.Formatter):
     
     def _format_json(self, record: logging.LogRecord) -> str:
         """Форматирует в JSON"""
-        log_data = {
+        log_data: Dict[str, Any] = {
             "timestamp": datetime.fromtimestamp(record.created).isoformat(),
             "level": record.levelname,
             "logger": record.name,
@@ -73,7 +73,7 @@ class StructuredFormatter(logging.Formatter):
     
     def _format_text(self, record: logging.LogRecord) -> str:
         """Форматирует в текстовом виде"""
-        parts = [
+        parts: List[str] = [
             f"[{datetime.fromtimestamp(record.created).strftime('%Y-%m-%d %H:%M:%S')}]",
             f"[{record.levelname:8}]",
             f"[{record.name}]"
@@ -90,12 +90,12 @@ class StructuredFormatter(logging.Formatter):
         
         # Добавляем экстра поля
         if self.include_extra and hasattr(record, 'extra_data'):
-            extra_str = " ".join(
+            extra_str: str = " ".join(
                 [f"{k}={v}" for k, v in record.extra_data.items()]
             )
             parts.append(f"({extra_str})")
         
-        result = " ".join(parts)
+        result: str = " ".join(parts)
         
         if record.exc_info:
             result += f"\n{self.formatException(record.exc_info)}"
@@ -110,26 +110,26 @@ class StructuredFormatter(logging.Formatter):
 class LoggerManager:
     """Менеджер логирования"""
     
-    def __init__(self, config: LogConfig):
-        self.config = config
+    def __init__(self, config: LogConfig) -> None:
+        self.config: LogConfig = config
         self.loggers: Dict[str, logging.Logger] = {}
         self._setup_logging()
     
-    def _setup_logging(self):
+    def _setup_logging(self) -> None:
         """Настраивает систему логирования"""
         # Создаем директорию для логов
-        log_dir = Path(self.config.log_dir)
+        log_dir: Path = Path(self.config.log_dir)
         log_dir.mkdir(exist_ok=True)
         
         # Настраиваем корневой логгер
-        root_logger = logging.getLogger()
+        root_logger: logging.Logger = logging.getLogger()
         root_logger.setLevel(getattr(logging, self.config.level.upper()))
         
         # Очищаем существующие обработчики
         root_logger.handlers.clear()
         
         # Создаем форматтеры
-        formatters = {
+        formatters: Dict[str, StructuredFormatter] = {
             "json": StructuredFormatter("json"),
             "text": StructuredFormatter("text"),
             "simple": StructuredFormatter("simple")
@@ -137,15 +137,15 @@ class LoggerManager:
         
         # Консольный обработчик
         if self.config.console_enabled:
-            console_handler = logging.StreamHandler(sys.stdout)
+            console_handler: logging.StreamHandler = logging.StreamHandler(sys.stdout)
             console_handler.setLevel(getattr(logging, self.config.level.upper()))
             console_handler.setFormatter(formatters.get(self.config.format, formatters["text"]))
             root_logger.addHandler(console_handler)
         
         # Файловый обработчик
         if self.config.file_enabled:
-            log_file = log_dir / f"app_{datetime.now().strftime('%Y%m%d')}.log"
-            file_handler = logging.handlers.RotatingFileHandler(
+            log_file: Path = log_dir / f"app_{datetime.now().strftime('%Y%m%d')}.log"
+            file_handler: logging.handlers.RotatingFileHandler = logging.handlers.RotatingFileHandler(
                 log_file,
                 maxBytes=self.config.max_file_size,
                 backupCount=self.config.backup_count,
@@ -156,8 +156,8 @@ class LoggerManager:
             root_logger.addHandler(file_handler)
         
         # Обработчик ошибок
-        error_file = log_dir / f"errors_{datetime.now().strftime('%Y%m%d')}.log"
-        error_handler = logging.handlers.RotatingFileHandler(
+        error_file: Path = log_dir / f"errors_{datetime.now().strftime('%Y%m%d')}.log"
+        error_handler: logging.handlers.RotatingFileHandler = logging.handlers.RotatingFileHandler(
             error_file,
             maxBytes=self.config.max_file_size,
             backupCount=self.config.backup_count,
@@ -174,7 +174,7 @@ class LoggerManager:
         return self.loggers[name]
     
     def log_with_context(self, logger: logging.Logger, level: int, message: str, 
-                        extra_data: Optional[Dict[str, Any]] = None, **kwargs):
+                        extra_data: Optional[Dict[str, Any]] = None, **kwargs: Any) -> None:
         """Логирует сообщение с дополнительным контекстом"""
         if extra_data is None:
             extra_data = {}
@@ -183,7 +183,7 @@ class LoggerManager:
         extra_data.update(kwargs)
         
         # Создаем запись с экстра данными
-        record = logger.makeRecord(
+        record: logging.LogRecord = logger.makeRecord(
             logger.name, level, "", 0, message, (), None
         )
         record.extra_data = extra_data
@@ -211,7 +211,7 @@ def get_logger(name: str) -> logging.Logger:
 
 
 def log_with_context(logger: logging.Logger, level: int, message: str,
-                    extra_data: Optional[Dict[str, Any]] = None, **kwargs):
+                    extra_data: Optional[Dict[str, Any]] = None, **kwargs: Any) -> None:
     """Логирует сообщение с контекстом"""
     if _logger_manager is None:
         setup_logging(LogConfig())

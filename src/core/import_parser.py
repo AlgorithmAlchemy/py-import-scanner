@@ -2,8 +2,9 @@
 Модуль парсера импортов Python
 """
 import ast
-from typing import List
+from typing import List, Dict, Any, Optional, Set
 from pathlib import Path
+from collections import Counter
 from .interfaces import IImportParser
 from .configuration import Configuration
 from .logging_config import get_logger
@@ -14,22 +15,22 @@ from .performance import PerformanceManager, PerformanceConfig
 class ImportParser(IImportParser):
     """Парсер импортов Python с оптимизациями"""
     
-    def __init__(self, config: Configuration):
-        self.config = config
-        self._excluded_libs = config.get_excluded_libraries()
+    def __init__(self, config: Configuration) -> None:
+        self.config: Configuration = config
+        self._excluded_libs: Set[str] = config.get_excluded_libraries()
         
         # Инициализация логгера
         self.logger = get_logger("ImportParser")
         
         # Инициализация безопасности
-        security_config_dict = config.get_security_config()
-        security_config = SecurityConfig(**security_config_dict)
-        self.security_manager = SecurityManager(security_config)
+        security_config_dict: Dict[str, Any] = config.get_security_config()
+        security_config: SecurityConfig = SecurityConfig(**security_config_dict)
+        self.security_manager: SecurityManager = SecurityManager(security_config)
         
         # Инициализация производительности
-        performance_config_dict = config.get_performance_config()
-        performance_config = PerformanceConfig(**performance_config_dict)
-        self.performance_manager = PerformanceManager(performance_config)
+        performance_config_dict: Dict[str, Any] = config.get_performance_config()
+        performance_config: PerformanceConfig = PerformanceConfig(**performance_config_dict)
+        self.performance_manager: PerformanceManager = PerformanceManager(performance_config)
         
         self.logger.info("ImportParser инициализирован", 
                         extra_data={"excluded_libs_count": len(self._excluded_libs)})
@@ -46,18 +47,18 @@ class ImportParser(IImportParser):
             Список найденных библиотек
         """
         # Генерация ключа кэша
-        cache_key = self.performance_manager.generate_cache_key(
+        cache_key: str = self.performance_manager.generate_cache_key(
             "parse_imports", str(file_path), hash(content)
         )
         
         # Попытка получить из кэша
-        cached_result = self.performance_manager.get_cached_result(cache_key)
+        cached_result: Optional[List[str]] = self.performance_manager.get_cached_result(cache_key)
         if cached_result is not None:
             self.logger.debug("Результат парсинга найден в кэше", 
                             extra_data={"file": str(file_path)})
             return cached_result
         
-        imports = []
+        imports: List[str] = []
         
         # Быстрая проверка на наличие импортов
         if 'import ' not in content and 'from ' not in content:
@@ -71,10 +72,10 @@ class ImportParser(IImportParser):
                 return imports
             
             # Парсинг AST
-            tree = ast.parse(content, filename=str(file_path))
+            tree: ast.AST = ast.parse(content, filename=str(file_path))
             
             # Обход AST
-            node_count = 0
+            node_count: int = 0
             for node in ast.walk(tree):
                 node_count += 1
                 
@@ -86,13 +87,13 @@ class ImportParser(IImportParser):
                 
                 if isinstance(node, ast.Import):
                     for alias in node.names:
-                        lib = self._extract_library_name(alias.name)
+                        lib: str = self._extract_library_name(alias.name)
                         if lib and self._is_valid_library(lib):
                             imports.append(lib)
                             
                 elif isinstance(node, ast.ImportFrom):
                     if node.module:
-                        lib = self._extract_library_name(node.module)
+                        lib: str = self._extract_library_name(node.module)
                         if lib and self._is_valid_library(lib):
                             imports.append(lib)
                 
@@ -133,7 +134,7 @@ class ImportParser(IImportParser):
             return ""
         
         # Берем только первую часть импорта
-        library = import_name.split('.')[0]
+        library: str = import_name.split('.')[0]
         
         # Проверяем, что это валидный идентификатор
         if not library or not library.isidentifier():
@@ -176,7 +177,7 @@ class ImportParser(IImportParser):
         """
         return library in self._excluded_libs
     
-    def get_import_statistics(self, imports: List[str]) -> dict:
+    def get_import_statistics(self, imports: List[str]) -> Dict[str, Any]:
         """
         Создает статистику по импортам
         
@@ -196,17 +197,16 @@ class ImportParser(IImportParser):
             }
         
         # Подсчет уникальных импортов
-        unique_imports = set(imports)
+        unique_imports: Set[str] = set(imports)
         
         # Разделение на стандартные и сторонние
-        standard_libs = sum(1 for lib in unique_imports
+        standard_libs: int = sum(1 for lib in unique_imports
                             if self.is_standard_library(lib))
-        third_party = len(unique_imports) - standard_libs
+        third_party: int = len(unique_imports) - standard_libs
         
         # Самые частые импорты
-        from collections import Counter
-        counter = Counter(imports)
-        most_common = counter.most_common(10)
+        counter: Counter = Counter(imports)
+        most_common: List[tuple] = counter.most_common(10)
         
         return {
             'total': len(imports),

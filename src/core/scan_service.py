@@ -2,7 +2,7 @@
 Главный сервис для координации сканирования
 """
 from pathlib import Path
-from typing import Optional, Callable
+from typing import Optional, Callable, Dict, List, Any, Tuple
 from .interfaces import ScanResult, IProgressReporter
 from .configuration import Configuration
 from .import_parser import ImportParser
@@ -17,50 +17,50 @@ from .performance import PerformanceManager, PerformanceConfig
 class ScanService:
     """Главный сервис для координации сканирования"""
     
-    def __init__(self, config: Configuration = None):
+    def __init__(self, config: Optional[Configuration] = None) -> None:
         """
         Инициализация сервиса
         
         Args:
             config: Конфигурация (если None, создается по умолчанию)
         """
-        self.config = config or Configuration()
+        self.config: Configuration = config or Configuration()
         
         # Настройка логирования
-        log_config_dict = self.config.get_logging_config()
-        log_config = LogConfig(**log_config_dict)
+        log_config_dict: Dict[str, Any] = self.config.get_logging_config()
+        log_config: LogConfig = LogConfig(**log_config_dict)
         setup_logging(log_config)
         self.logger = get_logger("ScanService")
         
         # Создание зависимостей
-        self.import_parser = ImportParser(self.config)
-        self.project_analyzer = ProjectAnalyzer(self.config)
-        self.file_scanner = FileScanner(
+        self.import_parser: ImportParser = ImportParser(self.config)
+        self.project_analyzer: ProjectAnalyzer = ProjectAnalyzer(self.config)
+        self.file_scanner: FileScanner = FileScanner(
             self.config, 
             self.import_parser, 
             self.project_analyzer
         )
-        self.data_exporter = DataExporter()
+        self.data_exporter: DataExporter = DataExporter()
         
         # Инициализация безопасности
-        security_config_dict = self.config.get_security_config()
-        security_config = SecurityConfig(**security_config_dict)
-        self.security_manager = SecurityManager(security_config)
+        security_config_dict: Dict[str, Any] = self.config.get_security_config()
+        security_config: SecurityConfig = SecurityConfig(**security_config_dict)
+        self.security_manager: SecurityManager = SecurityManager(security_config)
         
         # Инициализация производительности
-        performance_config_dict = self.config.get_performance_config()
-        performance_config = PerformanceConfig(**performance_config_dict)
-        self.performance_manager = PerformanceManager(performance_config)
+        performance_config_dict: Dict[str, Any] = self.config.get_performance_config()
+        performance_config: PerformanceConfig = PerformanceConfig(**performance_config_dict)
+        self.performance_manager: PerformanceManager = PerformanceManager(performance_config)
         
         # Состояние
         self.last_scan_result: Optional[ScanResult] = None
-        self.is_scanning = False
+        self.is_scanning: bool = False
         
         self.logger.info("ScanService инициализирован", 
                         extra_data={"config_file": str(self.config.config_file)})
     
     def scan_directory(self, directory: Path, 
-                      progress_callback: Optional[Callable] = None) -> ScanResult:
+                      progress_callback: Optional[Callable[[str, Optional[float]], None]] = None) -> ScanResult:
         """
         Сканирует директорию
         
@@ -82,6 +82,8 @@ class ScanService:
             self.is_scanning = True
             
             # Валидация безопасности
+            is_valid: bool
+            message: str
             is_valid, message = self.security_manager.validate_scan_request(directory)
             if not is_valid:
                 self.logger.error("Ошибка валидации безопасности", 
@@ -93,13 +95,13 @@ class ScanService:
             
             # Выполнение сканирования
             self.logger.info("Запуск сканирования файлов")
-            result = self.file_scanner.scan_directory(directory, progress_callback)
+            result: ScanResult = self.file_scanner.scan_directory(directory, progress_callback)
             
             # Сохранение результата
             self.last_scan_result = result
             
             # Завершение профилирования
-            scan_duration = self.performance_manager.end_profiling("scan_directory")
+            scan_duration: float = self.performance_manager.end_profiling("scan_directory")
             
             # Сохранение данных производительности
             self.performance_manager.save_performance_data()
@@ -134,7 +136,7 @@ class ScanService:
     
     def export_results(self, result: ScanResult, 
                       output_dir: Path,
-                      formats: list = None) -> dict:
+                      formats: Optional[List[str]] = None) -> Dict[str, Path]:
         """
         Экспортирует результаты в различные форматы
         
@@ -153,39 +155,39 @@ class ScanService:
         output_dir.mkdir(parents=True, exist_ok=True)
         
         # Генерация имени файла с временной меткой
-        timestamp = result.scan_timestamp.strftime('%Y%m%d_%H%M%S')
-        base_name = f"import_scan_{timestamp}"
+        timestamp: str = result.scan_timestamp.strftime('%Y%m%d_%H%M%S')
+        base_name: str = f"import_scan_{timestamp}"
         
-        exported_files = {}
+        exported_files: Dict[str, Path] = {}
         
         try:
             # Экспорт в CSV
             if 'csv' in formats:
-                csv_path = output_dir / f"{base_name}.csv"
+                csv_path: Path = output_dir / f"{base_name}.csv"
                 self.data_exporter.export_to_csv(result, csv_path)
                 exported_files['csv'] = csv_path
             
             # Экспорт в JSON
             if 'json' in formats:
-                json_path = output_dir / f"{base_name}.json"
+                json_path: Path = output_dir / f"{base_name}.json"
                 self.data_exporter.export_to_json(result, json_path)
                 exported_files['json'] = json_path
             
             # Экспорт в Excel
             if 'excel' in formats:
-                excel_path = output_dir / f"{base_name}.xlsx"
+                excel_path: Path = output_dir / f"{base_name}.xlsx"
                 self.data_exporter.export_to_excel(result, excel_path)
                 exported_files['excel'] = excel_path
             
             # Экспорт краткого отчета
             if 'txt' in formats:
-                txt_path = output_dir / f"{base_name}_report.txt"
+                txt_path: Path = output_dir / f"{base_name}_report.txt"
                 self.data_exporter.export_summary_report(result, txt_path)
                 exported_files['txt'] = txt_path
             
             # Экспорт только импортов
             if 'imports_csv' in formats:
-                imports_csv_path = output_dir / f"{base_name}_imports.csv"
+                imports_csv_path: Path = output_dir / f"{base_name}_imports.csv"
                 self.data_exporter.export_imports_only_csv(result, imports_csv_path)
                 exported_files['imports_csv'] = imports_csv_path
                 
@@ -194,7 +196,7 @@ class ScanService:
         
         return exported_files
     
-    def get_performance_report(self) -> dict:
+    def get_performance_report(self) -> Dict[str, Any]:
         """
         Возвращает отчет о производительности
         
@@ -203,7 +205,7 @@ class ScanService:
         """
         return self.performance_manager.get_performance_report()
     
-    def get_scan_statistics(self, result: ScanResult) -> dict:
+    def get_scan_statistics(self, result: ScanResult) -> Dict[str, Any]:
         """
         Возвращает статистику сканирования
         
@@ -217,13 +219,13 @@ class ScanService:
             return {}
         
         # Статистика импортов
-        imports_stats = self.import_parser.get_import_statistics(
+        imports_stats: Dict[str, Any] = self.import_parser.get_import_statistics(
             [lib for lib, data in result.imports_data.items() 
              for _ in range(data.count)]
         )
         
         # Статистика проектов
-        projects_stats = self.project_analyzer.get_project_statistics(
+        projects_stats: Dict[str, Any] = self.project_analyzer.get_project_statistics(
             result.projects_data
         )
         
@@ -241,7 +243,7 @@ class ScanService:
             }
         }
     
-    def validate_directory(self, directory: Path) -> tuple[bool, str]:
+    def validate_directory(self, directory: Path) -> Tuple[bool, str]:
         """
         Проверяет валидность директории для сканирования
         
@@ -258,7 +260,7 @@ class ScanService:
             return False, f"Путь не является директорией: {directory}"
         
         # Проверка на наличие Python файлов
-        python_files = list(directory.rglob("*.py"))
+        python_files: List[Path] = list(directory.rglob("*.py"))
         if not python_files:
             return False, "В директории не найдено Python файлов"
         
@@ -273,7 +275,7 @@ class ScanService:
         """
         return self.config
     
-    def update_configuration(self, **kwargs) -> None:
+    def update_configuration(self, **kwargs: Any) -> None:
         """
         Обновляет конфигурацию
         

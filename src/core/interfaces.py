@@ -2,7 +2,7 @@
 Интерфейсы для определения контрактов между модулями
 """
 from abc import ABC, abstractmethod
-from typing import Dict, List, Set, Optional
+from typing import Dict, List, Set, Optional, Any, Callable
 from pathlib import Path
 from dataclasses import dataclass
 from datetime import datetime
@@ -46,7 +46,9 @@ class IFileScanner(ABC):
     
     @abstractmethod
     def scan_directory(self, directory: Path,
-                       progress_callback=None) -> ScanResult:
+                       progress_callback: Optional[
+                           Callable[[str, Optional[float]], None]
+                       ] = None) -> ScanResult:
         """Сканирует директорию и возвращает результаты"""
         pass
     
@@ -102,7 +104,8 @@ class IProgressReporter(ABC):
     """Интерфейс для отчетов о прогрессе"""
     
     @abstractmethod
-    def report_progress(self, message: str, percentage: Optional[float] = None) -> None:
+    def report_progress(self, message: str, 
+                       percentage: Optional[float] = None) -> None:
         """Отправляет отчет о прогрессе"""
         pass
     
@@ -136,31 +139,31 @@ class IConfiguration(ABC):
         pass
     
     @abstractmethod
-    def get_logging_config(self) -> dict:
+    def get_logging_config(self) -> Dict[str, Any]:
         """Возвращает конфигурацию логирования"""
         pass
     
     @abstractmethod
-    def update_logging_config(self, key: str, value) -> None:
+    def update_logging_config(self, key: str, value: Any) -> None:
         """Обновляет настройку логирования"""
         pass
     
     @abstractmethod
-    def get_security_config(self) -> dict:
+    def get_security_config(self) -> Dict[str, Any]:
         """Возвращает конфигурацию безопасности"""
         pass
     
     @abstractmethod
-    def update_security_config(self, key: str, value) -> None:
+    def update_security_config(self, key: str, value: Any) -> None:
         """Обновляет настройку безопасности"""
         pass
     
     @abstractmethod
-    def get_performance_config(self) -> dict:
+    def get_performance_config(self) -> Dict[str, Any]:
         """Возвращает конфигурацию производительности"""
         pass
     
     @abstractmethod
-    def update_performance_config(self, key: str, value) -> None:
+    def update_performance_config(self, key: str, value: Any) -> None:
         """Обновляет настройку производительности"""
         pass
