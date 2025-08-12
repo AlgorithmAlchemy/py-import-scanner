@@ -7,6 +7,7 @@ from pathlib import Path
 from .interfaces import IImportParser
 from .configuration import Configuration
 from .logging_config import get_logger
+from .security import SecurityManager, SecurityConfig
 
 
 class ImportParser(IImportParser):
@@ -18,6 +19,12 @@ class ImportParser(IImportParser):
         
         # Инициализация логгера
         self.logger = get_logger("ImportParser")
+        
+        # Инициализация безопасности
+        security_config_dict = config.get_security_config()
+        security_config = SecurityConfig(**security_config_dict)
+        self.security_manager = SecurityManager(security_config)
+        
         self.logger.info("ImportParser инициализирован", 
                         extra_data={"excluded_libs_count": len(self._excluded_libs)})
     
@@ -39,11 +46,26 @@ class ImportParser(IImportParser):
             return imports
         
         try:
+            # Проверка лимитов AST
+            if len(content) > self.security_manager.config.max_ast_nodes:
+                self.logger.warning("Файл слишком большой для AST парсинга", 
+                                  extra_data={"file": str(file_path)})
+                return imports
+            
             # Парсинг AST
             tree = ast.parse(content, filename=str(file_path))
             
             # Обход AST
+            node_count = 0
             for node in ast.walk(tree):
+                node_count += 1
+                
+                # Проверка лимита узлов AST
+                if node_count > self.security_manager.config.max_ast_nodes:
+                    self.logger.warning("Превышен лимит узлов AST", 
+                                      extra_data={"file": str(file_path)})
+                    break
+                
                 if isinstance(node, ast.Import):
                     for alias in node.names:
                         lib = self._extract_library_name(alias.name)
@@ -57,7 +79,7 @@ class ImportParser(IImportParser):
                             imports.append(lib)
                 
                 # Ранний выход для оптимизации
-                if len(imports) > 50:
+                if len(imports) > self.security_manager.config.max_imports_per_file:
                     break
                     
         except (SyntaxError, ValueError) as e:

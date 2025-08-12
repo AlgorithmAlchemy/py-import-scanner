@@ -14,6 +14,7 @@ from .import_parser import ImportParser
 from .project_analyzer import ProjectAnalyzer
 from .configuration import Configuration
 from .logging_config import get_logger
+from .security import SecurityManager, SecurityConfig
 
 
 class FileScanner(IFileScanner):
@@ -33,6 +34,12 @@ class FileScanner(IFileScanner):
         
         # Инициализация логгера
         self.logger = get_logger("FileScanner")
+        
+        # Инициализация безопасности
+        security_config_dict = config.get_security_config()
+        security_config = SecurityConfig(**security_config_dict)
+        self.security_manager = SecurityManager(security_config)
+        
         self.logger.info("FileScanner инициализирован", 
                         extra_data={
                             "max_workers": self._max_workers,
@@ -119,8 +126,11 @@ class FileScanner(IFileScanner):
             Список найденных библиотек
         """
         try:
-            # Проверка размера файла
-            if file_path.stat().st_size > self._max_file_size:
+            # Валидация безопасности
+            is_valid, message = self.security_manager.validate_file(file_path)
+            if not is_valid:
+                self.logger.warning("Файл не прошел валидацию безопасности", 
+                                  extra_data={"file": str(file_path), "error": message})
                 return []
             
             # Чтение файла с поддержкой разных кодировок
@@ -128,10 +138,28 @@ class FileScanner(IFileScanner):
             if not content:
                 return []
             
-            # Парсинг импортов
-            return self.import_parser.parse_imports(content, file_path)
+            # Валидация и санитизация содержимого
+            is_valid, message, sanitized_content = self.security_manager.validate_and_sanitize_content(content, file_path)
+            if not is_valid:
+                self.logger.warning("Содержимое файла не прошло валидацию", 
+                                  extra_data={"file": str(file_path), "error": message})
+                return []
             
-        except Exception:
+            # Парсинг импортов
+            imports = self.import_parser.parse_imports(sanitized_content, file_path)
+            
+            # Валидация импортов
+            is_valid, message = self.security_manager.validate_imports(imports, file_path)
+            if not is_valid:
+                self.logger.warning("Импорты не прошли валидацию", 
+                                  extra_data={"file": str(file_path), "error": message})
+                return []
+            
+            return imports
+            
+        except Exception as e:
+            self.logger.error("Ошибка сканирования файла", 
+                            extra_data={"file": str(file_path), "error": str(e)})
             return []
     
     def _find_python_files(self, directory: Path) -> List[Path]:

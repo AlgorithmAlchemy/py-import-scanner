@@ -10,6 +10,7 @@ from .project_analyzer import ProjectAnalyzer
 from .file_scanner import FileScanner
 from .data_exporter import DataExporter
 from .logging_config import setup_logging, get_logger, LogConfig
+from .security import SecurityManager, SecurityConfig
 
 
 class ScanService:
@@ -40,6 +41,11 @@ class ScanService:
         )
         self.data_exporter = DataExporter()
         
+        # Инициализация безопасности
+        security_config_dict = self.config.get_security_config()
+        security_config = SecurityConfig(**security_config_dict)
+        self.security_manager = SecurityManager(security_config)
+        
         # Состояние
         self.last_scan_result: Optional[ScanResult] = None
         self.is_scanning = False
@@ -69,16 +75,12 @@ class ScanService:
         try:
             self.is_scanning = True
             
-            # Проверка существования директории
-            if not directory.exists():
-                self.logger.error("Директория не найдена", 
-                                extra_data={"directory": str(directory)})
-                raise FileNotFoundError(f"Директория не найдена: {directory}")
-            
-            if not directory.is_dir():
-                self.logger.error("Путь не является директорией", 
-                                extra_data={"path": str(directory)})
-                raise ValueError(f"Путь не является директорией: {directory}")
+            # Валидация безопасности
+            is_valid, message = self.security_manager.validate_scan_request(directory)
+            if not is_valid:
+                self.logger.error("Ошибка валидации безопасности", 
+                                extra_data={"directory": str(directory), "error": message})
+                raise ValueError(f"Ошибка валидации безопасности: {message}")
             
             # Выполнение сканирования
             self.logger.info("Запуск сканирования файлов")

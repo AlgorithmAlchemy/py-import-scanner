@@ -144,3 +144,13 @@ class IConfiguration(ABC):
     def update_logging_config(self, key: str, value) -> None:
         """Обновляет настройку логирования"""
         pass
+    
+    @abstractmethod
+    def get_security_config(self) -> dict:
+        """Возвращает конфигурацию безопасности"""
+        pass
+    
+    @abstractmethod
+    def update_security_config(self, key: str, value) -> None:
+        """Обновляет настройку безопасности"""
+        pass

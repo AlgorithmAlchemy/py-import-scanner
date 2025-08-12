@@ -79,6 +79,29 @@ class Configuration(IConfiguration):
                 "include_module": True,
                 "include_function": True,
                 "include_line": True
+            },
+            "security": {
+                "max_file_size": 50 * 1024 * 1024,
+                "max_files_per_scan": 10000,
+                "max_total_size": 1024 * 1024 * 1024,
+                "max_line_length": 10000,
+                "max_imports_per_file": 1000,
+                "max_ast_nodes": 100000,
+                "max_path_length": 4096,
+                "max_scan_duration": 3600,
+                "max_memory_usage": 1024 * 1024 * 1024,
+                "max_threads": 8,
+                "check_for_malicious_patterns": True,
+                "validate_imports": True,
+                "sanitize_content": True,
+                "allowed_extensions": [".py", ".pyw", ".pyx", ".pxd"],
+                "blocked_patterns": [
+                    "__pycache__", ".git", ".svn", ".hg", ".bzr",
+                    "node_modules", "venv", ".venv", "env", ".env",
+                    "build", "dist", ".pytest_cache", ".coverage",
+                    ".tox", ".mypy_cache", ".cache", "tmp", "temp"
+                ],
+                "safe_directories": []
             }
         }
     
@@ -137,4 +160,15 @@ class Configuration(IConfiguration):
         if "logging" not in self._config:
             self._config["logging"] = {}
         self._config["logging"][key] = value
+        self._save_config()
+    
+    def get_security_config(self) -> dict:
+        """Возвращает конфигурацию безопасности"""
+        return self._config.get("security", {})
+    
+    def update_security_config(self, key: str, value) -> None:
+        """Обновляет настройку безопасности"""
+        if "security" not in self._config:
+            self._config["security"] = {}
+        self._config["security"][key] = value
         self._save_config()
