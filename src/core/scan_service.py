@@ -19,6 +19,7 @@ from .patterns import (
 )
 from .complexity_analyzer import ComplexityAnalyzer, ProjectComplexityReport
 from .code_quality_analyzer import CodeQualityAnalyzer, ProjectQualityReport
+from .dependency_analyzer import DependencyAnalyzer, DependencyReport
 
 
 class ScanService:
@@ -69,6 +70,8 @@ class ScanService:
         
         # Инициализация анализатора качества кода
         self.quality_analyzer = CodeQualityAnalyzer()
+        # Инициализация анализатора зависимостей
+        self.dependency_analyzer = DependencyAnalyzer()
         
         # Инициализация субъекта для Observer паттерна
         self.scan_subject: ScanSubject = ScanSubject()
@@ -595,4 +598,59 @@ class ScanService:
         except Exception as e:
             self.logger.error("Ошибка при анализе качества кода проекта", 
                             extra_data={"directory": str(directory), "error": str(e)})
+            raise
+
+    def analyze_dependencies(self, requirements_path: Path) -> DependencyReport:
+        """
+        Анализирует зависимости в requirements.txt
+        
+        Args:
+            requirements_path: Путь к файлу requirements.txt
+            
+        Returns:
+            Отчет об анализе зависимостей
+        """
+        self.logger.info("Анализ зависимостей", 
+                        extra_data={"requirements_path": str(requirements_path)})
+        
+        try:
+            report = self.dependency_analyzer.analyze_requirements(requirements_path)
+            
+            self.logger.info("Анализ зависимостей завершен", 
+                            extra_data={
+                                "total_packages": report.total_packages,
+                                "vulnerable_packages": report.vulnerable_packages,
+                                "outdated_count": report.outdated_count,
+                                "duplicates_count": report.duplicates_count
+                            })
+            
+            return report
+            
+        except Exception as e:
+            self.logger.error("Ошибка при анализе зависимостей", 
+                            extra_data={"requirements_path": str(requirements_path), "error": str(e)})
+            raise
+
+    def export_dependency_report(self, report: DependencyReport, 
+                                output_path: Path, format: str = 'json') -> None:
+        """
+        Экспортирует отчет о зависимостях
+        
+        Args:
+            report: Отчет о зависимостях
+            output_path: Путь для сохранения отчета
+            format: Формат экспорта (json, csv, txt)
+        """
+        self.logger.info("Экспорт отчета о зависимостях", 
+                        extra_data={"output_path": str(output_path), "format": format})
+        
+        try:
+            self.dependency_analyzer.export_report(report, output_path, format)
+            
+            self.logger.info("Отчет о зависимостях экспортирован", 
+                            extra_data={"output_path": str(output_path)})
+            
+        except Exception as e:
+            self.logger.error("Ошибка при экспорте отчета о зависимостях", 
+                            extra_data={"output_path": str(output_path), "error": str(e)})
             raise
