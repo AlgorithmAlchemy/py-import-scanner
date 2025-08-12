@@ -6,8 +6,9 @@ import re
 import hashlib
 import tempfile
 from pathlib import Path, PurePath
-from typing import Optional, List, Dict, Any, Tuple, Set
-from dataclasses import dataclass
+
+from typing import Optional, List, Dict, Any, Tuple, Set, Pattern
+from dataclasses import dataclass, field
 from urllib.parse import urlparse
 import logging
 from concurrent.futures import ThreadPoolExecutor
@@ -32,9 +33,14 @@ class SecurityConfig:
     
     # Ограничения путей
     max_path_length: int = 4096
-    allowed_extensions: Set[str] = None
-    blocked_patterns: Set[str] = None
-    safe_directories: Set[str] = None
+    allowed_extensions: Set[str] = field(default_factory=lambda: {'.py', '.pyw', '.pyx', '.pxd'})
+    blocked_patterns: Set[str] = field(default_factory=lambda: {
+        '__pycache__', '.git', '.svn', '.hg', '.bzr',
+        'node_modules', 'venv', '.venv', 'env', '.env',
+        'build', 'dist', '.pytest_cache', '.coverage',
+        '.tox', '.mypy_cache', '.cache', 'tmp', 'temp'
+    })
+    safe_directories: Set[str] = field(default_factory=set)
     
     # Ограничения ресурсов
     max_scan_duration: int = 3600  # 1 час
@@ -45,32 +51,17 @@ class SecurityConfig:
     check_for_malicious_patterns: bool = True
     validate_imports: bool = True
     sanitize_content: bool = True
-    
-    def __post_init__(self):
-        if self.allowed_extensions is None:
-            self.allowed_extensions = {'.py', '.pyw', '.pyx', '.pxd'}
-        
-        if self.blocked_patterns is None:
-            self.blocked_patterns = {
-                '__pycache__', '.git', '.svn', '.hg', '.bzr',
-                'node_modules', 'venv', '.venv', 'env', '.env',
-                'build', 'dist', '.pytest_cache', '.coverage',
-                '.tox', '.mypy_cache', '.cache', 'tmp', 'temp'
-            }
-        
-        if self.safe_directories is None:
-            self.safe_directories = set()
 
 
 class SecurityValidator:
     """Валидатор безопасности"""
     
-    def __init__(self, config: SecurityConfig):
-        self.config = config
+    def __init__(self, config: SecurityConfig) -> None:
+        self.config: SecurityConfig = config
         self.logger = get_logger("SecurityValidator")
         
         # Компилируем регулярные выражения для производительности
-        self._malicious_patterns = [
+        self._malicious_patterns: List[Pattern] = [
             re.compile(r'eval\s*\(', re.IGNORECASE),
             re.compile(r'exec\s*\(', re.IGNORECASE),
             re.compile(r'__import__\s*\(', re.IGNORECASE),
@@ -84,7 +75,7 @@ class SecurityValidator:
         ]
         
         # Паттерны для подозрительных импортов
-        self._suspicious_imports = {
+        self._suspicious_imports: Set[str] = {
             'pickle', 'marshal', 'shelve', 'dill', 'cloudpickle',
             'subprocess', 'os', 'sys', 'ctypes', 'mmap',
             'socket', 'urllib', 'requests', 'ftplib', 'smtplib',
@@ -92,10 +83,10 @@ class SecurityValidator:
         }
         
         # Счетчики для отслеживания ресурсов
-        self._scan_start_time = None
-        self._total_files_processed = 0
-        self._total_size_processed = 0
-        self._lock = threading.Lock()
+        self._scan_start_time: Optional[float] = None
+        self._total_files_processed: int = 0
+        self._total_size_processed: int = 0
+        self._lock: threading.Lock = threading.Lock()
     
     def start_scan(self) -> None:
         """Начинает новое сканирование"""
@@ -125,7 +116,7 @@ class SecurityValidator:
                 return False, "Абсолютные пути не разрешены"
             
             # Проверка на path traversal
-            normalized_path = PurePath(file_path).resolve()
+            normalized_path: PurePath = PurePath(file_path).resolve()
             if self._contains_path_traversal(str(normalized_path)):
                 return False, "Обнаружена попытка path traversal"
             
@@ -162,7 +153,7 @@ class SecurityValidator:
             Кортеж (валиден, сообщение об ошибке)
         """
         try:
-            file_size = file_path.stat().st_size
+            file_size: int = file_path.stat().st_size
             
             # Проверка максимального размера файла
             if file_size > self.config.max_file_size:
@@ -197,7 +188,7 @@ class SecurityValidator:
                 return False, "Содержимое файла слишком большое"
             
             # Проверка длины строк
-            lines = content.split('\n')
+            lines: List[str] = content.split('\n')
             for i, line in enumerate(lines, 1):
                 if len(line) > self.config.max_line_length:
                     return False, f"Строка {i} слишком длинная: {len(line)} символов"
@@ -214,7 +205,7 @@ class SecurityValidator:
                         return False, f"Обнаружен подозрительный паттерн: {pattern.pattern}"
             
             # Проверка количества импортов
-            import_count = content.count('import ') + content.count('from ')
+            import_count: int = content.count('import ') + content.count('from ')
             if import_count > self.config.max_imports_per_file:
                 return False, f"Слишком много импортов: {import_count}"
             
@@ -238,7 +229,7 @@ class SecurityValidator:
             return True, "OK"
         
         try:
-            suspicious_imports = []
+            suspicious_imports: List[str] = []
             
             for import_name in imports:
                 # Проверка на подозрительные импорты
@@ -286,7 +277,7 @@ class SecurityValidator:
             content = content.replace('\r\n', '\n').replace('\r', '\n')
             
             # Удаление лишних пробелов в конце строк
-            lines = content.split('\n')
+            lines: List[str] = content.split('\n')
             lines = [line.rstrip() for line in lines]
             content = '\n'.join(lines)
             
@@ -307,7 +298,7 @@ class SecurityValidator:
         try:
             # Проверка времени сканирования
             if self._scan_start_time:
-                elapsed_time = time.time() - self._scan_start_time
+                elapsed_time: float = time.time() - self._scan_start_time
                 if elapsed_time > self.config.max_scan_duration:
                     return False, f"Превышено время сканирования: {elapsed_time:.2f}с"
             
@@ -319,7 +310,7 @@ class SecurityValidator:
             # Проверка памяти (базовая)
             import psutil
             process = psutil.Process()
-            memory_usage = process.memory_info().rss
+            memory_usage: int = process.memory_info().rss
             if memory_usage > self.config.max_memory_usage:
                 return False, f"Превышено использование памяти: {memory_usage} байт"
             
@@ -338,12 +329,12 @@ class SecurityValidator:
     
     def _contains_path_traversal(self, path: str) -> bool:
         """Проверяет наличие path traversal в пути"""
-        dangerous_patterns = [
+        dangerous_patterns: List[str] = [
             '..', '../', '..\\', '..%2f', '..%5c',
             '%2e%2e', '%2e%2e%2f', '%2e%2e%5c'
         ]
         
-        normalized_path = path.lower()
+        normalized_path: str = path.lower()
         for pattern in dangerous_patterns:
             if pattern in normalized_path:
                 return True
@@ -374,14 +365,14 @@ class SecurityValidator:
 class SecurityManager:
     """Менеджер безопасности"""
     
-    def __init__(self, config: SecurityConfig = None):
-        self.config = config or SecurityConfig()
-        self.validator = SecurityValidator(self.config)
+    def __init__(self, config: Optional[SecurityConfig] = None) -> None:
+        self.config: SecurityConfig = config or SecurityConfig()
+        self.validator: SecurityValidator = SecurityValidator(self.config)
         self.logger = get_logger("SecurityManager")
         
         # Кэш для хешей файлов
         self._file_hashes: Dict[str, str] = {}
-        self._hash_lock = threading.Lock()
+        self._hash_lock: threading.Lock = threading.Lock()
     
     def validate_scan_request(self, directory: Path) -> Tuple[bool, str]:
         """
@@ -407,7 +398,7 @@ class SecurityManager:
             
             # Проверка на безопасные директории
             if self.config.safe_directories:
-                is_safe = False
+                is_safe: bool = False
                 for safe_dir in self.config.safe_directories:
                     try:
                         directory.resolve().relative_to(Path(safe_dir).resolve())
@@ -439,6 +430,8 @@ class SecurityManager:
         """
         try:
             # Валидация пути
+            is_valid: bool
+            message: str
             is_valid, message = self.validator.validate_file_path(file_path)
             if not is_valid:
                 return False, message
@@ -474,12 +467,14 @@ class SecurityManager:
         """
         try:
             # Валидация содержимого
+            is_valid: bool
+            message: str
             is_valid, message = self.validator.validate_file_content(content, file_path)
             if not is_valid:
                 return False, message, content
             
             # Санитизация содержимого
-            sanitized_content = self.validator.sanitize_content(content)
+            sanitized_content: str = self.validator.sanitize_content(content)
             
             return True, "OK", sanitized_content
             
@@ -509,7 +504,7 @@ class SecurityManager:
         Returns:
             Хеш файла
         """
-        file_str = str(file_path)
+        file_str: str = str(file_path)
         
         with self._hash_lock:
             if file_str in self._file_hashes:
@@ -522,7 +517,7 @@ class SecurityManager:
                 for chunk in iter(lambda: f.read(4096), b""):
                     hash_md5.update(chunk)
             
-            file_hash = hash_md5.hexdigest()
+            file_hash: str = hash_md5.hexdigest()
             
             with self._hash_lock:
                 self._file_hashes[file_str] = file_hash
