@@ -3,11 +3,13 @@
 [![Matplotlib](https://img.shields.io/badge/Matplotlib-3.8+-orange)](https://matplotlib.org/stable/)
 [![License](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Platform](https://img.shields.io/badge/Platform-Windows%20%7C%20Linux%20%7C%20macOS-critical)]()
-## 🔄 Последнее обновление — v2.2.0
+## 🔄 Последнее обновление — v2.3.0
 
 > 📅 Дата релиза: 2025-01-27
 
-- ⚡ Ультра-быстрая оптимизация производительности:📈 Графики по времени создания проектов
+- 🌍 **Новая функция**: Английская локализация в графическом интерфейсе
+- ⚡ Ультра-быстрая оптимизация производительности
+- 📈 Графики по времени создания проектов
 - 🚀 Технические оптимизации
 - 📊 Улучшения интерфейса, модернизация на PySide6
 - 🔧 Архитектурные улучшения
@@ -17,13 +19,14 @@
 
 #
 
-
-<a href="https://github.com/AlgorithmAlchemy/py-import-scanner/blob/main/README_en.md" style="text-decoration: none;">
-    <button style="background-color: #4CAF50; color: white; padding: 10px 20px; text-align: center; display: inline-block; font-size: 16px; margin: 4px 2px; cursor: pointer; border: none;">
-        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/be/Flag_of_England.svg/32px-Flag_of_England.svg.png" alt="English" style="vertical-align: middle; padding-right: 8px;" />
-         ENG READMY
+<div align="center">
+  <a href="README_en.md" style="text-decoration: none;">
+    <button style="background: linear-gradient(45deg, #4CAF50, #45a049); color: white; padding: 12px 24px; text-align: center; display: inline-block; font-size: 16px; margin: 8px 4px; cursor: pointer; border: none; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.2); transition: all 0.3s ease;">
+      <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/be/Flag_of_England.svg/32px-Flag_of_England.svg.png" alt="English" style="vertical-align: middle; padding-right: 8px;" />
+      📖 English README
     </button>
-</a>
+  </a>
+</div>
 
 **Program provides**:
 <img src="data/ezgif.com-animated-gif-maker.gif" style="width: 80%;" />
@@ -47,6 +50,7 @@
 - Генерирует статистику по импортам.
 - Отображает гистограммы и круговые диаграммы с использованием `matplotlib`.
 - Возможность копировать статистику в буфер обмена.
+- 🌍 **Многоязычная поддержка**: Английская и русская локализация интерфейса.
 
 ## Установка
 
