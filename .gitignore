@@ -41,3 +41,5 @@ libraries/
 .cursorrules
 .cursorignore
 .cursor.toml
+/PATTERNS_FINAL_REPORT.md
+/PATTERNS_REPORT.md
