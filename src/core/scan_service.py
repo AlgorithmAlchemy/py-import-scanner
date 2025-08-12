@@ -17,6 +17,7 @@ from .patterns import (
     ScanSubject, ProgressObserver, LoggingObserver, MetricsObserver,
     ScanConfigurationBuilder, ScanConfiguration
 )
+from .complexity_analyzer import ComplexityAnalyzer, ProjectComplexityReport
 
 
 class ScanService:
@@ -61,6 +62,9 @@ class ScanService:
         self.performance_manager: PerformanceManager = self.component_factory.create_component(
             ComponentType.PERFORMANCE_MANAGER
         )
+        
+        # Инициализация анализатора сложности
+        self.complexity_analyzer = ComplexityAnalyzer()
         
         # Инициализация субъекта для Observer паттерна
         self.scan_subject: ScanSubject = ScanSubject()
@@ -453,3 +457,70 @@ class ScanService:
             Субъект наблюдателей
         """
         return self.scan_subject
+    
+    def analyze_complexity(self, directory: Path) -> ProjectComplexityReport:
+        """
+        Анализирует сложность кода в проекте
+        
+        Args:
+            directory: Директория проекта для анализа
+            
+        Returns:
+            Отчет о сложности проекта
+        """
+        self.logger.info("Начало анализа сложности кода", 
+                        extra_data={"directory": str(directory)})
+        
+        try:
+            # Валидация директории
+            is_valid: bool
+            message: str
+            is_valid, message = self.validate_directory(directory)
+            if not is_valid:
+                raise ValueError(f"Ошибка валидации директории: {message}")
+            
+            # Анализ сложности
+            report = self.complexity_analyzer.analyze_project(directory)
+            
+            self.logger.info("Анализ сложности завершен", 
+                            extra_data={
+                                "total_files": report.total_files,
+                                "average_complexity": report.average_complexity
+                            })
+            
+            return report
+            
+        except Exception as e:
+            self.logger.error("Ошибка при анализе сложности", 
+                            extra_data={"directory": str(directory), "error": str(e)})
+            raise
+    
+    def analyze_file_complexity(self, file_path: Path) -> 'FileComplexityReport':
+        """
+        Анализирует сложность отдельного файла
+        
+        Args:
+            file_path: Путь к файлу для анализа
+            
+        Returns:
+            Отчет о сложности файла
+        """
+        self.logger.info("Анализ сложности файла", 
+                        extra_data={"file_path": str(file_path)})
+        
+        try:
+            report = self.complexity_analyzer.analyze_file(file_path)
+            
+            self.logger.info("Анализ сложности файла завершен", 
+                            extra_data={
+                                "file_path": str(file_path),
+                                "grade": report.grade,
+                                "complexity": report.metrics.cyclomatic_complexity
+                            })
+            
+            return report
+            
+        except Exception as e:
+            self.logger.error("Ошибка при анализе сложности файла", 
+                            extra_data={"file_path": str(file_path), "error": str(e)})
+            raise
