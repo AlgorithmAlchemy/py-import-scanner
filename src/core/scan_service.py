@@ -9,6 +9,7 @@ from .import_parser import ImportParser
 from .project_analyzer import ProjectAnalyzer
 from .file_scanner import FileScanner
 from .data_exporter import DataExporter
+from .logging_config import setup_logging, get_logger, LogConfig
 
 
 class ScanService:
@@ -23,6 +24,12 @@ class ScanService:
         """
         self.config = config or Configuration()
         
+        # Настройка логирования
+        log_config_dict = self.config.get_logging_config()
+        log_config = LogConfig(**log_config_dict)
+        setup_logging(log_config)
+        self.logger = get_logger("ScanService")
+        
         # Создание зависимостей
         self.import_parser = ImportParser(self.config)
         self.project_analyzer = ProjectAnalyzer(self.config)
@@ -36,6 +43,9 @@ class ScanService:
         # Состояние
         self.last_scan_result: Optional[ScanResult] = None
         self.is_scanning = False
+        
+        self.logger.info("ScanService инициализирован", 
+                        extra_data={"config_file": str(self.config.config_file)})
     
     def scan_directory(self, directory: Path, 
                       progress_callback: Optional[Callable] = None) -> ScanResult:
@@ -49,7 +59,11 @@ class ScanService:
         Returns:
             Результат сканирования
         """
+        self.logger.info("Начало сканирования директории", 
+                        extra_data={"directory": str(directory)})
+        
         if self.is_scanning:
+            self.logger.warning("Попытка запуска сканирования во время выполнения")
             raise RuntimeError("Сканирование уже выполняется")
         
         try:
@@ -57,21 +71,39 @@ class ScanService:
             
             # Проверка существования директории
             if not directory.exists():
+                self.logger.error("Директория не найдена", 
+                                extra_data={"directory": str(directory)})
                 raise FileNotFoundError(f"Директория не найдена: {directory}")
             
             if not directory.is_dir():
+                self.logger.error("Путь не является директорией", 
+                                extra_data={"path": str(directory)})
                 raise ValueError(f"Путь не является директорией: {directory}")
             
             # Выполнение сканирования
+            self.logger.info("Запуск сканирования файлов")
             result = self.file_scanner.scan_directory(directory, progress_callback)
             
             # Сохранение результата
             self.last_scan_result = result
             
+            self.logger.info("Сканирование завершено успешно", 
+                           extra_data={
+                               "total_files": result.total_files_scanned,
+                               "total_imports": result.total_imports,
+                               "duration": result.scan_duration,
+                               "projects_found": len(result.projects_data)
+                           })
+            
             return result
             
+        except Exception as e:
+            self.logger.error("Ошибка при сканировании", 
+                            extra_data={"error": str(e), "directory": str(directory)})
+            raise
         finally:
             self.is_scanning = False
+            self.logger.info("Сканирование завершено")
     
     def get_last_result(self) -> Optional[ScanResult]:
         """

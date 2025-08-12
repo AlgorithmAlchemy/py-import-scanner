@@ -12,12 +12,15 @@ from PySide6.QtWidgets import QApplication
 from PySide6.QtCore import QTranslator, QLocale
 
 from core.scan_service import ScanService
+from core.logging_config import get_logger
 from gui.main_window import MainWindow
 
 
 def main():
     """Главная функция приложения"""
-    print("🚀 Запуск Python Import Parser (рефакторинг v1.0)")
+    # Инициализация логгера
+    logger = get_logger("Main")
+    logger.info("🚀 Запуск Python Import Parser (рефакторинг v1.0)")
     
     # Создание приложения
     app = QApplication(sys.argv)
@@ -32,18 +35,20 @@ def main():
     # Попытка загрузить перевод
     if translator.load(f"translations/import_parser_{locale}", "."):
         app.installTranslator(translator)
-        print(f"✅ Загружен перевод для локали: {locale}")
+        logger.info(f"✅ Загружен перевод для локали: {locale}")
     else:
-        print(f"⚠️ Перевод для локали {locale} не найден, используется английский")
+        logger.warning(f"⚠️ Перевод для локали {locale} не найден, используется английский")
     
     # Создание сервиса сканирования
+    logger.info("Инициализация ScanService")
     scan_service = ScanService()
     
     # Создание и отображение главного окна
+    logger.info("Создание главного окна")
     window = MainWindow(scan_service)
     window.show()
     
-    print("✅ Приложение запущено успешно")
+    logger.info("✅ Приложение запущено успешно")
     
     # Запуск главного цикла
     return app.exec()

@@ -134,3 +134,13 @@ class IConfiguration(ABC):
     def get_max_depth(self) -> int:
         """Возвращает максимальную глубину сканирования"""
         pass
+    
+    @abstractmethod
+    def get_logging_config(self) -> dict:
+        """Возвращает конфигурацию логирования"""
+        pass
+    
+    @abstractmethod
+    def update_logging_config(self, key: str, value) -> None:
+        """Обновляет настройку логирования"""
+        pass

@@ -66,7 +66,20 @@ class Configuration(IConfiguration):
             "max_workers": 4,
             "supported_encodings": ["utf-8", "cp1251", "latin-1"],
             "file_extensions": [".py"],
-            "progress_update_interval": 500
+            "progress_update_interval": 500,
+            "logging": {
+                "level": "INFO",
+                "format": "json",
+                "file_enabled": True,
+                "console_enabled": True,
+                "max_file_size": 10 * 1024 * 1024,
+                "backup_count": 5,
+                "log_dir": "logs",
+                "include_timestamp": True,
+                "include_module": True,
+                "include_function": True,
+                "include_line": True
+            }
         }
     
     def get_excluded_libraries(self) -> Set[str]:
@@ -113,4 +126,15 @@ class Configuration(IConfiguration):
     def reset_to_defaults(self) -> None:
         """Сбрасывает конфигурацию к значениям по умолчанию"""
         self._config = self._get_default_config()
+        self._save_config()
+    
+    def get_logging_config(self) -> dict:
+        """Возвращает конфигурацию логирования"""
+        return self._config.get("logging", {})
+    
+    def update_logging_config(self, key: str, value) -> None:
+        """Обновляет настройку логирования"""
+        if "logging" not in self._config:
+            self._config["logging"] = {}
+        self._config["logging"][key] = value
         self._save_config()

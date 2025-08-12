@@ -13,6 +13,7 @@ from .interfaces import IFileScanner, ScanResult, ImportData, ProjectData
 from .import_parser import ImportParser
 from .project_analyzer import ProjectAnalyzer
 from .configuration import Configuration
+from .logging_config import get_logger
 
 
 class FileScanner(IFileScanner):
@@ -29,6 +30,15 @@ class FileScanner(IFileScanner):
         self._batch_size = config.get_batch_size()
         self._max_workers = config.get_max_workers()
         self._supported_encodings = config.get_supported_encodings()
+        
+        # Инициализация логгера
+        self.logger = get_logger("FileScanner")
+        self.logger.info("FileScanner инициализирован", 
+                        extra_data={
+                            "max_workers": self._max_workers,
+                            "batch_size": self._batch_size,
+                            "max_file_size": self._max_file_size
+                        })
     
     def scan_directory(self, directory: Path, 
                       progress_callback=None) -> ScanResult:
@@ -42,27 +52,37 @@ class FileScanner(IFileScanner):
         Returns:
             Результат сканирования
         """
+        self.logger.info("Начало сканирования директории", 
+                        extra_data={"directory": str(directory)})
+        
         start_time = time.time()
         
         if progress_callback:
             progress_callback("Поиск Python файлов...")
         
         # Поиск всех Python файлов
+        self.logger.info("Поиск Python файлов")
         file_paths = self._find_python_files(directory)
+        
+        self.logger.info("Поиск файлов завершен", 
+                        extra_data={"files_found": len(file_paths)})
         
         if progress_callback:
             progress_callback(f"Найдено {len(file_paths)} файлов для обработки...")
         
         if not file_paths:
+            self.logger.warning("Python файлы не найдены")
             return self._create_empty_result(start_time)
         
         # Сканирование файлов
+        self.logger.info("Начало параллельного сканирования файлов")
         all_imports = self._scan_files_parallel(file_paths, progress_callback)
         
         # Анализ проектов
         if progress_callback:
             progress_callback("Анализ структуры проектов...")
         
+        self.logger.info("Анализ структуры проектов")
         projects_data = self.project_analyzer.analyze_project_structure(directory)
         
         # Обновление данных проектов с импортами
@@ -70,6 +90,14 @@ class FileScanner(IFileScanner):
         
         # Создание результата
         scan_duration = time.time() - start_time
+        
+        self.logger.info("Сканирование завершено", 
+                        extra_data={
+                            "total_files": len(file_paths),
+                            "total_imports": sum(all_imports.values()),
+                            "duration": scan_duration,
+                            "projects_found": len(projects_data)
+                        })
         
         return ScanResult(
             imports_data=self._create_imports_data(all_imports),

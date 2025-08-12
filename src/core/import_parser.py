@@ -6,6 +6,7 @@ from typing import List
 from pathlib import Path
 from .interfaces import IImportParser
 from .configuration import Configuration
+from .logging_config import get_logger
 
 
 class ImportParser(IImportParser):
@@ -14,6 +15,11 @@ class ImportParser(IImportParser):
     def __init__(self, config: Configuration):
         self.config = config
         self._excluded_libs = config.get_excluded_libraries()
+        
+        # Инициализация логгера
+        self.logger = get_logger("ImportParser")
+        self.logger.info("ImportParser инициализирован", 
+                        extra_data={"excluded_libs_count": len(self._excluded_libs)})
     
     def parse_imports(self, content: str, file_path: Path) -> List[str]:
         """
@@ -54,9 +60,19 @@ class ImportParser(IImportParser):
                 if len(imports) > 50:
                     break
                     
-        except (SyntaxError, ValueError):
-            # Игнорируем синтаксические ошибки
-            pass
+        except (SyntaxError, ValueError) as e:
+            # Логируем синтаксические ошибки
+            self.logger.warning("Синтаксическая ошибка при парсинге файла", 
+                              extra_data={
+                                  "file": str(file_path),
+                                  "error": str(e)
+                              })
+        
+        self.logger.debug("Парсинг импортов завершен", 
+                         extra_data={
+                             "file": str(file_path),
+                             "imports_found": len(imports)
+                         })
         
         return imports
     
