@@ -154,3 +154,13 @@ class IConfiguration(ABC):
     def update_security_config(self, key: str, value) -> None:
         """Обновляет настройку безопасности"""
         pass
+    
+    @abstractmethod
+    def get_performance_config(self) -> dict:
+        """Возвращает конфигурацию производительности"""
+        pass
+    
+    @abstractmethod
+    def update_performance_config(self, key: str, value) -> None:
+        """Обновляет настройку производительности"""
+        pass
