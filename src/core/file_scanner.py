@@ -15,6 +15,7 @@ from .project_analyzer import ProjectAnalyzer
 from .configuration import Configuration
 from .logging_config import get_logger
 from .security import SecurityManager, SecurityConfig
+from .performance import PerformanceManager, PerformanceConfig
 
 
 class FileScanner(IFileScanner):
@@ -39,6 +40,11 @@ class FileScanner(IFileScanner):
         security_config_dict = config.get_security_config()
         security_config = SecurityConfig(**security_config_dict)
         self.security_manager = SecurityManager(security_config)
+        
+        # Инициализация производительности
+        performance_config_dict = config.get_performance_config()
+        performance_config = PerformanceConfig(**performance_config_dict)
+        self.performance_manager = PerformanceManager(performance_config)
         
         self.logger.info("FileScanner инициализирован", 
                         extra_data={
@@ -117,7 +123,7 @@ class FileScanner(IFileScanner):
     
     def scan_file(self, file_path: Path) -> List[str]:
         """
-        Сканирует один файл и возвращает список импортов
+        Сканирует один файл и возвращает список импортов с кэшированием
         
         Args:
             file_path: Путь к файлу
@@ -125,6 +131,18 @@ class FileScanner(IFileScanner):
         Returns:
             Список найденных библиотек
         """
+        # Генерация ключа кэша
+        cache_key = self.performance_manager.generate_cache_key(
+            "scan_file", str(file_path), file_path.stat().st_mtime
+        )
+        
+        # Попытка получить из кэша
+        cached_result = self.performance_manager.get_cached_result(cache_key)
+        if cached_result is not None:
+            self.logger.debug("Результат найден в кэше", 
+                            extra_data={"file": str(file_path)})
+            return cached_result
+        
         try:
             # Валидация безопасности
             is_valid, message = self.security_manager.validate_file(file_path)
@@ -154,6 +172,9 @@ class FileScanner(IFileScanner):
                 self.logger.warning("Импорты не прошли валидацию", 
                                   extra_data={"file": str(file_path), "error": message})
                 return []
+            
+            # Кэширование результата
+            self.performance_manager.cache_result(cache_key, imports)
             
             return imports
             
@@ -208,7 +229,7 @@ class FileScanner(IFileScanner):
     def _scan_files_parallel(self, file_paths: List[Path], 
                            progress_callback=None) -> Dict[str, int]:
         """
-        Сканирует файлы параллельно
+        Сканирует файлы параллельно с оптимизацией производительности
         
         Args:
             file_paths: Список путей к файлам
@@ -217,16 +238,30 @@ class FileScanner(IFileScanner):
         Returns:
             Словарь с количеством импортов по библиотекам
         """
+        # Запуск профилирования
+        self.performance_manager.start_profiling("parallel_scan")
+        
+        # Получение оптимальных параметров
+        optimal_threads = self.performance_manager.get_optimal_threads(len(file_paths))
+        chunk_size = self.performance_manager.get_chunk_size(len(file_paths), optimal_threads)
+        
+        self.logger.info("Оптимизированное сканирование", 
+                        extra_data={
+                            "file_count": len(file_paths),
+                            "optimal_threads": optimal_threads,
+                            "chunk_size": chunk_size
+                        })
+        
         all_imports = []
         
-        # Создание батчей
-        batches = [file_paths[i:i + self._batch_size] 
-                  for i in range(0, len(file_paths), self._batch_size)]
+        # Создание батчей с оптимальным размером
+        batches = [file_paths[i:i + chunk_size] 
+                  for i in range(0, len(file_paths), chunk_size)]
         
         if progress_callback:
-            progress_callback(f"Запуск {self._max_workers} потоков...")
+            progress_callback(f"Запуск {optimal_threads} потоков...")
         
-        with ThreadPoolExecutor(max_workers=self._max_workers) as executor:
+        with ThreadPoolExecutor(max_workers=optimal_threads) as executor:
             futures = {executor.submit(self._process_batch, batch): i 
                       for i, batch in enumerate(batches)}
             
@@ -236,9 +271,22 @@ class FileScanner(IFileScanner):
                 all_imports.extend(batch_imports)
                 
                 processed_batches += 1
+                
+                # Оптимизация памяти
+                self.performance_manager.optimize_memory()
+                
                 if progress_callback and processed_batches % 5 == 0:
-                    processed_files = processed_batches * self._batch_size
+                    processed_files = processed_batches * chunk_size
                     progress_callback(f"Обработано {min(processed_files, len(file_paths))}/{len(file_paths)} файлов...")
+        
+        # Завершение профилирования
+        scan_duration = self.performance_manager.end_profiling("parallel_scan")
+        
+        self.logger.info("Параллельное сканирование завершено", 
+                        extra_data={
+                            "duration": scan_duration,
+                            "files_per_second": len(file_paths) / scan_duration if scan_duration > 0 else 0
+                        })
         
         # Подсчет результатов
         return dict(Counter(all_imports))
