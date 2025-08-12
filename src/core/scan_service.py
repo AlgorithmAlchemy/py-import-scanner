@@ -18,6 +18,7 @@ from .patterns import (
     ScanConfigurationBuilder, ScanConfiguration
 )
 from .complexity_analyzer import ComplexityAnalyzer, ProjectComplexityReport
+from .code_quality_analyzer import CodeQualityAnalyzer, ProjectQualityReport
 
 
 class ScanService:
@@ -65,6 +66,9 @@ class ScanService:
         
         # Инициализация анализатора сложности
         self.complexity_analyzer = ComplexityAnalyzer()
+        
+        # Инициализация анализатора качества кода
+        self.quality_analyzer = CodeQualityAnalyzer()
         
         # Инициализация субъекта для Observer паттерна
         self.scan_subject: ScanSubject = ScanSubject()
@@ -523,4 +527,72 @@ class ScanService:
         except Exception as e:
             self.logger.error("Ошибка при анализе сложности файла", 
                             extra_data={"file_path": str(file_path), "error": str(e)})
+            raise
+
+    def analyze_file_quality(self, file_path: Path) -> 'CodeQualityReport':
+        """
+        Анализирует качество кода в файле
+        
+        Args:
+            file_path: Путь к файлу для анализа
+            
+        Returns:
+            Отчет о качестве кода
+        """
+        self.logger.info("Анализ качества кода файла", 
+                        extra_data={"file_path": str(file_path)})
+        
+        try:
+            report = self.quality_analyzer.analyze_file(file_path)
+            
+            self.logger.info("Анализ качества кода завершен", 
+                            extra_data={
+                                "file_path": str(file_path),
+                                "score": report.overall_score,
+                                "issues": report.issues_count
+                            })
+            
+            return report
+            
+        except Exception as e:
+            self.logger.error("Ошибка при анализе качества кода", 
+                            extra_data={"file_path": str(file_path), "error": str(e)})
+            raise
+
+    def analyze_project_quality(self, directory: Path) -> ProjectQualityReport:
+        """
+        Анализирует качество кода в проекте
+        
+        Args:
+            directory: Директория проекта для анализа
+            
+        Returns:
+            Отчет о качестве проекта
+        """
+        self.logger.info("Анализ качества кода проекта", 
+                        extra_data={"directory": str(directory)})
+        
+        try:
+            # Валидация директории
+            is_valid: bool
+            message: str
+            is_valid, message = self.validate_directory(directory)
+            if not is_valid:
+                raise ValueError(f"Ошибка валидации директории: {message}")
+            
+            # Анализ качества
+            report = self.quality_analyzer.analyze_project(directory)
+            
+            self.logger.info("Анализ качества кода проекта завершен", 
+                            extra_data={
+                                "total_files": report.total_files,
+                                "total_issues": report.total_issues,
+                                "average_score": report.average_score
+                            })
+            
+            return report
+            
+        except Exception as e:
+            self.logger.error("Ошибка при анализе качества кода проекта", 
+                            extra_data={"directory": str(directory), "error": str(e)})
             raise
