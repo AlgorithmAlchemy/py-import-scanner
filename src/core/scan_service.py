@@ -1,5 +1,5 @@
 """
-Главный сервис для координации сканирования
+Главный сервис для координации сканирования с паттернами проектирования
 """
 from pathlib import Path
 from typing import Optional, Callable, Dict, List, Any, Tuple
@@ -12,14 +12,19 @@ from .data_exporter import DataExporter
 from .logging_config import setup_logging, get_logger, LogConfig
 from .security import SecurityManager, SecurityConfig
 from .performance import PerformanceManager, PerformanceConfig
+from .patterns import (
+    ComponentFactory, ComponentType, ScanningStrategyFactory,
+    ScanSubject, ProgressObserver, LoggingObserver, MetricsObserver,
+    ScanConfigurationBuilder, ScanConfiguration
+)
 
 
 class ScanService:
-    """Главный сервис для координации сканирования"""
+    """Главный сервис для координации сканирования с паттернами"""
     
     def __init__(self, config: Optional[Configuration] = None) -> None:
         """
-        Инициализация сервиса
+        Инициализация сервиса с паттернами
         
         Args:
             config: Конфигурация (если None, создается по умолчанию)
@@ -32,47 +37,58 @@ class ScanService:
         setup_logging(log_config)
         self.logger = get_logger("ScanService")
         
-        # Создание зависимостей
-        self.import_parser: ImportParser = ImportParser(self.config)
-        self.project_analyzer: ProjectAnalyzer = ProjectAnalyzer(self.config)
-        self.file_scanner: FileScanner = FileScanner(
-            self.config, 
-            self.import_parser, 
-            self.project_analyzer
+        # Инициализация фабрики компонентов
+        self.component_factory: ComponentFactory = ComponentFactory(self.config)
+        
+        # Создание компонентов через фабрику
+        self.import_parser: ImportParser = self.component_factory.create_component(
+            ComponentType.IMPORT_PARSER
         )
-        self.data_exporter: DataExporter = DataExporter()
+        self.project_analyzer: ProjectAnalyzer = self.component_factory.create_component(
+            ComponentType.PROJECT_ANALYZER
+        )
+        self.file_scanner: FileScanner = self.component_factory.create_component(
+            ComponentType.FILE_SCANNER
+        )
+        self.data_exporter: DataExporter = self.component_factory.create_component(
+            ComponentType.DATA_EXPORTER
+        )
         
-        # Инициализация безопасности
-        security_config_dict: Dict[str, Any] = self.config.get_security_config()
-        security_config: SecurityConfig = SecurityConfig(**security_config_dict)
-        self.security_manager: SecurityManager = SecurityManager(security_config)
+        # Инициализация безопасности и производительности
+        self.security_manager: SecurityManager = self.component_factory.create_component(
+            ComponentType.SECURITY_MANAGER
+        )
+        self.performance_manager: PerformanceManager = self.component_factory.create_component(
+            ComponentType.PERFORMANCE_MANAGER
+        )
         
-        # Инициализация производительности
-        performance_config_dict: Dict[str, Any] = self.config.get_performance_config()
-        performance_config: PerformanceConfig = PerformanceConfig(**performance_config_dict)
-        self.performance_manager: PerformanceManager = PerformanceManager(performance_config)
+        # Инициализация субъекта для Observer паттерна
+        self.scan_subject: ScanSubject = ScanSubject()
         
         # Состояние
         self.last_scan_result: Optional[ScanResult] = None
         self.is_scanning: bool = False
+        self.current_strategy: Optional[Any] = None
         
-        self.logger.info("ScanService инициализирован", 
+        self.logger.info("ScanService инициализирован с паттернами", 
                         extra_data={"config_file": str(self.config.config_file)})
     
     def scan_directory(self, directory: Path, 
-                      progress_callback: Optional[Callable[[str, Optional[float]], None]] = None) -> ScanResult:
+                      progress_callback: Optional[Callable[[str, Optional[float]], None]] = None,
+                      strategy_type: str = "adaptive") -> ScanResult:
         """
-        Сканирует директорию
+        Сканирует директорию с использованием паттернов
         
         Args:
             directory: Директория для сканирования
             progress_callback: Функция обратного вызова для прогресса
+            strategy_type: Тип стратегии сканирования
             
         Returns:
             Результат сканирования
         """
-        self.logger.info("Начало сканирования директории", 
-                        extra_data={"directory": str(directory)})
+        self.logger.info("Начало сканирования директории с паттернами", 
+                        extra_data={"directory": str(directory), "strategy": strategy_type})
         
         if self.is_scanning:
             self.logger.warning("Попытка запуска сканирования во время выполнения")
@@ -81,6 +97,15 @@ class ScanService:
         try:
             self.is_scanning = True
             
+            # Настройка наблюдателей
+            self._setup_observers(progress_callback)
+            
+            # Уведомление о начале сканирования
+            self.scan_subject.notify_all("scan_started", {
+                "directory": str(directory),
+                "strategy": strategy_type
+            })
+            
             # Валидация безопасности
             is_valid: bool
             message: str
@@ -88,14 +113,23 @@ class ScanService:
             if not is_valid:
                 self.logger.error("Ошибка валидации безопасности", 
                                 extra_data={"directory": str(directory), "error": message})
+                self.scan_subject.notify_all("error", {"error": message})
                 raise ValueError(f"Ошибка валидации безопасности: {message}")
             
             # Запуск профилирования
             self.performance_manager.start_profiling("scan_directory")
             
-            # Выполнение сканирования
-            self.logger.info("Запуск сканирования файлов")
-            result: ScanResult = self.file_scanner.scan_directory(directory, progress_callback)
+            # Создание стратегии через фабрику
+            self.current_strategy = ScanningStrategyFactory.create_strategy(
+                strategy_type, self.file_scanner, self.import_parser, self.project_analyzer
+            )
+            
+            # Выполнение сканирования с использованием стратегии
+            self.logger.info("Запуск сканирования с выбранной стратегией")
+            scan_result = self.current_strategy.scan_directory(directory, progress_callback)
+            
+            # Преобразование результата в ScanResult
+            result = self._create_scan_result(scan_result, directory)
             
             # Сохранение результата
             self.last_scan_result = result
@@ -106,13 +140,22 @@ class ScanService:
             # Сохранение данных производительности
             self.performance_manager.save_performance_data()
             
-            self.logger.info("Сканирование завершено успешно", 
+            # Уведомление о завершении сканирования
+            self.scan_subject.notify_all("scan_completed", {
+                "total_files": result.total_files_scanned,
+                "total_imports": result.total_imports,
+                "duration": result.scan_duration,
+                "strategy": strategy_type
+            })
+            
+            self.logger.info("Сканирование завершено успешно с паттернами", 
                            extra_data={
                                "total_files": result.total_files_scanned,
                                "total_imports": result.total_imports,
                                "duration": result.scan_duration,
                                "scan_duration_profiled": scan_duration,
-                               "projects_found": len(result.projects_data)
+                               "projects_found": len(result.projects_data),
+                               "strategy": strategy_type
                            })
             
             return result
@@ -120,10 +163,114 @@ class ScanService:
         except Exception as e:
             self.logger.error("Ошибка при сканировании", 
                             extra_data={"error": str(e), "directory": str(directory)})
+            self.scan_subject.notify_all("error", {"error": str(e)})
             raise
         finally:
             self.is_scanning = False
             self.logger.info("Сканирование завершено")
+    
+    def scan_with_configuration(self, directory: Path, 
+                               config_builder: ScanConfigurationBuilder) -> ScanResult:
+        """
+        Сканирует директорию с использованием конфигурации Builder паттерна
+        
+        Args:
+            directory: Директория для сканирования
+            config_builder: Строитель конфигурации
+            
+        Returns:
+            Результат сканирования
+        """
+        config: ScanConfiguration = config_builder.build()
+        
+        self.logger.info("Сканирование с кастомной конфигурацией", 
+                        extra_data={"config": config.__dict__})
+        
+        # Настройка наблюдателей на основе конфигурации
+        if config.enable_logging:
+            self.scan_subject.attach(LoggingObserver())
+        
+        if config.enable_metrics:
+            metrics_observer = MetricsObserver()
+            self.scan_subject.attach(metrics_observer)
+        
+        if config.progress_callback:
+            self.scan_subject.attach(ProgressObserver(config.progress_callback))
+        
+        # Выполнение сканирования
+        result = self.scan_directory(directory, config.progress_callback, config.strategy_type)
+        
+        # Возврат метрик если они были включены
+        if config.enable_metrics:
+            metrics = metrics_observer.get_metrics()
+            self.logger.info("Метрики сканирования", extra_data=metrics)
+        
+        return result
+    
+    def _setup_observers(self, progress_callback: Optional[Callable] = None) -> None:
+        """Настраивает наблюдателей"""
+        # Очищаем существующих наблюдателей
+        self.scan_subject.observers.clear()
+        
+        # Добавляем наблюдателя логирования
+        self.scan_subject.attach(LoggingObserver())
+        
+        # Добавляем наблюдателя метрик
+        self.scan_subject.attach(MetricsObserver())
+        
+        # Добавляем наблюдателя прогресса если есть callback
+        if progress_callback:
+            self.scan_subject.attach(ProgressObserver(progress_callback))
+    
+    def _create_scan_result(self, scan_data: Dict[str, Any], directory: Path) -> ScanResult:
+        """Создает ScanResult из данных стратегии"""
+        from datetime import datetime
+        
+        # Преобразование данных в зависимости от стратегии
+        if 'imports' in scan_data and isinstance(scan_data['imports'], list):
+            # Для последовательной стратегии
+            imports_data = self._process_imports_list(scan_data['imports'])
+            projects_data = scan_data.get('projects', [])
+            total_files = scan_data.get('total_files', 0)
+        else:
+            # Для параллельной стратегии
+            imports_data = scan_data.get('imports', {})
+            projects_data = scan_data.get('projects', [])
+            total_files = scan_data.get('total_files', 0)
+        
+        return ScanResult(
+            imports_data=imports_data,
+            projects_data=projects_data,
+            total_files_scanned=total_files,
+            total_imports=sum(data.count for data in imports_data.values()),
+            scan_duration=0.0,  # Будет обновлено позже
+            scan_timestamp=datetime.now()
+        )
+    
+    def _process_imports_list(self, imports_list: List[str]) -> Dict[str, Any]:
+        """Обрабатывает список импортов в формат ImportData"""
+        from collections import Counter
+        from .interfaces import ImportData
+        
+        if not imports_list:
+            return {}
+        
+        # Подсчет импортов
+        counter = Counter(imports_list)
+        total_imports = len(imports_list)
+        
+        # Создание ImportData
+        imports_data = {}
+        for library, count in counter.items():
+            percentage = (count / total_imports * 100) if total_imports > 0 else 0
+            imports_data[library] = ImportData(
+                library=library,
+                count=count,
+                percentage=percentage,
+                files=[]  # Можно добавить список файлов
+            )
+        
+        return imports_data
     
     def get_last_result(self) -> Optional[ScanResult]:
         """
@@ -288,3 +435,21 @@ class ScanService:
     def reset_configuration(self) -> None:
         """Сбрасывает конфигурацию к значениям по умолчанию"""
         self.config.reset_to_defaults()
+    
+    def get_component_factory(self) -> ComponentFactory:
+        """
+        Возвращает фабрику компонентов
+        
+        Returns:
+            Фабрика компонентов
+        """
+        return self.component_factory
+    
+    def get_scan_subject(self) -> ScanSubject:
+        """
+        Возвращает субъект для управления наблюдателями
+        
+        Returns:
+            Субъект наблюдателей
+        """
+        return self.scan_subject
