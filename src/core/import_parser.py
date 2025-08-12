@@ -8,6 +8,7 @@ from .interfaces import IImportParser
 from .configuration import Configuration
 from .logging_config import get_logger
 from .security import SecurityManager, SecurityConfig
+from .performance import PerformanceManager, PerformanceConfig
 
 
 class ImportParser(IImportParser):
@@ -25,6 +26,11 @@ class ImportParser(IImportParser):
         security_config = SecurityConfig(**security_config_dict)
         self.security_manager = SecurityManager(security_config)
         
+        # Инициализация производительности
+        performance_config_dict = config.get_performance_config()
+        performance_config = PerformanceConfig(**performance_config_dict)
+        self.performance_manager = PerformanceManager(performance_config)
+        
         self.logger.info("ImportParser инициализирован", 
                         extra_data={"excluded_libs_count": len(self._excluded_libs)})
     
@@ -39,6 +45,18 @@ class ImportParser(IImportParser):
         Returns:
             Список найденных библиотек
         """
+        # Генерация ключа кэша
+        cache_key = self.performance_manager.generate_cache_key(
+            "parse_imports", str(file_path), hash(content)
+        )
+        
+        # Попытка получить из кэша
+        cached_result = self.performance_manager.get_cached_result(cache_key)
+        if cached_result is not None:
+            self.logger.debug("Результат парсинга найден в кэше", 
+                            extra_data={"file": str(file_path)})
+            return cached_result
+        
         imports = []
         
         # Быстрая проверка на наличие импортов
@@ -89,6 +107,9 @@ class ImportParser(IImportParser):
                                   "file": str(file_path),
                                   "error": str(e)
                               })
+        
+        # Кэширование результата
+        self.performance_manager.cache_result(cache_key, imports)
         
         self.logger.debug("Парсинг импортов завершен", 
                          extra_data={
