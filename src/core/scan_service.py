@@ -11,6 +11,7 @@ from .file_scanner import FileScanner
 from .data_exporter import DataExporter
 from .logging_config import setup_logging, get_logger, LogConfig
 from .security import SecurityManager, SecurityConfig
+from .performance import PerformanceManager, PerformanceConfig
 
 
 class ScanService:
@@ -45,6 +46,11 @@ class ScanService:
         security_config_dict = self.config.get_security_config()
         security_config = SecurityConfig(**security_config_dict)
         self.security_manager = SecurityManager(security_config)
+        
+        # Инициализация производительности
+        performance_config_dict = self.config.get_performance_config()
+        performance_config = PerformanceConfig(**performance_config_dict)
+        self.performance_manager = PerformanceManager(performance_config)
         
         # Состояние
         self.last_scan_result: Optional[ScanResult] = None
@@ -82,6 +88,9 @@ class ScanService:
                                 extra_data={"directory": str(directory), "error": message})
                 raise ValueError(f"Ошибка валидации безопасности: {message}")
             
+            # Запуск профилирования
+            self.performance_manager.start_profiling("scan_directory")
+            
             # Выполнение сканирования
             self.logger.info("Запуск сканирования файлов")
             result = self.file_scanner.scan_directory(directory, progress_callback)
@@ -89,11 +98,18 @@ class ScanService:
             # Сохранение результата
             self.last_scan_result = result
             
+            # Завершение профилирования
+            scan_duration = self.performance_manager.end_profiling("scan_directory")
+            
+            # Сохранение данных производительности
+            self.performance_manager.save_performance_data()
+            
             self.logger.info("Сканирование завершено успешно", 
                            extra_data={
                                "total_files": result.total_files_scanned,
                                "total_imports": result.total_imports,
                                "duration": result.scan_duration,
+                               "scan_duration_profiled": scan_duration,
                                "projects_found": len(result.projects_data)
                            })
             
@@ -177,6 +193,15 @@ class ScanService:
             raise RuntimeError(f"Ошибка при экспорте: {e}")
         
         return exported_files
+    
+    def get_performance_report(self) -> dict:
+        """
+        Возвращает отчет о производительности
+        
+        Returns:
+            Словарь с данными о производительности
+        """
+        return self.performance_manager.get_performance_report()
     
     def get_scan_statistics(self, result: ScanResult) -> dict:
         """
