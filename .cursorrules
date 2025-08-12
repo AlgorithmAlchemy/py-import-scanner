@@ -1,5 +1,0 @@
-# Amnezia Time Tracker - Правила разработки
-
-## Общие принципы
-- Следуй принципам SOLID, PEP8, DRY, KISS, YAGNI
-- Используй dependency injection
