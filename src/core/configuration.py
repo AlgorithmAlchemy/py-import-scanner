@@ -102,6 +102,24 @@ class Configuration(IConfiguration):
                     ".tox", ".mypy_cache", ".cache", "tmp", "temp"
                 ],
                 "safe_directories": []
+            },
+            "performance": {
+                "enable_caching": True,
+                "cache_size": 1000,
+                "cache_ttl": 3600,
+                "cache_file": "cache/performance_cache.json",
+                "enable_memory_optimization": True,
+                "gc_threshold": 100,
+                "memory_check_interval": 50,
+                "enable_profiling": True,
+                "profile_file": "logs/performance_profile.json",
+                "detailed_profiling": False,
+                "optimal_threads": 0,
+                "thread_chunk_size": 100,
+                "adaptive_threading": True,
+                "cache_imports": True,
+                "cache_file_hashes": True,
+                "cache_directory_structure": True
             }
         }
     
@@ -171,4 +189,15 @@ class Configuration(IConfiguration):
         if "security" not in self._config:
             self._config["security"] = {}
         self._config["security"][key] = value
+        self._save_config()
+    
+    def get_performance_config(self) -> dict:
+        """Возвращает конфигурацию производительности"""
+        return self._config.get("performance", {})
+    
+    def update_performance_config(self, key: str, value) -> None:
+        """Обновляет настройку производительности"""
+        if "performance" not in self._config:
+            self._config["performance"] = {}
+        self._config["performance"][key] = value
         self._save_config()
