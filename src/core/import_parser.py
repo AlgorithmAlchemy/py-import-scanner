@@ -32,8 +32,7 @@ class ImportParser(IImportParser):
         performance_config: PerformanceConfig = PerformanceConfig(**performance_config_dict)
         self.performance_manager: PerformanceManager = PerformanceManager(performance_config)
         
-        self.logger.info("ImportParser инициализирован", 
-                        extra_data={"excluded_libs_count": len(self._excluded_libs)})
+        self.logger.info(f"ImportParser инициализирован (excluded_libs_count: {len(self._excluded_libs)})")
     
     def parse_imports(self, content: str, file_path: Path) -> List[str]:
         """
@@ -54,8 +53,7 @@ class ImportParser(IImportParser):
         # Попытка получить из кэша
         cached_result: Optional[List[str]] = self.performance_manager.get_cached_result(cache_key)
         if cached_result is not None:
-            self.logger.debug("Результат парсинга найден в кэше", 
-                            extra_data={"file": str(file_path)})
+            self.logger.debug(f"Результат парсинга найден в кэше (file: {file_path})")
             return cached_result
         
         imports: List[str] = []
@@ -67,8 +65,7 @@ class ImportParser(IImportParser):
         try:
             # Проверка лимитов AST
             if len(content) > self.security_manager.config.max_ast_nodes:
-                self.logger.warning("Файл слишком большой для AST парсинга", 
-                                  extra_data={"file": str(file_path)})
+                self.logger.warning(f"Файл слишком большой для AST парсинга (file: {file_path})")
                 return imports
             
             # Парсинг AST
@@ -81,8 +78,7 @@ class ImportParser(IImportParser):
                 
                 # Проверка лимита узлов AST
                 if node_count > self.security_manager.config.max_ast_nodes:
-                    self.logger.warning("Превышен лимит узлов AST", 
-                                      extra_data={"file": str(file_path)})
+                    self.logger.warning(f"Превышен лимит узлов AST (file: {file_path})")
                     break
                 
                 if isinstance(node, ast.Import):
@@ -103,20 +99,12 @@ class ImportParser(IImportParser):
                     
         except (SyntaxError, ValueError) as e:
             # Логируем синтаксические ошибки
-            self.logger.warning("Синтаксическая ошибка при парсинге файла", 
-                              extra_data={
-                                  "file": str(file_path),
-                                  "error": str(e)
-                              })
+            self.logger.warning(f"Синтаксическая ошибка при парсинге файла (file: {file_path}, error: {e})")
         
         # Кэширование результата
         self.performance_manager.cache_result(cache_key, imports)
         
-        self.logger.debug("Парсинг импортов завершен", 
-                         extra_data={
-                             "file": str(file_path),
-                             "imports_found": len(imports)
-                         })
+        self.logger.debug(f"Парсинг импортов завершен (file: {file_path}, imports_found: {len(imports)})")
         
         return imports
     
