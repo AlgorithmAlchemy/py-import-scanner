@@ -20,6 +20,7 @@ from .patterns import (
 from .complexity_analyzer import ComplexityAnalyzer, ProjectComplexityReport
 from .code_quality_analyzer import CodeQualityAnalyzer, ProjectQualityReport
 from .dependency_analyzer import DependencyAnalyzer, DependencyReport
+from .architecture_analyzer import ArchitectureAnalyzer, ArchitectureReport
 
 
 class ScanService:
@@ -72,6 +73,8 @@ class ScanService:
         self.quality_analyzer = CodeQualityAnalyzer()
         # Инициализация анализатора зависимостей
         self.dependency_analyzer = DependencyAnalyzer()
+        # Инициализация анализатора архитектуры
+        self.architecture_analyzer = ArchitectureAnalyzer()
         
         # Инициализация субъекта для Observer паттерна
         self.scan_subject: ScanSubject = ScanSubject()
@@ -81,8 +84,7 @@ class ScanService:
         self.is_scanning: bool = False
         self.current_strategy: Optional[Any] = None
         
-        self.logger.info("ScanService инициализирован с паттернами", 
-                        extra_data={"config_file": str(self.config.config_file)})
+        self.logger.info(f"ScanService инициализирован с паттернами (config_file: {self.config.config_file})")
     
     def scan_directory(self, directory: Path, 
                       progress_callback: Optional[Callable[[str, Optional[float]], None]] = None,
@@ -98,8 +100,7 @@ class ScanService:
         Returns:
             Результат сканирования
         """
-        self.logger.info("Начало сканирования директории с паттернами", 
-                        extra_data={"directory": str(directory), "strategy": strategy_type})
+        self.logger.info(f"Начало сканирования директории с паттернами (directory: {directory}, strategy: {strategy_type})")
         
         if self.is_scanning:
             self.logger.warning("Попытка запуска сканирования во время выполнения")
@@ -122,8 +123,7 @@ class ScanService:
             message: str
             is_valid, message = self.security_manager.validate_scan_request(directory)
             if not is_valid:
-                self.logger.error("Ошибка валидации безопасности", 
-                                extra_data={"directory": str(directory), "error": message})
+                self.logger.error(f"Ошибка валидации безопасности (directory: {directory}, error: {message})")
                 self.scan_subject.notify_all("error", {"error": message})
                 raise ValueError(f"Ошибка валидации безопасности: {message}")
             
@@ -652,5 +652,83 @@ class ScanService:
             
         except Exception as e:
             self.logger.error("Ошибка при экспорте отчета о зависимостях", 
+                            extra_data={"output_path": str(output_path), "error": str(e)})
+            raise
+
+    def analyze_architecture(self, project_path: Path) -> ArchitectureReport:
+        """
+        Анализирует архитектуру проекта
+        
+        Args:
+            project_path: Путь к корню проекта
+            
+        Returns:
+            Отчет об архитектуре
+        """
+        self.logger.info("Анализ архитектуры проекта", 
+                        extra_data={"project_path": str(project_path)})
+        
+        try:
+            report = self.architecture_analyzer.analyze_project(project_path)
+            
+            self.logger.info("Анализ архитектуры завершен", 
+                            extra_data={
+                                "total_modules": report.total_modules,
+                                "total_dependencies": report.total_dependencies,
+                                "circular_dependencies": len(report.circular_dependencies)
+                            })
+            
+            return report
+            
+        except Exception as e:
+            self.logger.error("Ошибка при анализе архитектуры", 
+                            extra_data={"project_path": str(project_path), "error": str(e)})
+            raise
+
+    def visualize_architecture(self, report: ArchitectureReport, 
+                             output_path: Path, format: str = 'png') -> None:
+        """
+        Визуализирует граф зависимостей архитектуры
+        
+        Args:
+            report: Отчет об архитектуре
+            output_path: Путь для сохранения изображения
+            format: Формат изображения (png, svg, pdf)
+        """
+        self.logger.info("Визуализация архитектуры", 
+                        extra_data={"output_path": str(output_path), "format": format})
+        
+        try:
+            self.architecture_analyzer.visualize_dependencies(report, output_path, format)
+            
+            self.logger.info("Визуализация архитектуры завершена", 
+                            extra_data={"output_path": str(output_path)})
+            
+        except Exception as e:
+            self.logger.error("Ошибка при визуализации архитектуры", 
+                            extra_data={"output_path": str(output_path), "error": str(e)})
+            raise
+
+    def export_architecture_report(self, report: ArchitectureReport, 
+                                 output_path: Path, format: str = 'json') -> None:
+        """
+        Экспортирует отчет об архитектуре
+        
+        Args:
+            report: Отчет об архитектуре
+            output_path: Путь для сохранения отчета
+            format: Формат экспорта (json, dot)
+        """
+        self.logger.info("Экспорт отчета об архитектуре", 
+                        extra_data={"output_path": str(output_path), "format": format})
+        
+        try:
+            self.architecture_analyzer.export_report(report, output_path, format)
+            
+            self.logger.info("Отчет об архитектуре экспортирован", 
+                            extra_data={"output_path": str(output_path)})
+            
+        except Exception as e:
+            self.logger.error("Ошибка при экспорте отчета об архитектуре", 
                             extra_data={"output_path": str(output_path), "error": str(e)})
             raise
