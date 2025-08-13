@@ -1,9 +1,10 @@
 """
-Окно расширенной статистики проекта
+Окно детального анализа отдельного проекта
 """
 import os
 import json
 import sys
+import time
 import traceback
 from pathlib import Path
 from typing import Dict, Any, Optional
@@ -24,6 +25,84 @@ from PySide6.QtGui import QFont, QPalette, QColor, QPixmap
 
 from ..core.project_analyzer_core import IntegratedProjectAnalyzer
 from ..core.configuration import Configuration
+
+
+def get_ui_texts(language="ru"):
+    """Получение текстов интерфейса в соответствии с выбранным языком"""
+    texts = {
+        "ru": {
+            "window_title": "📊 Детальный анализ проекта",
+            "title_label": "📊 Детальный анализ проекта",
+            "select_folder_btn": "📁 Выбрать папку",
+            "analyze_btn": "🔍 Анализировать папку",
+            "export_btn": "💾 Экспорт",
+            "progress_label": "Выберите папку для анализа",
+            "ready_status": "Готов к анализу",
+            "folder_selected": "Выбрана папка: {}",
+            "warning_title": "Предупреждение",
+            "warning_select_folder": "Сначала выберите папку!",
+            "error_title": "Ошибка",
+            "error_analysis": "Ошибка при анализе:\n{}",
+            "error_export": "Ошибка при сохранении отчета:\n{}",
+            "success_export": "Отчет сохранен в {}",
+            "analysis_completed": "✅ Анализ завершен!",
+            "analysis_error": "❌ Ошибка анализа",
+            "overview_tab": "📊 Обзор",
+            "libraries_tab": "📦 Библиотеки",
+            "quality_tab": "✨ Качество",
+            "complexity_tab": "📊 Сложность",
+            "architecture_tab": "🏗️ Архитектура",
+            "dependencies_tab": "🔗 Зависимости",
+            "overview_title": "📊 Общая статистика папки",
+            "architecture_title": "🏗️ АНАЛИЗ АРХИТЕКТУРЫ ПАПКИ",
+            "dependencies_title": "🔗 АНАЛИЗ ЗАВИСИМОСТЕЙ В ПАПКЕ",
+            "architecture_placeholder": "Результаты анализа архитектуры папки появятся здесь...",
+            "dependencies_placeholder": "Результаты анализа зависимостей в папке появятся здесь...",
+            "chart_libraries": "Топ библиотек",
+            "chart_quality": "Распределение качества кода",
+            "chart_complexity": "Распределение сложности кода",
+            "chart_quality_folder": "Распределение качества кода в папке",
+            "no_architecture_data": "Данные архитектуры недоступны",
+            "no_dependencies_data": "Данные зависимостей недоступны"
+        },
+        "en": {
+            "window_title": "📊 Detailed Project Analysis",
+            "title_label": "📊 Detailed Project Analysis",
+            "select_folder_btn": "📁 Select Folder",
+            "analyze_btn": "🔍 Analyze Folder",
+            "export_btn": "💾 Export",
+            "progress_label": "Select folder for analysis",
+            "ready_status": "Ready for analysis",
+            "folder_selected": "Selected folder: {}",
+            "warning_title": "Warning",
+            "warning_select_folder": "Please select a folder first!",
+            "error_title": "Error",
+            "error_analysis": "Error during analysis:\n{}",
+            "error_export": "Error saving report:\n{}",
+            "success_export": "Report saved to {}",
+            "analysis_completed": "✅ Analysis completed!",
+            "analysis_error": "❌ Analysis error",
+            "overview_tab": "📊 Overview",
+            "libraries_tab": "📦 Libraries",
+            "quality_tab": "✨ Quality",
+            "complexity_tab": "📊 Complexity",
+            "architecture_tab": "🏗️ Architecture",
+            "dependencies_tab": "🔗 Dependencies",
+            "overview_title": "📊 General Folder Statistics",
+            "architecture_title": "🏗️ FOLDER ARCHITECTURE ANALYSIS",
+            "dependencies_title": "🔗 DEPENDENCIES ANALYSIS IN FOLDER",
+            "architecture_placeholder": "Folder architecture analysis results will appear here...",
+            "dependencies_placeholder": "Folder dependencies analysis results will appear here...",
+            "chart_libraries": "Top Libraries",
+            "chart_quality": "Code Quality Distribution",
+            "chart_complexity": "Code Complexity Distribution",
+            "chart_quality_folder": "Code Quality Distribution in Folder",
+            "no_architecture_data": "Architecture data unavailable",
+            "no_dependencies_data": "Dependencies data unavailable"
+        }
+    }
+    
+    return texts.get(language, texts["ru"])
 
 
 def debug_log(message: str):
@@ -72,19 +151,21 @@ class AnalysisWorker(QThread):
 
 
 class StatsWindow(QMainWindow):
-    """Окно расширенной статистики"""
+    """Окно расширенной статистики папки/директории"""
     
-    def __init__(self, project_path: Optional[Path] = None, scan_service=None):
+    def __init__(self, scan_service=None, language="ru"):
         debug_log("=== ИНИЦИАЛИЗАЦИЯ StatsWindow ===")
-        debug_log(f"project_path: {project_path}")
         debug_log(f"scan_service: {scan_service}")
+        debug_log(f"language: {language}")
         
         try:
             super().__init__()
             debug_log("✅ super().__init__() выполнен")
             
-            self.project_path = project_path
+            self.folder_path = None  # Пользователь сам выберет папку
             self.scan_service = scan_service
+            self.language = language
+            self.texts = get_ui_texts(language)
             self.analysis_result = None
             self.analysis_worker = None
             
@@ -103,12 +184,8 @@ class StatsWindow(QMainWindow):
             self.setup_styles()
             debug_log("✅ Стили настроены")
             
-            # Если путь к проекту передан, запускаем анализ
-            if self.project_path:
-                debug_log("🚀 Запуск анализа проекта...")
-                self.start_analysis()
-            else:
-                debug_log("ℹ️ project_path не передан, анализ не запускается")
+            # НЕ запускаем анализ автоматически - пользователь сам выберет папку
+            debug_log("ℹ️ Анализ не запускается автоматически - пользователь выберет папку")
             
             debug_log("✅ StatsWindow инициализирован успешно")
             
@@ -121,7 +198,7 @@ class StatsWindow(QMainWindow):
         """Инициализация пользовательского интерфейса"""
         debug_log("🎨 Начало инициализации UI...")
         
-        self.setWindowTitle("📊 Расширенная статистика проекта")
+        self.setWindowTitle(self.texts["window_title"])
         self.setMinimumSize(1200, 800)
         debug_log("✅ Заголовок и размер окна установлены")
         
@@ -135,7 +212,7 @@ class StatsWindow(QMainWindow):
         main_layout.setContentsMargins(20, 20, 20, 20)
         
         # Заголовок
-        title_label = QLabel("📊 Расширенная статистика проекта")
+        title_label = QLabel(self.texts["title_label"])
         title_label.setFont(QFont("Segoe UI", 20, QFont.Bold))
         title_label.setAlignment(Qt.AlignCenter)
         title_label.setStyleSheet("color: #2c3e50; margin-bottom: 10px;")
@@ -155,10 +232,10 @@ class StatsWindow(QMainWindow):
         control_layout = QHBoxLayout(control_frame)
         
         # Кнопки
-        self.select_project_btn = QPushButton("📁 Выбрать проект")
-        self.select_project_btn.setFont(QFont("Segoe UI", 11))
-        self.select_project_btn.clicked.connect(self.select_project)
-        self.select_project_btn.setStyleSheet("""
+        self.select_folder_btn = QPushButton(self.texts["select_folder_btn"])
+        self.select_folder_btn.setFont(QFont("Segoe UI", 11))
+        self.select_folder_btn.clicked.connect(self.select_folder)
+        self.select_folder_btn.setStyleSheet("""
             QPushButton {
                 background-color: #3498db;
                 color: white;
@@ -172,7 +249,7 @@ class StatsWindow(QMainWindow):
             }
         """)
         
-        self.analyze_btn = QPushButton("🔍 Анализировать")
+        self.analyze_btn = QPushButton(self.texts["analyze_btn"])
         self.analyze_btn.setFont(QFont("Segoe UI", 11))
         self.analyze_btn.clicked.connect(self.start_analysis)
         self.analyze_btn.setEnabled(False)
@@ -216,7 +293,7 @@ class StatsWindow(QMainWindow):
             }
         """)
         
-        control_layout.addWidget(self.select_project_btn)
+        control_layout.addWidget(self.select_folder_btn)
         control_layout.addWidget(self.analyze_btn)
         control_layout.addWidget(self.export_btn)
         control_layout.addStretch()
@@ -224,7 +301,7 @@ class StatsWindow(QMainWindow):
         main_layout.addWidget(control_frame)
         
         # Прогресс бар
-        self.progress_label = QLabel("Выберите проект для анализа")
+        self.progress_label = QLabel(self.texts["progress_label"])
         self.progress_label.setFont(QFont("Segoe UI", 10))
         self.progress_label.setStyleSheet("color: #2c3e50; margin-top: 10px;")
         main_layout.addWidget(self.progress_label)
@@ -301,7 +378,7 @@ class StatsWindow(QMainWindow):
         stats_layout = QGridLayout(stats_frame)
         
         # Заголовок
-        stats_title = QLabel("📊 Общая статистика")
+        stats_title = QLabel("📊 Общая статистика папки")
         stats_title.setFont(QFont("Segoe UI", 14, QFont.Bold))
         stats_title.setStyleSheet("color: #2c3e50; margin-bottom: 10px;")
         stats_layout.addWidget(stats_title, 0, 0, 1, 2)
@@ -356,7 +433,7 @@ class StatsWindow(QMainWindow):
         charts_layout.addWidget(self.libraries_chart)
         
         # График распределения качества
-        self.quality_chart = self.create_chart("Распределение качества")
+        self.quality_chart = self.create_chart("Распределение качества кода")
         charts_layout.addWidget(self.quality_chart)
         
         layout.addWidget(charts_frame)
@@ -399,7 +476,7 @@ class StatsWindow(QMainWindow):
         layout = QVBoxLayout(quality_widget)
         
         # График качества
-        self.quality_distribution_chart = self.create_chart("Распределение качества кода")
+        self.quality_distribution_chart = self.create_chart("Распределение качества кода в папке")
         layout.addWidget(self.quality_distribution_chart)
         
         # Таблица файлов с проблемами
@@ -433,7 +510,7 @@ class StatsWindow(QMainWindow):
         layout = QVBoxLayout(complexity_widget)
         
         # График сложности
-        self.complexity_chart = self.create_chart("Распределение сложности")
+        self.complexity_chart = self.create_chart("Распределение сложности кода")
         layout.addWidget(self.complexity_chart)
         
         # Таблица сложных файлов
@@ -478,7 +555,7 @@ class StatsWindow(QMainWindow):
                 color: #2c3e50;
             }
         """)
-        self.architecture_text.setPlaceholderText("Результаты анализа архитектуры появятся здесь...")
+        self.architecture_text.setPlaceholderText("Результаты анализа архитектуры папки появятся здесь...")
         
         layout.addWidget(self.architecture_text)
         
@@ -501,7 +578,7 @@ class StatsWindow(QMainWindow):
                 color: #2c3e50;
             }
         """)
-        self.dependencies_text.setPlaceholderText("Результаты анализа зависимостей появятся здесь...")
+        self.dependencies_text.setPlaceholderText("Результаты анализа зависимостей в папке появятся здесь...")
         
         layout.addWidget(self.dependencies_text)
         
@@ -533,35 +610,35 @@ class StatsWindow(QMainWindow):
             }
         """)
     
-    def select_project(self):
-        """Выбор проекта"""
+    def select_folder(self):
+        """Выбор папки для анализа"""
         directory = QFileDialog.getExistingDirectory(
             self, 
-            "Выберите папку проекта",
+            "Выберите папку для анализа",
             os.getcwd()
         )
         
         if directory:
-            self.project_path = Path(directory)
+            self.folder_path = Path(directory)
             self.analyze_btn.setEnabled(True)
-            self.progress_label.setText(f"Выбран проект: {directory}")
-            self.statusBar().showMessage(f"Проект: {directory}")
+            self.progress_label.setText(self.texts["folder_selected"].format(directory))
+            self.statusBar().showMessage(f"Папка: {directory}")
     
     def start_analysis(self):
-        """Запуск анализа"""
-        debug_log("🚀 Запуск анализа...")
-        debug_log(f"project_path: {self.project_path}")
+        """Запуск анализа папки"""
+        debug_log("🚀 Запуск анализа папки...")
+        debug_log(f"folder_path: {self.folder_path}")
         
-        if not self.project_path:
-            debug_log("❌ project_path не установлен")
-            QMessageBox.warning(self, "Предупреждение", "Сначала выберите проект!")
+        if not self.folder_path:
+            debug_log("❌ folder_path не установлен")
+            QMessageBox.warning(self, "Предупреждение", "Сначала выберите папку!")
             return
         
-        debug_log("✅ project_path установлен, начинаем анализ")
+        debug_log("✅ folder_path установлен, начинаем анализ")
         
         # Отключаем кнопки
         self.analyze_btn.setEnabled(False)
-        self.select_project_btn.setEnabled(False)
+        self.select_folder_btn.setEnabled(False)
         self.export_btn.setEnabled(False)
         debug_log("✅ Кнопки отключены")
         
@@ -573,7 +650,7 @@ class StatsWindow(QMainWindow):
         # Запускаем анализ в отдельном потоке
         debug_log("🔧 Создание AnalysisWorker...")
         try:
-            self.analysis_worker = AnalysisWorker(self.project_path, self.config)
+            self.analysis_worker = AnalysisWorker(self.folder_path, self.config)
             debug_log("✅ AnalysisWorker создан")
             
             self.analysis_worker.progress_updated.connect(self.update_progress)
@@ -591,7 +668,7 @@ class StatsWindow(QMainWindow):
             QMessageBox.critical(self, "Ошибка", f"Ошибка при запуске анализа:\n{e}")
             # Включаем кнопки обратно
             self.analyze_btn.setEnabled(True)
-            self.select_project_btn.setEnabled(True)
+            self.select_folder_btn.setEnabled(True)
             self.export_btn.setEnabled(True)
             self.progress_bar.setVisible(False)
     
@@ -609,7 +686,7 @@ class StatsWindow(QMainWindow):
         
         # Включаем кнопки
         self.analyze_btn.setEnabled(True)
-        self.select_project_btn.setEnabled(True)
+        self.select_folder_btn.setEnabled(True)
         self.export_btn.setEnabled(True)
         
         # Обновляем данные
@@ -620,7 +697,7 @@ class StatsWindow(QMainWindow):
         self.update_architecture_tab()
         self.update_dependencies_tab()
         
-        self.progress_label.setText("✅ Анализ завершен!")
+        self.progress_label.setText(self.texts["analysis_completed"])
         self.statusBar().showMessage("Анализ завершен успешно")
     
     def analysis_error(self, error_message: str):
@@ -629,12 +706,12 @@ class StatsWindow(QMainWindow):
         
         # Включаем кнопки
         self.analyze_btn.setEnabled(True)
-        self.select_project_btn.setEnabled(True)
+        self.select_folder_btn.setEnabled(True)
         
         # Скрываем прогресс
         self.progress_bar.setVisible(False)
         
-        self.progress_label.setText("❌ Ошибка анализа")
+        self.progress_label.setText(self.texts["analysis_error"])
         self.statusBar().showMessage("Ошибка анализа")
     
     def update_statistics(self):
@@ -738,7 +815,7 @@ class StatsWindow(QMainWindow):
         architecture_data = self.analysis_result.get('architecture_data', {})
         
         # Форматируем данные архитектуры
-        text = "🏗️ АНАЛИЗ АРХИТЕКТУРЫ ПРОЕКТА\n"
+        text = "🏗️ АНАЛИЗ АРХИТЕКТУРЫ ПАПКИ\n"
         text += "=" * 50 + "\n\n"
         
         if architecture_data:
@@ -757,7 +834,7 @@ class StatsWindow(QMainWindow):
         dependency_graph = self.analysis_result.get('dependency_graph', {})
         
         # Форматируем данные зависимостей
-        text = "🔗 АНАЛИЗ ЗАВИСИМОСТЕЙ ПРОЕКТА\n"
+        text = "🔗 АНАЛИЗ ЗАВИСИМОСТЕЙ В ПАПКЕ\n"
         text += "=" * 50 + "\n\n"
         
         if dependency_graph:
