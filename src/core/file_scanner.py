@@ -46,12 +46,7 @@ class FileScanner(IFileScanner):
         performance_config: PerformanceConfig = PerformanceConfig(**performance_config_dict)
         self.performance_manager: PerformanceManager = PerformanceManager(performance_config)
         
-        self.logger.info("FileScanner инициализирован", 
-                        extra_data={
-                            "max_workers": self._max_workers,
-                            "batch_size": self._batch_size,
-                            "max_file_size": self._max_file_size
-                        })
+        self.logger.info(f"FileScanner инициализирован (max_workers: {self._max_workers}, batch_size: {self._batch_size}, max_file_size: {self._max_file_size})")
     
     def scan_directory(self, directory: Path, 
                       progress_callback: Optional[Callable[[str, Optional[float]], None]] = None) -> ScanResult:
@@ -65,8 +60,7 @@ class FileScanner(IFileScanner):
         Returns:
             Результат сканирования
         """
-        self.logger.info("Начало сканирования директории", 
-                        extra_data={"directory": str(directory)})
+        self.logger.info(f"Начало сканирования директории (directory: {directory})")
         
         start_time: float = time.time()
         
@@ -77,8 +71,7 @@ class FileScanner(IFileScanner):
         self.logger.info("Поиск Python файлов")
         file_paths: List[Path] = self._find_python_files(directory)
         
-        self.logger.info("Поиск файлов завершен", 
-                        extra_data={"files_found": len(file_paths)})
+        self.logger.info(f"Поиск файлов завершен (files_found: {len(file_paths)})")
         
         if progress_callback:
             progress_callback(f"Найдено {len(file_paths)} файлов для обработки...")
@@ -104,13 +97,7 @@ class FileScanner(IFileScanner):
         # Создание результата
         scan_duration: float = time.time() - start_time
         
-        self.logger.info("Сканирование завершено", 
-                        extra_data={
-                            "total_files": len(file_paths),
-                            "total_imports": sum(all_imports.values()),
-                            "duration": scan_duration,
-                            "projects_found": len(projects_data)
-                        })
+        self.logger.info(f"Сканирование завершено (total_files: {len(file_paths)}, total_imports: {sum(all_imports.values())}, duration: {scan_duration:.2f}s, projects_found: {len(projects_data)})")
         
         return ScanResult(
             imports_data=self._create_imports_data(all_imports),
@@ -139,8 +126,7 @@ class FileScanner(IFileScanner):
         # Попытка получить из кэша
         cached_result: Optional[List[str]] = self.performance_manager.get_cached_result(cache_key)
         if cached_result is not None:
-            self.logger.debug("Результат найден в кэше", 
-                            extra_data={"file": str(file_path)})
+            self.logger.debug(f"Результат найден в кэше (file: {file_path})")
             return cached_result
         
         try:
