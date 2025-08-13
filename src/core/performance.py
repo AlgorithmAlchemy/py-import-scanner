@@ -164,12 +164,10 @@ class PerformanceProfiler:
             with open(self.config.profile_file, 'w', encoding='utf-8') as f:
                 json.dump(profile_data, f, indent=2, ensure_ascii=False)
             
-            self.logger.info("Профиль производительности сохранен", 
-                           extra_data={"file": self.config.profile_file})
+            self.logger.info(f"Профиль производительности сохранен (file: {self.config.profile_file})")
             
         except Exception as e:
-            self.logger.error("Ошибка сохранения профиля", 
-                            extra_data={"error": str(e)})
+            self.logger.error(f"Ошибка сохранения профиля (error: {e})")
     
     def reset(self) -> None:
         """Сбрасывает все метрики"""
@@ -203,8 +201,7 @@ class MemoryOptimizer:
         except ImportError:
             return {'rss': 0, 'vms': 0, 'percent': 0, 'available': 0}
         except Exception as e:
-            self.logger.error("Ошибка проверки памяти", 
-                            extra_data={"error": str(e)})
+            self.logger.error(f"Ошибка проверки памяти (error: {e})")
             return {'rss': 0, 'vms': 0, 'percent': 0, 'available': 0}
     
     def should_gc(self) -> bool:
@@ -222,7 +219,7 @@ class MemoryOptimizer:
     def log_memory_usage(self) -> None:
         """Логирует использование памяти"""
         memory_info: Dict[str, float] = self.check_memory_usage()
-        self.logger.info("Использование памяти", extra_data=memory_info)
+        self.logger.info(f"Использование памяти (rss: {memory_info['rss']:.1f}MB, vms: {memory_info['vms']:.1f}MB, percent: {memory_info['percent']:.1f}%)")
 
 
 class ThreadOptimizer:
@@ -316,8 +313,7 @@ class PerformanceManager:
         
         result: Optional[Any] = self.cache.get(key)
         if result:
-            self.logger.debug("Результат найден в кэше", 
-                            extra_data={"key": key})
+            self.logger.debug(f"Результат найден в кэше (key: {key})")
         return result
     
     def cache_result(self, key: str, value: Any) -> None:
@@ -326,8 +322,7 @@ class PerformanceManager:
             return
         
         self.cache.put(key, value)
-        self.logger.debug("Результат сохранен в кэш", 
-                         extra_data={"key": key})
+        self.logger.debug(f"Результат сохранен в кэш (key: {key})")
     
     def start_profiling(self, name: str) -> None:
         """Запускает профилирование"""
