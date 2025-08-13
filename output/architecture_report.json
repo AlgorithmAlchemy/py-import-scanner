@@ -1,0 +1,5531 @@
+{
+  "summary": {
+    "total_modules": 50,
+    "total_dependencies": 154,
+    "architecture_score": 0.0,
+    "circular_dependencies_count": 15,
+    "problematic_dependencies_count": 140,
+    "isolated_modules_count": 3,
+    "highly_coupled_modules_count": 6,
+    "unstable_modules_count": 22,
+    "unused_imports_count": 0,
+    "missing_imports_count": 0
+  },
+  "modules": [
+    {
+      "name": "examples.architecture_analysis_example",
+      "path": "E:\\Code\\PYTHON\\py_import_parser\\examples\\architecture_analysis_example.py",
+      "imports": [
+        "sys",
+        "pathlib",
+        "core.architecture_analyzer",
+        "core.scan_service",
+        "traceback"
+      ],
+      "classes": [],
+      "functions": [
+        "main",
+        "print_results",
+        "visualize_dependencies",
+        "export_reports"
+      ],
+      "dependencies": [
+        "src.core.architecture_analyzer",
+        "src.core.scan_service"
+      ],
+      "dependents": []
+    },
+    {
+      "name": "examples.architecture_simple_example",
+      "path": "E:\\Code\\PYTHON\\py_import_parser\\examples\\architecture_simple_example.py",
+      "imports": [
+        "sys",
+        "pathlib",
+        "core.architecture_analyzer",
+        "traceback"
+      ],
+      "classes": [],
+      "functions": [
+        "main",
+        "print_results",
+        "visualize_dependencies",
+        "export_reports"
+      ],
+      "dependencies": [
+        "src.core.architecture_analyzer"
+      ],
+      "dependents": []
+    },
+    {
+      "name": "examples.complexity_example",
+      "path": "E:\\Code\\PYTHON\\py_import_parser\\examples\\complexity_example.py",
+      "imports": [
+        "sys",
+        "pathlib",
+        "core.scan_service",
+        "core.complexity_analyzer",
+        "core.configuration",
+        "traceback"
+      ],
+      "classes": [],
+      "functions": [
+        "print_file_report",
+        "print_project_report",
+        "analyze_sample_file",
+        "analyze_current_project",
+        "analyze_specific_files",
+        "main"
+      ],
+      "dependencies": [
+        "src.core.scan_service",
+        "src.core.complexity_analyzer",
+        "src.core.configuration"
+      ],
+      "dependents": []
+    },
+    {
+      "name": "examples.complexity_simple_example",
+      "path": "E:\\Code\\PYTHON\\py_import_parser\\examples\\complexity_simple_example.py",
+      "imports": [
+        "sys",
+        "pathlib",
+        "core.complexity_analyzer",
+        "tempfile",
+        "shutil",
+        "traceback"
+      ],
+      "classes": [],
+      "functions": [
+        "print_file_report",
+        "print_project_report",
+        "analyze_sample_file",
+        "analyze_specific_files",
+        "analyze_small_project",
+        "main"
+      ],
+      "dependencies": [
+        "src.core.complexity_analyzer"
+      ],
+      "dependents": []
+    },
+    {
+      "name": "examples.dependency_analysis_example",
+      "path": "E:\\Code\\PYTHON\\py_import_parser\\examples\\dependency_analysis_example.py",
+      "imports": [
+        "sys",
+        "pathlib",
+        "core.dependency_analyzer",
+        "core.scan_service",
+        "traceback"
+      ],
+      "classes": [],
+      "functions": [
+        "main",
+        "create_test_requirements",
+        "print_results",
+        "export_reports"
+      ],
+      "dependencies": [
+        "src.core.dependency_analyzer",
+        "src.core.scan_service"
+      ],
+      "dependents": []
+    },
+    {
+      "name": "examples.dependency_simple_example",
+      "path": "E:\\Code\\PYTHON\\py_import_parser\\examples\\dependency_simple_example.py",
+      "imports": [
+        "sys",
+        "pathlib",
+        "core.dependency_analyzer",
+        "traceback"
+      ],
+      "classes": [],
+      "functions": [
+        "main",
+        "create_test_requirements",
+        "print_results",
+        "export_reports"
+      ],
+      "dependencies": [
+        "src.core.dependency_analyzer"
+      ],
+      "dependents": []
+    },
+    {
+      "name": "examples.logging_example",
+      "path": "E:\\Code\\PYTHON\\py_import_parser\\examples\\logging_example.py",
+      "imports": [
+        "sys",
+        "pathlib",
+        "core.logging_config",
+        "core.configuration",
+        "core.scan_service",
+        "json",
+        "collections"
+      ],
+      "classes": [],
+      "functions": [
+        "example_basic_logging",
+        "example_context_logging",
+        "example_scan_service_logging",
+        "example_log_analysis",
+        "main"
+      ],
+      "dependencies": [
+        "src.core.logging_config",
+        "src.core.configuration",
+        "src.core.scan_service"
+      ],
+      "dependents": []
+    },
+    {
+      "name": "examples.patterns_example",
+      "path": "E:\\Code\\PYTHON\\py_import_parser\\examples\\patterns_example.py",
+      "imports": [
+        "sys",
+        "pathlib",
+        "core.scan_service",
+        "core.patterns",
+        "core.logging_config",
+        "core.configuration",
+        "core.configuration",
+        "core.import_parser",
+        "core.project_analyzer",
+        "core.file_scanner",
+        "core.patterns",
+        "core.configuration",
+        "core.file_scanner",
+        "core.import_parser",
+        "core.project_analyzer",
+        "traceback"
+      ],
+      "classes": [],
+      "functions": [
+        "example_factory_pattern",
+        "example_strategy_pattern",
+        "example_observer_pattern",
+        "example_builder_pattern",
+        "example_scan_service_with_patterns",
+        "example_composite_pattern",
+        "main"
+      ],
+      "dependencies": [
+        "src.core.scan_service",
+        "src.core.patterns",
+        "src.core.logging_config",
+        "src.core.configuration",
+        "src.core.configuration",
+        "src.core.import_parser",
+        "src.core.project_analyzer",
+        "src.core.file_scanner",
+        "src.core.patterns",
+        "src.core.configuration",
+        "src.core.file_scanner",
+        "src.core.import_parser",
+        "src.core.project_analyzer"
+      ],
+      "dependents": []
+    },
+    {
+      "name": "examples.patterns_simple_example",
+      "path": "E:\\Code\\PYTHON\\py_import_parser\\examples\\patterns_simple_example.py",
+      "imports": [
+        "sys",
+        "pathlib",
+        "core.patterns",
+        "core.configuration",
+        "core.configuration",
+        "core.import_parser",
+        "core.project_analyzer",
+        "core.file_scanner",
+        "core.patterns",
+        "core.configuration",
+        "core.file_scanner",
+        "core.import_parser",
+        "core.project_analyzer"
+      ],
+      "classes": [],
+      "functions": [
+        "example_factory_pattern",
+        "example_strategy_pattern",
+        "example_observer_pattern",
+        "progress_callback",
+        "example_builder_pattern",
+        "example_composite_pattern",
+        "example_patterns_integration",
+        "custom_progress_callback",
+        "main"
+      ],
+      "dependencies": [
+        "src.core.patterns",
+        "src.core.configuration",
+        "src.core.configuration",
+        "src.core.import_parser",
+        "src.core.project_analyzer",
+        "src.core.file_scanner",
+        "src.core.patterns",
+        "src.core.configuration",
+        "src.core.file_scanner",
+        "src.core.import_parser",
+        "src.core.project_analyzer"
+      ],
+      "dependents": []
+    },
+    {
+      "name": "examples.performance_example",
+      "path": "E:\\Code\\PYTHON\\py_import_parser\\examples\\performance_example.py",
+      "imports": [
+        "time",
+        "tempfile",
+        "pathlib",
+        "typing",
+        "src.core.performance",
+        "src.core.configuration",
+        "traceback"
+      ],
+      "classes": [],
+      "functions": [
+        "create_test_files",
+        "simulate_file_scanning",
+        "expensive_parsing_operation",
+        "analyze_project_structure",
+        "demonstrate_caching",
+        "demonstrate_profiling",
+        "demonstrate_memory_optimization",
+        "demonstrate_thread_optimization",
+        "demonstrate_decorators",
+        "generate_performance_report",
+        "main"
+      ],
+      "dependencies": [
+        "src.core.performance",
+        "src.core.configuration"
+      ],
+      "dependents": []
+    },
+    {
+      "name": "examples.quality_analysis_example",
+      "path": "E:\\Code\\PYTHON\\py_import_parser\\examples\\quality_analysis_example.py",
+      "imports": [
+        "sys",
+        "pathlib",
+        "core.code_quality_analyzer",
+        "core.scan_service",
+        "core.configuration"
+      ],
+      "classes": [],
+      "functions": [
+        "print_file_quality_report",
+        "print_project_quality_report",
+        "create_test_file_with_issues",
+        "analyze_sample_file",
+        "analyze_current_project",
+        "analyze_specific_files",
+        "main"
+      ],
+      "dependencies": [
+        "src.core.code_quality_analyzer",
+        "src.core.scan_service",
+        "src.core.configuration"
+      ],
+      "dependents": []
+    },
+    {
+      "name": "examples.quality_simple_example",
+      "path": "E:\\Code\\PYTHON\\py_import_parser\\examples\\quality_simple_example.py",
+      "imports": [
+        "sys",
+        "pathlib",
+        "core.code_quality_analyzer",
+        "tempfile",
+        "shutil"
+      ],
+      "classes": [],
+      "functions": [
+        "print_file_quality_report",
+        "create_test_file_with_issues",
+        "analyze_test_file",
+        "analyze_specific_files",
+        "analyze_small_project",
+        "main"
+      ],
+      "dependencies": [
+        "src.core.code_quality_analyzer"
+      ],
+      "dependents": []
+    },
+    {
+      "name": "examples.security_example",
+      "path": "E:\\Code\\PYTHON\\py_import_parser\\examples\\security_example.py",
+      "imports": [
+        "sys",
+        "tempfile",
+        "pathlib",
+        "core.security",
+        "core.configuration",
+        "traceback"
+      ],
+      "classes": [],
+      "functions": [
+        "demonstrate_security_features",
+        "demonstrate_integration_with_configuration",
+        "demonstrate_security_validation_flow",
+        "main"
+      ],
+      "dependencies": [
+        "src.core.security",
+        "src.core.configuration"
+      ],
+      "dependents": []
+    },
+    {
+      "name": "gui.__init__",
+      "path": "E:\\Code\\PYTHON\\py_import_parser\\gui\\__init__.py",
+      "imports": [
+        "main_window",
+        "stats_window"
+      ],
+      "classes": [],
+      "functions": [],
+      "dependencies": [
+        "gui.main_window",
+        "stats_window"
+      ],
+      "dependents": []
+    },
+    {
+      "name": "gui.chart_windows",
+      "path": "E:\\Code\\PYTHON\\py_import_parser\\gui\\chart_windows.py",
+      "imports": [
+        "matplotlib",
+        "matplotlib.backends.backend_qt5agg",
+        "matplotlib.figure",
+        "matplotlib.pyplot",
+        "PySide6.QtWidgets",
+        "PySide6.QtCore",
+        "PySide6.QtGui",
+        "datetime",
+        "numpy"
+      ],
+      "classes": [
+        "ChartWindow",
+        "BarChartWindow",
+        "PieChartWindow"
+      ],
+      "functions": [
+        "__init__",
+        "init_ui",
+        "setup_styles",
+        "create_chart",
+        "save_chart",
+        "__init__",
+        "create_chart",
+        "__init__",
+        "create_chart"
+      ],
+      "dependencies": [],
+      "dependents": [
+        "gui.stats_window",
+        "gui.stats_window"
+      ]
+    },
+    {
+      "name": "gui.main_window",
+      "path": "E:\\Code\\PYTHON\\py_import_parser\\gui\\main_window.py",
+      "imports": [
+        "os",
+        "re",
+        "threading",
+        "threading",
+        "collections",
+        "matplotlib.pyplot",
+        "matplotlib.backends.backend_qt5agg",
+        "PySide6.QtWidgets",
+        "PySide6.QtCore",
+        "PySide6.QtGui",
+        "pyperclip",
+        "colorama",
+        "queue",
+        "concurrent.futures",
+        "ast",
+        "utils"
+      ],
+      "classes": [
+        "ScanWorker",
+        "MainWindow"
+      ],
+      "functions": [
+        "__init__",
+        "run",
+        "scan_directory_for_imports_parallel",
+        "__init__",
+        "init_ui",
+        "setup_styles",
+        "change_language",
+        "update_ui_texts",
+        "get_ui_texts",
+        "browse_directory",
+        "start_scan",
+        "stop_scan",
+        "update_progress",
+        "scan_completed",
+        "scan_error",
+        "display_results",
+        "show_stats",
+        "show_context_menu",
+        "copy_to_clipboard",
+        "get_gitignore_excluded_dirs",
+        "is_excluded_directory",
+        "find_imports_in_file"
+      ],
+      "dependencies": [
+        "tests.test_architecture",
+        "utils"
+      ],
+      "dependents": [
+        "gui.__init__",
+        "main",
+        "src.main_refactored"
+      ]
+    },
+    {
+      "name": "gui.stats_window",
+      "path": "E:\\Code\\PYTHON\\py_import_parser\\gui\\stats_window.py",
+      "imports": [
+        "os",
+        "ast",
+        "datetime",
+        "pandas",
+        "matplotlib.pyplot",
+        "matplotlib",
+        "matplotlib.backends.backend_qt5agg",
+        "matplotlib.figure",
+        "numpy",
+        "PySide6.QtWidgets",
+        "PySide6.QtCore",
+        "PySide6.QtGui",
+        "utils",
+        "collections",
+        "gui.chart_windows",
+        "traceback",
+        "gui.chart_windows",
+        "traceback",
+        "PySide6.QtWidgets",
+        "PySide6.QtWidgets"
+      ],
+      "classes": [
+        "StatsWorker",
+        "StatsWindow"
+      ],
+      "functions": [
+        "analyze_project_structure",
+        "parse_python_files",
+        "__init__",
+        "run",
+        "analyze_project_structure",
+        "parse_python_files",
+        "__init__",
+        "extract_imports_data",
+        "init_ui",
+        "setup_styles",
+        "create_overview_tab",
+        "generate_overview_stats",
+        "create_charts_tab",
+        "open_bar_chart",
+        "open_pie_chart",
+        "create_table_tab",
+        "create_details_tab",
+        "create_imports_chart",
+        "create_pie_chart",
+        "populate_table",
+        "populate_details",
+        "export_to_csv",
+        "open_stats_window"
+      ],
+      "dependencies": [
+        "utils",
+        "gui.chart_windows",
+        "gui.chart_windows"
+      ],
+      "dependents": []
+    },
+    {
+      "name": "main",
+      "path": "E:\\Code\\PYTHON\\py_import_parser\\main.py",
+      "imports": [
+        "sys",
+        "os",
+        "pathlib",
+        "core.architecture_analyzer",
+        "core.dependency_analyzer",
+        "core.complexity_analyzer",
+        "core.code_quality_analyzer",
+        "PySide6.QtWidgets",
+        "PySide6.QtCore",
+        "core.scan_service",
+        "core.logging_config",
+        "gui.main_window",
+        "traceback",
+        "traceback"
+      ],
+      "classes": [],
+      "functions": [
+        "main"
+      ],
+      "dependencies": [
+        "src.core.architecture_analyzer",
+        "src.core.dependency_analyzer",
+        "src.core.complexity_analyzer",
+        "src.core.code_quality_analyzer",
+        "src.core.scan_service",
+        "src.core.logging_config",
+        "gui.main_window"
+      ],
+      "dependents": []
+    },
+    {
+      "name": "src.__init__",
+      "path": "E:\\Code\\PYTHON\\py_import_parser\\src\\__init__.py",
+      "imports": [],
+      "classes": [],
+      "functions": [],
+      "dependencies": [],
+      "dependents": []
+    },
+    {
+      "name": "src.core.__init__",
+      "path": "E:\\Code\\PYTHON\\py_import_parser\\src\\core\\__init__.py",
+      "imports": [],
+      "classes": [],
+      "functions": [],
+      "dependencies": [],
+      "dependents": []
+    },
+    {
+      "name": "src.core.architecture_analyzer",
+      "path": "E:\\Code\\PYTHON\\py_import_parser\\src\\core\\architecture_analyzer.py",
+      "imports": [
+        "ast",
+        "networkx",
+        "matplotlib.pyplot",
+        "typing",
+        "pathlib",
+        "dataclasses",
+        "json",
+        "logging",
+        "logging_config"
+      ],
+      "classes": [
+        "ModuleInfo",
+        "DependencyEdge",
+        "CircularDependency",
+        "ProblematicDependency",
+        "ArchitectureReport",
+        "ArchitectureAnalyzer",
+        "ModuleAnalyzerVisitor"
+      ],
+      "functions": [
+        "__init__",
+        "analyze_project",
+        "_find_python_files",
+        "_analyze_file",
+        "_get_module_name",
+        "_build_dependency_graph",
+        "_resolve_import",
+        "_analyze_architecture_patterns",
+        "_analyze_circular_dependencies",
+        "_analyze_single_cycle",
+        "_generate_cycle_suggestions",
+        "_find_affected_modules",
+        "_analyze_problematic_dependencies",
+        "_check_dependency_problems",
+        "_is_unstable_module",
+        "_analyze_unstable_modules",
+        "_analyze_import_issues",
+        "_is_import_used",
+        "_calculate_architecture_score",
+        "_generate_recommendations",
+        "visualize_dependencies",
+        "export_report",
+        "_export_json",
+        "_export_dot",
+        "__init__",
+        "visit_Import",
+        "visit_ImportFrom",
+        "visit_ClassDef",
+        "visit_FunctionDef"
+      ],
+      "dependencies": [
+        "tests.test_logging",
+        "src.core.logging_config"
+      ],
+      "dependents": [
+        "examples.architecture_analysis_example",
+        "examples.architecture_simple_example",
+        "main",
+        "src.core.scan_service",
+        "tests.test_architecture_analyzer"
+      ]
+    },
+    {
+      "name": "src.core.code_quality_analyzer",
+      "path": "E:\\Code\\PYTHON\\py_import_parser\\src\\core\\code_quality_analyzer.py",
+      "imports": [
+        "ast",
+        "re",
+        "hashlib",
+        "typing",
+        "pathlib",
+        "dataclasses",
+        "collections",
+        "logging",
+        "logging_config"
+      ],
+      "classes": [
+        "PEP8Violation",
+        "CognitiveComplexity",
+        "CodeDuplication",
+        "FunctionQuality",
+        "CodeQualityReport",
+        "ProjectQualityReport",
+        "CodeQualityAnalyzer"
+      ],
+      "functions": [
+        "__init__",
+        "analyze_file",
+        "analyze_project",
+        "_check_pep8",
+        "_analyze_functions_quality",
+        "_calculate_cyclomatic_complexity",
+        "_calculate_cognitive_complexity",
+        "_count_function_lines",
+        "_calculate_nesting_depth",
+        "_analyze_cognitive_complexity",
+        "_identify_cognitive_factors",
+        "_find_code_duplications",
+        "_normalize_code_block",
+        "_calculate_similarity",
+        "_calculate_quality_score",
+        "_generate_recommendations",
+        "_aggregate_project_results",
+        "_generate_project_recommendations"
+      ],
+      "dependencies": [
+        "tests.test_architecture",
+        "tests.test_logging",
+        "src.core.logging_config"
+      ],
+      "dependents": [
+        "examples.quality_analysis_example",
+        "examples.quality_simple_example",
+        "main",
+        "src.core.scan_service",
+        "tests.test_quality_analyzer"
+      ]
+    },
+    {
+      "name": "src.core.complexity_analyzer",
+      "path": "E:\\Code\\PYTHON\\py_import_parser\\src\\core\\complexity_analyzer.py",
+      "imports": [
+        "ast",
+        "math",
+        "typing",
+        "pathlib",
+        "dataclasses",
+        "collections",
+        "logging",
+        "logging_config"
+      ],
+      "classes": [
+        "ComplexityMetrics",
+        "FunctionMetrics",
+        "ClassMetrics",
+        "FileComplexityReport",
+        "ProjectComplexityReport",
+        "ComplexityAnalyzer",
+        "ComplexityVisitor",
+        "FunctionVisitor",
+        "ClassVisitor"
+      ],
+      "functions": [
+        "__init__",
+        "analyze_file",
+        "analyze_project",
+        "_calculate_basic_metrics",
+        "_analyze_ast",
+        "_calculate_advanced_metrics",
+        "_calculate_maintainability_index",
+        "_calculate_halstead_metrics",
+        "_extract_function_metrics",
+        "_extract_class_metrics",
+        "_calculate_function_maintainability",
+        "_calculate_grade",
+        "_create_project_report",
+        "_generate_recommendations",
+        "__init__",
+        "visit",
+        "visit_FunctionDef",
+        "visit_AsyncFunctionDef",
+        "visit_ClassDef",
+        "visit_If",
+        "visit_While",
+        "visit_For",
+        "visit_ExceptHandler",
+        "visit_With",
+        "visit_Import",
+        "visit_ImportFrom",
+        "visit_Assign",
+        "visit_Num",
+        "average_nesting_depth",
+        "__init__",
+        "visit",
+        "visit_If",
+        "visit_While",
+        "visit_For",
+        "visit_ExceptHandler",
+        "visit_Assign",
+        "visit_Num",
+        "__init__",
+        "visit_FunctionDef",
+        "visit_AsyncFunctionDef",
+        "visit_Assign",
+        "visit_If",
+        "visit_While",
+        "visit_For"
+      ],
+      "dependencies": [
+        "tests.test_logging",
+        "src.core.logging_config"
+      ],
+      "dependents": [
+        "examples.complexity_example",
+        "examples.complexity_simple_example",
+        "main",
+        "src.core.scan_service",
+        "tests.test_complexity",
+        "tests.test_gui_integration",
+        "tests.test_gui_simple"
+      ]
+    },
+    {
+      "name": "src.core.configuration",
+      "path": "E:\\Code\\PYTHON\\py_import_parser\\src\\core\\configuration.py",
+      "imports": [
+        "typing",
+        "pathlib",
+        "json",
+        "interfaces"
+      ],
+      "classes": [
+        "Configuration"
+      ],
+      "functions": [
+        "__init__",
+        "_load_config",
+        "_save_config",
+        "_get_default_config",
+        "get_excluded_libraries",
+        "get_excluded_directories",
+        "get_max_file_size",
+        "get_max_depth",
+        "get_batch_size",
+        "get_max_workers",
+        "get_supported_encodings",
+        "get_file_extensions",
+        "get_progress_update_interval",
+        "update_config",
+        "reset_to_defaults",
+        "get_logging_config",
+        "update_logging_config",
+        "get_security_config",
+        "update_security_config",
+        "get_performance_config",
+        "update_performance_config"
+      ],
+      "dependencies": [
+        "src.core.interfaces"
+      ],
+      "dependents": [
+        "examples.complexity_example",
+        "examples.logging_example",
+        "examples.patterns_example",
+        "examples.patterns_example",
+        "examples.patterns_example",
+        "examples.patterns_simple_example",
+        "examples.patterns_simple_example",
+        "examples.patterns_simple_example",
+        "examples.performance_example",
+        "examples.quality_analysis_example",
+        "examples.security_example",
+        "src.core.file_scanner",
+        "src.core.import_parser",
+        "src.core.project_analyzer",
+        "src.core.scan_service",
+        "tests.test_architecture",
+        "tests.test_gui_integration",
+        "tests.test_gui_simple",
+        "tests.test_gui_simple",
+        "tests.test_gui_simple",
+        "tests.test_gui_simple",
+        "tests.test_patterns"
+      ]
+    },
+    {
+      "name": "src.core.data_exporter",
+      "path": "E:\\Code\\PYTHON\\py_import_parser\\src\\core\\data_exporter.py",
+      "imports": [
+        "json",
+        "csv",
+        "datetime",
+        "typing",
+        "pathlib",
+        "pandas",
+        "interfaces"
+      ],
+      "classes": [
+        "DataExporter"
+      ],
+      "functions": [
+        "export_to_csv",
+        "export_to_json",
+        "export_to_excel",
+        "export_summary_report",
+        "export_imports_only_csv"
+      ],
+      "dependencies": [
+        "src.core.interfaces"
+      ],
+      "dependents": [
+        "src.core.patterns",
+        "src.core.scan_service",
+        "tests.test_architecture",
+        "tests.test_gui_simple"
+      ]
+    },
+    {
+      "name": "src.core.dependency_analyzer",
+      "path": "E:\\Code\\PYTHON\\py_import_parser\\src\\core\\dependency_analyzer.py",
+      "imports": [
+        "subprocess",
+        "json",
+        "re",
+        "requests",
+        "typing",
+        "pathlib",
+        "dataclasses",
+        "packaging",
+        "packaging.requirements",
+        "logging",
+        "logging_config",
+        "csv"
+      ],
+      "classes": [
+        "PackageInfo",
+        "Vulnerability",
+        "LicenseInfo",
+        "DuplicateDependency",
+        "DependencyReport",
+        "DependencyAnalyzer"
+      ],
+      "functions": [
+        "__init__",
+        "analyze_requirements",
+        "_parse_requirements",
+        "_check_vulnerabilities",
+        "_check_with_safety",
+        "_check_with_pypi",
+        "_analyze_licenses",
+        "_get_package_license",
+        "_check_license_compatibility",
+        "_check_outdated_packages",
+        "_get_latest_version",
+        "_extract_version",
+        "_find_duplicate_dependencies",
+        "_generate_recommendations",
+        "export_report",
+        "_export_json",
+        "_export_csv",
+        "_export_txt"
+      ],
+      "dependencies": [
+        "tests.test_architecture",
+        "tests.test_logging",
+        "src.core.logging_config"
+      ],
+      "dependents": [
+        "examples.dependency_analysis_example",
+        "examples.dependency_simple_example",
+        "main",
+        "src.core.scan_service",
+        "tests.test_dependency_analyzer"
+      ]
+    },
+    {
+      "name": "src.core.file_scanner",
+      "path": "E:\\Code\\PYTHON\\py_import_parser\\src\\core\\file_scanner.py",
+      "imports": [
+        "time",
+        "datetime",
+        "typing",
+        "pathlib",
+        "concurrent.futures",
+        "collections",
+        "os",
+        "interfaces",
+        "import_parser",
+        "project_analyzer",
+        "configuration",
+        "logging_config",
+        "security",
+        "performance"
+      ],
+      "classes": [
+        "FileScanner"
+      ],
+      "functions": [
+        "__init__",
+        "scan_directory",
+        "scan_file",
+        "_find_python_files",
+        "_read_file_content",
+        "_scan_files_parallel",
+        "_process_batch",
+        "_update_projects_with_imports",
+        "_create_imports_data",
+        "_create_empty_result"
+      ],
+      "dependencies": [
+        "src.core.interfaces",
+        "src.core.import_parser",
+        "src.core.project_analyzer",
+        "src.core.configuration",
+        "src.core.logging_config",
+        "src.core.security",
+        "src.core.performance"
+      ],
+      "dependents": [
+        "examples.patterns_example",
+        "examples.patterns_example",
+        "examples.patterns_simple_example",
+        "examples.patterns_simple_example",
+        "src.core.patterns",
+        "src.core.scan_service",
+        "tests.test_architecture",
+        "tests.test_gui_simple"
+      ]
+    },
+    {
+      "name": "src.core.import_parser",
+      "path": "E:\\Code\\PYTHON\\py_import_parser\\src\\core\\import_parser.py",
+      "imports": [
+        "ast",
+        "typing",
+        "pathlib",
+        "collections",
+        "interfaces",
+        "configuration",
+        "logging_config",
+        "security",
+        "performance"
+      ],
+      "classes": [
+        "ImportParser"
+      ],
+      "functions": [
+        "__init__",
+        "parse_imports",
+        "_extract_library_name",
+        "_is_valid_library",
+        "is_standard_library",
+        "get_import_statistics"
+      ],
+      "dependencies": [
+        "src.core.interfaces",
+        "src.core.configuration",
+        "src.core.logging_config",
+        "src.core.security",
+        "src.core.performance"
+      ],
+      "dependents": [
+        "examples.patterns_example",
+        "examples.patterns_example",
+        "examples.patterns_simple_example",
+        "examples.patterns_simple_example",
+        "src.core.file_scanner",
+        "src.core.patterns",
+        "src.core.scan_service",
+        "tests.test_architecture",
+        "tests.test_gui_simple",
+        "tests.test_gui_simple"
+      ]
+    },
+    {
+      "name": "src.core.interfaces",
+      "path": "E:\\Code\\PYTHON\\py_import_parser\\src\\core\\interfaces.py",
+      "imports": [
+        "abc",
+        "typing",
+        "pathlib",
+        "dataclasses",
+        "datetime"
+      ],
+      "classes": [
+        "ImportData",
+        "ProjectData",
+        "ScanResult",
+        "IFileScanner",
+        "IImportParser",
+        "IProjectAnalyzer",
+        "IDataExporter",
+        "IProgressReporter",
+        "IConfiguration"
+      ],
+      "functions": [
+        "scan_directory",
+        "scan_file",
+        "parse_imports",
+        "is_standard_library",
+        "analyze_project_structure",
+        "find_projects",
+        "export_to_csv",
+        "export_to_json",
+        "report_progress",
+        "report_error",
+        "get_excluded_libraries",
+        "get_excluded_directories",
+        "get_max_file_size",
+        "get_max_depth",
+        "get_logging_config",
+        "update_logging_config",
+        "get_security_config",
+        "update_security_config",
+        "get_performance_config",
+        "update_performance_config"
+      ],
+      "dependencies": [],
+      "dependents": [
+        "src.core.configuration",
+        "src.core.data_exporter",
+        "src.core.file_scanner",
+        "src.core.import_parser",
+        "src.core.project_analyzer",
+        "src.core.scan_service",
+        "src.core.scan_service",
+        "tests.test_gui_simple"
+      ]
+    },
+    {
+      "name": "src.core.logging_config",
+      "path": "E:\\Code\\PYTHON\\py_import_parser\\src\\core\\logging_config.py",
+      "imports": [
+        "logging",
+        "logging.handlers",
+        "json",
+        "sys",
+        "pathlib",
+        "datetime",
+        "typing",
+        "dataclasses"
+      ],
+      "classes": [
+        "LogConfig",
+        "StructuredFormatter",
+        "LoggerManager"
+      ],
+      "functions": [
+        "__init__",
+        "format",
+        "_format_json",
+        "_format_text",
+        "_format_simple",
+        "__init__",
+        "_setup_logging",
+        "get_logger",
+        "log_with_context",
+        "setup_logging",
+        "get_logger",
+        "log_with_context"
+      ],
+      "dependencies": [
+        "tests.test_logging"
+      ],
+      "dependents": [
+        "examples.logging_example",
+        "examples.patterns_example",
+        "main",
+        "src.core.architecture_analyzer",
+        "src.core.code_quality_analyzer",
+        "src.core.complexity_analyzer",
+        "src.core.dependency_analyzer",
+        "src.core.file_scanner",
+        "src.core.import_parser",
+        "src.core.patterns",
+        "src.core.patterns",
+        "src.core.performance",
+        "src.core.scan_service",
+        "src.core.security",
+        "src.main_refactored",
+        "tests.test_gui_integration",
+        "tests.test_gui_simple",
+        "tests.test_logging"
+      ]
+    },
+    {
+      "name": "src.core.patterns",
+      "path": "E:\\Code\\PYTHON\\py_import_parser\\src\\core\\patterns.py",
+      "imports": [
+        "abc",
+        "typing",
+        "pathlib",
+        "dataclasses",
+        "enum",
+        "threading",
+        "time",
+        "logging_config",
+        "import_parser",
+        "file_scanner",
+        "project_analyzer",
+        "data_exporter",
+        "security",
+        "performance",
+        "logging_config"
+      ],
+      "classes": [
+        "ComponentType",
+        "ComponentFactory",
+        "ScanningStrategy",
+        "SequentialScanningStrategy",
+        "ParallelScanningStrategy",
+        "AdaptiveScanningStrategy",
+        "ScanningStrategyFactory",
+        "ScanEvent",
+        "ScanObserver",
+        "ProgressObserver",
+        "LoggingObserver",
+        "MetricsObserver",
+        "ScanSubject",
+        "ScanComponent",
+        "FileScanComponent",
+        "DirectoryScanComponent",
+        "ScanConfiguration",
+        "ScanConfigurationBuilder"
+      ],
+      "functions": [
+        "__init__",
+        "create_component",
+        "_create_component_instance",
+        "get_component",
+        "clear_cache",
+        "scan_directory",
+        "__init__",
+        "scan_directory",
+        "_find_python_files",
+        "__init__",
+        "scan_directory",
+        "__init__",
+        "scan_directory",
+        "create_strategy",
+        "update",
+        "__init__",
+        "update",
+        "__init__",
+        "update",
+        "__init__",
+        "update",
+        "get_metrics",
+        "__init__",
+        "attach",
+        "detach",
+        "notify",
+        "notify_all",
+        "scan",
+        "get_name",
+        "__init__",
+        "scan",
+        "get_name",
+        "__init__",
+        "scan",
+        "get_name",
+        "add_component",
+        "remove_component",
+        "__init__",
+        "with_strategy",
+        "with_parallel",
+        "with_max_workers",
+        "with_progress_callback",
+        "with_logging",
+        "with_metrics",
+        "with_components",
+        "build"
+      ],
+      "dependencies": [
+        "src.core.logging_config",
+        "src.core.import_parser",
+        "src.core.file_scanner",
+        "src.core.project_analyzer",
+        "src.core.data_exporter",
+        "src.core.security",
+        "src.core.performance",
+        "src.core.logging_config"
+      ],
+      "dependents": [
+        "examples.patterns_example",
+        "examples.patterns_example",
+        "examples.patterns_simple_example",
+        "examples.patterns_simple_example",
+        "src.core.scan_service",
+        "tests.test_gui_integration",
+        "tests.test_gui_simple",
+        "tests.test_patterns",
+        "tests.test_patterns",
+        "tests.test_patterns"
+      ]
+    },
+    {
+      "name": "src.core.performance",
+      "path": "E:\\Code\\PYTHON\\py_import_parser\\src\\core\\performance.py",
+      "imports": [
+        "time",
+        "threading",
+        "functools",
+        "hashlib",
+        "json",
+        "os",
+        "pathlib",
+        "typing",
+        "dataclasses",
+        "collections",
+        "psutil",
+        "gc",
+        "logging_config"
+      ],
+      "classes": [
+        "PerformanceConfig",
+        "LRUCache",
+        "PerformanceProfiler",
+        "MemoryOptimizer",
+        "ThreadOptimizer",
+        "PerformanceManager"
+      ],
+      "functions": [
+        "__init__",
+        "get",
+        "put",
+        "clear",
+        "size",
+        "__init__",
+        "start_timer",
+        "end_timer",
+        "add_metric",
+        "get_statistics",
+        "save_profile",
+        "reset",
+        "__init__",
+        "check_memory_usage",
+        "should_gc",
+        "optimize_memory",
+        "log_memory_usage",
+        "__init__",
+        "get_optimal_thread_count",
+        "get_chunk_size",
+        "record_performance",
+        "__init__",
+        "_create_directories",
+        "get_cached_result",
+        "cache_result",
+        "start_profiling",
+        "end_profiling",
+        "optimize_memory",
+        "get_memory_usage",
+        "get_optimal_threads",
+        "get_chunk_size",
+        "generate_cache_key",
+        "save_performance_data",
+        "get_performance_report",
+        "clear_cache",
+        "reset_profiler",
+        "cached",
+        "decorator",
+        "wrapper",
+        "profiled",
+        "decorator",
+        "wrapper"
+      ],
+      "dependencies": [
+        "src.core.logging_config"
+      ],
+      "dependents": [
+        "examples.performance_example",
+        "src.core.file_scanner",
+        "src.core.import_parser",
+        "src.core.patterns",
+        "src.core.scan_service",
+        "tests.test_performance"
+      ]
+    },
+    {
+      "name": "src.core.project_analyzer",
+      "path": "E:\\Code\\PYTHON\\py_import_parser\\src\\core\\project_analyzer.py",
+      "imports": [
+        "os",
+        "datetime",
+        "typing",
+        "pathlib",
+        "interfaces",
+        "configuration"
+      ],
+      "classes": [
+        "ProjectAnalyzer"
+      ],
+      "functions": [
+        "__init__",
+        "analyze_project_structure",
+        "find_projects",
+        "_is_excluded_directory",
+        "_create_project_data",
+        "_get_earliest_creation_date",
+        "_collect_directories",
+        "get_project_statistics"
+      ],
+      "dependencies": [
+        "src.core.interfaces",
+        "src.core.configuration"
+      ],
+      "dependents": [
+        "examples.patterns_example",
+        "examples.patterns_example",
+        "examples.patterns_simple_example",
+        "examples.patterns_simple_example",
+        "src.core.file_scanner",
+        "src.core.patterns",
+        "src.core.scan_service",
+        "tests.test_architecture",
+        "tests.test_gui_simple",
+        "tests.test_gui_simple"
+      ]
+    },
+    {
+      "name": "src.core.scan_service",
+      "path": "E:\\Code\\PYTHON\\py_import_parser\\src\\core\\scan_service.py",
+      "imports": [
+        "pathlib",
+        "typing",
+        "interfaces",
+        "configuration",
+        "import_parser",
+        "project_analyzer",
+        "file_scanner",
+        "data_exporter",
+        "logging_config",
+        "security",
+        "performance",
+        "patterns",
+        "complexity_analyzer",
+        "code_quality_analyzer",
+        "dependency_analyzer",
+        "architecture_analyzer",
+        "datetime",
+        "collections",
+        "interfaces"
+      ],
+      "classes": [
+        "ScanService"
+      ],
+      "functions": [
+        "__init__",
+        "scan_directory",
+        "scan_with_configuration",
+        "_setup_observers",
+        "_create_scan_result",
+        "_process_imports_list",
+        "get_last_result",
+        "export_results",
+        "get_performance_report",
+        "get_scan_statistics",
+        "validate_directory",
+        "get_configuration",
+        "update_configuration",
+        "reset_configuration",
+        "get_component_factory",
+        "get_scan_subject",
+        "analyze_complexity",
+        "analyze_file_complexity",
+        "analyze_file_quality",
+        "analyze_project_quality",
+        "analyze_dependencies",
+        "export_dependency_report",
+        "analyze_architecture",
+        "visualize_architecture",
+        "export_architecture_report"
+      ],
+      "dependencies": [
+        "src.core.interfaces",
+        "src.core.configuration",
+        "src.core.import_parser",
+        "src.core.project_analyzer",
+        "src.core.file_scanner",
+        "src.core.data_exporter",
+        "src.core.logging_config",
+        "src.core.security",
+        "src.core.performance",
+        "src.core.patterns",
+        "src.core.complexity_analyzer",
+        "src.core.code_quality_analyzer",
+        "src.core.dependency_analyzer",
+        "src.core.architecture_analyzer",
+        "src.core.interfaces"
+      ],
+      "dependents": [
+        "examples.architecture_analysis_example",
+        "examples.complexity_example",
+        "examples.dependency_analysis_example",
+        "examples.logging_example",
+        "examples.patterns_example",
+        "examples.quality_analysis_example",
+        "main",
+        "src.main_refactored",
+        "tests.test_architecture",
+        "tests.test_gui_integration"
+      ]
+    },
+    {
+      "name": "src.core.security",
+      "path": "E:\\Code\\PYTHON\\py_import_parser\\src\\core\\security.py",
+      "imports": [
+        "os",
+        "re",
+        "hashlib",
+        "tempfile",
+        "pathlib",
+        "typing",
+        "dataclasses",
+        "urllib.parse",
+        "logging",
+        "concurrent.futures",
+        "threading",
+        "time",
+        "logging_config",
+        "psutil",
+        "keyword"
+      ],
+      "classes": [
+        "SecurityConfig",
+        "SecurityValidator",
+        "SecurityManager"
+      ],
+      "functions": [
+        "__init__",
+        "start_scan",
+        "validate_file_path",
+        "validate_file_size",
+        "validate_file_content",
+        "validate_imports",
+        "sanitize_content",
+        "check_resource_limits",
+        "increment_file_count",
+        "_contains_path_traversal",
+        "_is_valid_import_name",
+        "__init__",
+        "validate_scan_request",
+        "validate_file",
+        "validate_and_sanitize_content",
+        "validate_imports",
+        "get_file_hash",
+        "get_security_report"
+      ],
+      "dependencies": [
+        "tests.test_architecture",
+        "tests.test_logging",
+        "src.core.logging_config"
+      ],
+      "dependents": [
+        "examples.security_example",
+        "src.core.file_scanner",
+        "src.core.import_parser",
+        "src.core.patterns",
+        "src.core.scan_service",
+        "tests.test_security"
+      ]
+    },
+    {
+      "name": "src.main_refactored",
+      "path": "E:\\Code\\PYTHON\\py_import_parser\\src\\main_refactored.py",
+      "imports": [
+        "sys",
+        "os",
+        "pathlib",
+        "PySide6.QtWidgets",
+        "PySide6.QtCore",
+        "core.scan_service",
+        "core.logging_config",
+        "gui.main_window",
+        "traceback"
+      ],
+      "classes": [],
+      "functions": [
+        "main"
+      ],
+      "dependencies": [
+        "src.core.scan_service",
+        "src.core.logging_config",
+        "gui.main_window"
+      ],
+      "dependents": []
+    },
+    {
+      "name": "stats_window",
+      "path": "E:\\Code\\PYTHON\\py_import_parser\\stats_window.py",
+      "imports": [
+        "pandas",
+        "matplotlib.pyplot",
+        "matplotlib.backends.backend_qt5agg",
+        "os",
+        "ast",
+        "datetime",
+        "numpy",
+        "PySide6.QtWidgets",
+        "PySide6.QtCore",
+        "PySide6.QtGui",
+        "utils",
+        "os",
+        "ast",
+        "datetime",
+        "pandas",
+        "pandas",
+        "PySide6.QtWidgets"
+      ],
+      "classes": [
+        "StatsWindow"
+      ],
+      "functions": [
+        "analyze_project_structure",
+        "parse_python_files",
+        "__init__",
+        "init_ui",
+        "setup_styles",
+        "create_charts_tab",
+        "create_table_tab",
+        "create_details_tab",
+        "create_imports_chart",
+        "populate_table",
+        "populate_details",
+        "export_to_csv",
+        "open_stats_window"
+      ],
+      "dependencies": [
+        "utils"
+      ],
+      "dependents": [
+        "gui.__init__"
+      ]
+    },
+    {
+      "name": "tests.__init__",
+      "path": "E:\\Code\\PYTHON\\py_import_parser\\tests\\__init__.py",
+      "imports": [],
+      "classes": [],
+      "functions": [],
+      "dependencies": [],
+      "dependents": []
+    },
+    {
+      "name": "tests.test_architecture",
+      "path": "E:\\Code\\PYTHON\\py_import_parser\\tests\\test_architecture.py",
+      "imports": [
+        "pytest",
+        "pathlib",
+        "tempfile",
+        "os",
+        "sys",
+        "core.configuration",
+        "core.import_parser",
+        "core.project_analyzer",
+        "core.file_scanner",
+        "core.data_exporter",
+        "core.scan_service"
+      ],
+      "classes": [
+        "TestArchitecture"
+      ],
+      "functions": [
+        "test_configuration_creation",
+        "test_import_parser_creation",
+        "test_project_analyzer_creation",
+        "test_file_scanner_creation",
+        "test_data_exporter_creation",
+        "test_scan_service_creation",
+        "test_import_parser_functionality",
+        "test_configuration_persistence",
+        "test_scan_service_validation",
+        "test_dependency_injection"
+      ],
+      "dependencies": [
+        "src.core.configuration",
+        "src.core.import_parser",
+        "src.core.project_analyzer",
+        "src.core.file_scanner",
+        "src.core.data_exporter",
+        "src.core.scan_service"
+      ],
+      "dependents": [
+        "gui.main_window",
+        "src.core.code_quality_analyzer",
+        "src.core.dependency_analyzer",
+        "src.core.security"
+      ]
+    },
+    {
+      "name": "tests.test_architecture_analyzer",
+      "path": "E:\\Code\\PYTHON\\py_import_parser\\tests\\test_architecture_analyzer.py",
+      "imports": [
+        "unittest",
+        "pathlib",
+        "tempfile",
+        "sys",
+        "core.architecture_analyzer",
+        "shutil",
+        "json",
+        "ast",
+        "ast",
+        "ast",
+        "ast"
+      ],
+      "classes": [
+        "TestArchitectureAnalyzer",
+        "TestModuleAnalyzerVisitor"
+      ],
+      "functions": [
+        "setUp",
+        "tearDown",
+        "create_test_project",
+        "test_find_python_files",
+        "test_get_module_name",
+        "test_analyze_file",
+        "test_resolve_import",
+        "test_analyze_project_integration",
+        "test_build_dependency_graph",
+        "test_analyze_architecture_patterns",
+        "test_generate_recommendations",
+        "test_export_report_json",
+        "test_export_report_dot",
+        "test_export_report_invalid_format",
+        "test_analyze_project_file_not_found",
+        "setUp",
+        "test_visit_import",
+        "test_visit_import_from",
+        "test_visit_class_def",
+        "test_visit_function_def"
+      ],
+      "dependencies": [
+        "src.core.architecture_analyzer"
+      ],
+      "dependents": []
+    },
+    {
+      "name": "tests.test_complexity",
+      "path": "E:\\Code\\PYTHON\\py_import_parser\\tests\\test_complexity.py",
+      "imports": [
+        "unittest",
+        "pathlib",
+        "tempfile",
+        "sys",
+        "core.complexity_analyzer",
+        "shutil"
+      ],
+      "classes": [
+        "TestComplexityAnalyzer",
+        "TestComplexityMetrics"
+      ],
+      "functions": [
+        "setUp",
+        "tearDown",
+        "create_test_file",
+        "test_basic_metrics_calculation",
+        "test_cyclomatic_complexity",
+        "test_nesting_depth",
+        "test_function_metrics",
+        "test_class_metrics",
+        "test_maintainability_index",
+        "test_grade_calculation",
+        "test_project_analysis",
+        "test_error_handling",
+        "test_halstead_metrics",
+        "test_complexity_metrics_creation",
+        "test_function_metrics_creation",
+        "test_class_metrics_creation"
+      ],
+      "dependencies": [
+        "src.core.complexity_analyzer"
+      ],
+      "dependents": []
+    },
+    {
+      "name": "tests.test_dependency_analyzer",
+      "path": "E:\\Code\\PYTHON\\py_import_parser\\tests\\test_dependency_analyzer.py",
+      "imports": [
+        "unittest",
+        "pathlib",
+        "tempfile",
+        "sys",
+        "core.dependency_analyzer",
+        "shutil",
+        "json"
+      ],
+      "classes": [
+        "TestDependencyAnalyzer"
+      ],
+      "functions": [
+        "setUp",
+        "tearDown",
+        "create_test_requirements",
+        "test_parse_requirements_basic",
+        "test_parse_requirements_with_comments",
+        "test_parse_requirements_invalid_line",
+        "test_license_compatibility_check",
+        "test_extract_version",
+        "test_find_duplicate_dependencies",
+        "test_generate_recommendations",
+        "test_analyze_requirements_integration",
+        "test_export_report_json",
+        "test_export_report_csv",
+        "test_export_report_txt",
+        "test_export_report_invalid_format",
+        "test_analyze_requirements_file_not_found"
+      ],
+      "dependencies": [
+        "src.core.dependency_analyzer"
+      ],
+      "dependents": []
+    },
+    {
+      "name": "tests.test_gui_integration",
+      "path": "E:\\Code\\PYTHON\\py_import_parser\\tests\\test_gui_integration.py",
+      "imports": [
+        "sys",
+        "pathlib",
+        "core.scan_service",
+        "core.configuration",
+        "core.complexity_analyzer",
+        "core.patterns",
+        "core.logging_config"
+      ],
+      "classes": [],
+      "functions": [
+        "test_scan_service_integration",
+        "test_patterns_integration",
+        "test_complexity_analyzer_integration",
+        "test_logging_integration",
+        "test_security_integration",
+        "test_performance_integration",
+        "test_gui_ready",
+        "main"
+      ],
+      "dependencies": [
+        "src.core.scan_service",
+        "src.core.configuration",
+        "src.core.complexity_analyzer",
+        "src.core.patterns",
+        "src.core.logging_config"
+      ],
+      "dependents": []
+    },
+    {
+      "name": "tests.test_gui_simple",
+      "path": "E:\\Code\\PYTHON\\py_import_parser\\tests\\test_gui_simple.py",
+      "imports": [
+        "sys",
+        "pathlib",
+        "core.interfaces",
+        "core.patterns",
+        "core.complexity_analyzer",
+        "core.logging_config",
+        "core.configuration",
+        "core.import_parser",
+        "core.configuration",
+        "core.project_analyzer",
+        "core.configuration",
+        "core.data_exporter",
+        "core.file_scanner",
+        "core.configuration",
+        "core.import_parser",
+        "core.project_analyzer"
+      ],
+      "classes": [],
+      "functions": [
+        "test_interfaces",
+        "test_patterns",
+        "test_complexity_analyzer",
+        "test_logging",
+        "test_configuration",
+        "test_import_parser",
+        "test_project_analyzer",
+        "test_data_exporter",
+        "test_file_scanner",
+        "main"
+      ],
+      "dependencies": [
+        "src.core.interfaces",
+        "src.core.patterns",
+        "src.core.complexity_analyzer",
+        "src.core.logging_config",
+        "src.core.configuration",
+        "src.core.import_parser",
+        "src.core.configuration",
+        "src.core.project_analyzer",
+        "src.core.configuration",
+        "src.core.data_exporter",
+        "src.core.file_scanner",
+        "src.core.configuration",
+        "src.core.import_parser",
+        "src.core.project_analyzer"
+      ],
+      "dependents": []
+    },
+    {
+      "name": "tests.test_logging",
+      "path": "E:\\Code\\PYTHON\\py_import_parser\\tests\\test_logging.py",
+      "imports": [
+        "pytest",
+        "tempfile",
+        "json",
+        "sys",
+        "pathlib",
+        "datetime",
+        "core.logging_config",
+        "logging"
+      ],
+      "classes": [
+        "TestLogConfig",
+        "TestStructuredFormatter",
+        "TestLoggerManager",
+        "TestGlobalLogging",
+        "TestLoggingIntegration"
+      ],
+      "functions": [
+        "test_default_config",
+        "test_custom_config",
+        "test_json_format",
+        "test_text_format",
+        "test_simple_format",
+        "test_json_with_extra_data",
+        "_create_test_record",
+        "test_logger_creation",
+        "test_log_with_context",
+        "test_file_logging",
+        "test_setup_logging",
+        "test_get_logger",
+        "test_log_with_context_function",
+        "test_full_logging_flow",
+        "test_error_logging"
+      ],
+      "dependencies": [
+        "src.core.logging_config",
+        "tests.test_logging"
+      ],
+      "dependents": [
+        "src.core.architecture_analyzer",
+        "src.core.code_quality_analyzer",
+        "src.core.complexity_analyzer",
+        "src.core.dependency_analyzer",
+        "src.core.logging_config",
+        "src.core.security",
+        "tests.test_logging"
+      ]
+    },
+    {
+      "name": "tests.test_patterns",
+      "path": "E:\\Code\\PYTHON\\py_import_parser\\tests\\test_patterns.py",
+      "imports": [
+        "unittest",
+        "unittest.mock",
+        "pathlib",
+        "tempfile",
+        "shutil",
+        "sys",
+        "core.patterns",
+        "core.configuration",
+        "core.patterns",
+        "core.patterns",
+        "time"
+      ],
+      "classes": [
+        "TestFactoryPattern",
+        "TestStrategyPattern",
+        "TestObserverPattern",
+        "TestBuilderPattern",
+        "TestCompositePattern",
+        "TestPatternsIntegration"
+      ],
+      "functions": [
+        "setUp",
+        "test_create_import_parser",
+        "test_create_file_scanner",
+        "test_create_security_manager",
+        "test_get_existing_component",
+        "test_clear_cache",
+        "test_invalid_component_type",
+        "setUp",
+        "test_create_sequential_strategy",
+        "test_create_parallel_strategy",
+        "test_create_adaptive_strategy",
+        "test_invalid_strategy_type",
+        "test_sequential_strategy_scan",
+        "test_adaptive_strategy_selection",
+        "setUp",
+        "test_attach_observer",
+        "test_detach_observer",
+        "test_notify_observers",
+        "test_progress_observer",
+        "progress_callback",
+        "test_metrics_observer",
+        "test_basic_builder",
+        "test_fluent_interface",
+        "test_default_values",
+        "setUp",
+        "test_file_scan_component",
+        "test_directory_scan_component",
+        "test_add_remove_component",
+        "test_factory_with_strategy",
+        "test_observer_with_subject"
+      ],
+      "dependencies": [
+        "src.core.patterns",
+        "src.core.configuration",
+        "src.core.patterns",
+        "src.core.patterns"
+      ],
+      "dependents": []
+    },
+    {
+      "name": "tests.test_performance",
+      "path": "E:\\Code\\PYTHON\\py_import_parser\\tests\\test_performance.py",
+      "imports": [
+        "unittest",
+        "tempfile",
+        "time",
+        "os",
+        "pathlib",
+        "unittest.mock",
+        "src.core.performance"
+      ],
+      "classes": [
+        "TestPerformanceConfig",
+        "TestLRUCache",
+        "TestPerformanceProfiler",
+        "TestMemoryOptimizer",
+        "TestThreadOptimizer",
+        "TestPerformanceManager",
+        "TestPerformanceIntegration"
+      ],
+      "functions": [
+        "test_default_config",
+        "test_custom_config",
+        "setUp",
+        "test_basic_operations",
+        "test_lru_eviction",
+        "test_ttl_expiration",
+        "test_size_method",
+        "test_clear_method",
+        "setUp",
+        "test_timer_operations",
+        "test_add_metric",
+        "test_get_statistics",
+        "test_reset",
+        "setUp",
+        "test_check_memory_usage",
+        "test_should_gc",
+        "setUp",
+        "test_get_optimal_thread_count",
+        "test_get_chunk_size",
+        "test_record_performance",
+        "setUp",
+        "test_cache_operations",
+        "test_profiling_operations",
+        "test_generate_cache_key",
+        "test_get_performance_report",
+        "test_clear_cache",
+        "test_reset_profiler",
+        "setUp",
+        "test_full_workflow",
+        "test_memory_optimization_workflow"
+      ],
+      "dependencies": [
+        "src.core.performance"
+      ],
+      "dependents": []
+    },
+    {
+      "name": "tests.test_quality_analyzer",
+      "path": "E:\\Code\\PYTHON\\py_import_parser\\tests\\test_quality_analyzer.py",
+      "imports": [
+        "unittest",
+        "pathlib",
+        "tempfile",
+        "sys",
+        "core.code_quality_analyzer",
+        "shutil"
+      ],
+      "classes": [
+        "TestCodeQualityAnalyzer",
+        "TestPEP8Violation",
+        "TestFunctionQuality",
+        "TestCognitiveComplexity",
+        "TestCodeDuplication"
+      ],
+      "functions": [
+        "setUp",
+        "tearDown",
+        "create_test_file",
+        "test_pep8_violations_detection",
+        "test_cyclomatic_complexity_calculation",
+        "test_cognitive_complexity_calculation",
+        "test_code_duplication_detection",
+        "test_function_quality_analysis",
+        "test_quality_score_calculation",
+        "test_project_analysis",
+        "test_recommendations_generation",
+        "test_error_handling",
+        "test_pep8_violation_creation",
+        "test_function_quality_creation",
+        "test_cognitive_complexity_creation",
+        "test_code_duplication_creation"
+      ],
+      "dependencies": [
+        "src.core.code_quality_analyzer"
+      ],
+      "dependents": []
+    },
+    {
+      "name": "tests.test_security",
+      "path": "E:\\Code\\PYTHON\\py_import_parser\\tests\\test_security.py",
+      "imports": [
+        "pytest",
+        "tempfile",
+        "sys",
+        "pathlib",
+        "unittest.mock",
+        "core.security"
+      ],
+      "classes": [
+        "TestSecurityConfig",
+        "TestSecurityValidator",
+        "TestSecurityManager",
+        "TestSecurityIntegration"
+      ],
+      "functions": [
+        "test_default_config",
+        "test_custom_config",
+        "setup_method",
+        "test_validate_file_path_valid",
+        "test_validate_file_path_too_long",
+        "test_validate_file_path_absolute",
+        "test_validate_file_path_traversal",
+        "test_validate_file_path_wrong_extension",
+        "test_validate_file_path_blocked_pattern",
+        "test_validate_file_size_valid",
+        "test_validate_file_size_too_large",
+        "test_validate_file_content_valid",
+        "test_validate_file_content_malicious_pattern",
+        "test_validate_file_content_too_many_imports",
+        "test_validate_imports_valid",
+        "test_validate_imports_suspicious",
+        "test_validate_imports_invalid_name",
+        "test_sanitize_content",
+        "test_check_resource_limits",
+        "test_contains_path_traversal",
+        "test_is_valid_import_name",
+        "setup_method",
+        "test_validate_scan_request_valid",
+        "test_validate_scan_request_nonexistent",
+        "test_validate_scan_request_no_python_files",
+        "test_validate_file",
+        "test_validate_and_sanitize_content",
+        "test_validate_imports",
+        "test_get_file_hash",
+        "test_get_security_report",
+        "test_full_scan_validation_flow",
+        "test_security_with_malicious_content"
+      ],
+      "dependencies": [
+        "src.core.security"
+      ],
+      "dependents": []
+    },
+    {
+      "name": "utils",
+      "path": "E:\\Code\\PYTHON\\py_import_parser\\utils.py",
+      "imports": [
+        "os"
+      ],
+      "classes": [],
+      "functions": [
+        "find_projects",
+        "read_gitignore",
+        "is_ignored"
+      ],
+      "dependencies": [],
+      "dependents": [
+        "gui.main_window",
+        "gui.stats_window",
+        "stats_window"
+      ]
+    }
+  ],
+  "dependencies": [
+    {
+      "source": "examples.architecture_analysis_example",
+      "target": "src.core.architecture_analyzer",
+      "type": "import",
+      "line_number": 0,
+      "details": "import core.architecture_analyzer"
+    },
+    {
+      "source": "examples.architecture_analysis_example",
+      "target": "src.core.scan_service",
+      "type": "import",
+      "line_number": 0,
+      "details": "import core.scan_service"
+    },
+    {
+      "source": "examples.architecture_simple_example",
+      "target": "src.core.architecture_analyzer",
+      "type": "import",
+      "line_number": 0,
+      "details": "import core.architecture_analyzer"
+    },
+    {
+      "source": "examples.complexity_example",
+      "target": "src.core.scan_service",
+      "type": "import",
+      "line_number": 0,
+      "details": "import core.scan_service"
+    },
+    {
+      "source": "examples.complexity_example",
+      "target": "src.core.complexity_analyzer",
+      "type": "import",
+      "line_number": 0,
+      "details": "import core.complexity_analyzer"
+    },
+    {
+      "source": "examples.complexity_example",
+      "target": "src.core.configuration",
+      "type": "import",
+      "line_number": 0,
+      "details": "import core.configuration"
+    },
+    {
+      "source": "examples.complexity_simple_example",
+      "target": "src.core.complexity_analyzer",
+      "type": "import",
+      "line_number": 0,
+      "details": "import core.complexity_analyzer"
+    },
+    {
+      "source": "examples.dependency_analysis_example",
+      "target": "src.core.dependency_analyzer",
+      "type": "import",
+      "line_number": 0,
+      "details": "import core.dependency_analyzer"
+    },
+    {
+      "source": "examples.dependency_analysis_example",
+      "target": "src.core.scan_service",
+      "type": "import",
+      "line_number": 0,
+      "details": "import core.scan_service"
+    },
+    {
+      "source": "examples.dependency_simple_example",
+      "target": "src.core.dependency_analyzer",
+      "type": "import",
+      "line_number": 0,
+      "details": "import core.dependency_analyzer"
+    },
+    {
+      "source": "examples.logging_example",
+      "target": "src.core.logging_config",
+      "type": "import",
+      "line_number": 0,
+      "details": "import core.logging_config"
+    },
+    {
+      "source": "examples.logging_example",
+      "target": "src.core.configuration",
+      "type": "import",
+      "line_number": 0,
+      "details": "import core.configuration"
+    },
+    {
+      "source": "examples.logging_example",
+      "target": "src.core.scan_service",
+      "type": "import",
+      "line_number": 0,
+      "details": "import core.scan_service"
+    },
+    {
+      "source": "examples.patterns_example",
+      "target": "src.core.scan_service",
+      "type": "import",
+      "line_number": 0,
+      "details": "import core.scan_service"
+    },
+    {
+      "source": "examples.patterns_example",
+      "target": "src.core.patterns",
+      "type": "import",
+      "line_number": 0,
+      "details": "import core.patterns"
+    },
+    {
+      "source": "examples.patterns_example",
+      "target": "src.core.logging_config",
+      "type": "import",
+      "line_number": 0,
+      "details": "import core.logging_config"
+    },
+    {
+      "source": "examples.patterns_example",
+      "target": "src.core.configuration",
+      "type": "import",
+      "line_number": 0,
+      "details": "import core.configuration"
+    },
+    {
+      "source": "examples.patterns_example",
+      "target": "src.core.configuration",
+      "type": "import",
+      "line_number": 0,
+      "details": "import core.configuration"
+    },
+    {
+      "source": "examples.patterns_example",
+      "target": "src.core.import_parser",
+      "type": "import",
+      "line_number": 0,
+      "details": "import core.import_parser"
+    },
+    {
+      "source": "examples.patterns_example",
+      "target": "src.core.project_analyzer",
+      "type": "import",
+      "line_number": 0,
+      "details": "import core.project_analyzer"
+    },
+    {
+      "source": "examples.patterns_example",
+      "target": "src.core.file_scanner",
+      "type": "import",
+      "line_number": 0,
+      "details": "import core.file_scanner"
+    },
+    {
+      "source": "examples.patterns_example",
+      "target": "src.core.patterns",
+      "type": "import",
+      "line_number": 0,
+      "details": "import core.patterns"
+    },
+    {
+      "source": "examples.patterns_example",
+      "target": "src.core.configuration",
+      "type": "import",
+      "line_number": 0,
+      "details": "import core.configuration"
+    },
+    {
+      "source": "examples.patterns_example",
+      "target": "src.core.file_scanner",
+      "type": "import",
+      "line_number": 0,
+      "details": "import core.file_scanner"
+    },
+    {
+      "source": "examples.patterns_example",
+      "target": "src.core.import_parser",
+      "type": "import",
+      "line_number": 0,
+      "details": "import core.import_parser"
+    },
+    {
+      "source": "examples.patterns_example",
+      "target": "src.core.project_analyzer",
+      "type": "import",
+      "line_number": 0,
+      "details": "import core.project_analyzer"
+    },
+    {
+      "source": "examples.patterns_simple_example",
+      "target": "src.core.patterns",
+      "type": "import",
+      "line_number": 0,
+      "details": "import core.patterns"
+    },
+    {
+      "source": "examples.patterns_simple_example",
+      "target": "src.core.configuration",
+      "type": "import",
+      "line_number": 0,
+      "details": "import core.configuration"
+    },
+    {
+      "source": "examples.patterns_simple_example",
+      "target": "src.core.configuration",
+      "type": "import",
+      "line_number": 0,
+      "details": "import core.configuration"
+    },
+    {
+      "source": "examples.patterns_simple_example",
+      "target": "src.core.import_parser",
+      "type": "import",
+      "line_number": 0,
+      "details": "import core.import_parser"
+    },
+    {
+      "source": "examples.patterns_simple_example",
+      "target": "src.core.project_analyzer",
+      "type": "import",
+      "line_number": 0,
+      "details": "import core.project_analyzer"
+    },
+    {
+      "source": "examples.patterns_simple_example",
+      "target": "src.core.file_scanner",
+      "type": "import",
+      "line_number": 0,
+      "details": "import core.file_scanner"
+    },
+    {
+      "source": "examples.patterns_simple_example",
+      "target": "src.core.patterns",
+      "type": "import",
+      "line_number": 0,
+      "details": "import core.patterns"
+    },
+    {
+      "source": "examples.patterns_simple_example",
+      "target": "src.core.configuration",
+      "type": "import",
+      "line_number": 0,
+      "details": "import core.configuration"
+    },
+    {
+      "source": "examples.patterns_simple_example",
+      "target": "src.core.file_scanner",
+      "type": "import",
+      "line_number": 0,
+      "details": "import core.file_scanner"
+    },
+    {
+      "source": "examples.patterns_simple_example",
+      "target": "src.core.import_parser",
+      "type": "import",
+      "line_number": 0,
+      "details": "import core.import_parser"
+    },
+    {
+      "source": "examples.patterns_simple_example",
+      "target": "src.core.project_analyzer",
+      "type": "import",
+      "line_number": 0,
+      "details": "import core.project_analyzer"
+    },
+    {
+      "source": "examples.performance_example",
+      "target": "src.core.performance",
+      "type": "import",
+      "line_number": 0,
+      "details": "import src.core.performance"
+    },
+    {
+      "source": "examples.performance_example",
+      "target": "src.core.configuration",
+      "type": "import",
+      "line_number": 0,
+      "details": "import src.core.configuration"
+    },
+    {
+      "source": "examples.quality_analysis_example",
+      "target": "src.core.code_quality_analyzer",
+      "type": "import",
+      "line_number": 0,
+      "details": "import core.code_quality_analyzer"
+    },
+    {
+      "source": "examples.quality_analysis_example",
+      "target": "src.core.scan_service",
+      "type": "import",
+      "line_number": 0,
+      "details": "import core.scan_service"
+    },
+    {
+      "source": "examples.quality_analysis_example",
+      "target": "src.core.configuration",
+      "type": "import",
+      "line_number": 0,
+      "details": "import core.configuration"
+    },
+    {
+      "source": "examples.quality_simple_example",
+      "target": "src.core.code_quality_analyzer",
+      "type": "import",
+      "line_number": 0,
+      "details": "import core.code_quality_analyzer"
+    },
+    {
+      "source": "examples.security_example",
+      "target": "src.core.security",
+      "type": "import",
+      "line_number": 0,
+      "details": "import core.security"
+    },
+    {
+      "source": "examples.security_example",
+      "target": "src.core.configuration",
+      "type": "import",
+      "line_number": 0,
+      "details": "import core.configuration"
+    },
+    {
+      "source": "gui.__init__",
+      "target": "gui.main_window",
+      "type": "import",
+      "line_number": 0,
+      "details": "import main_window"
+    },
+    {
+      "source": "gui.__init__",
+      "target": "stats_window",
+      "type": "import",
+      "line_number": 0,
+      "details": "import stats_window"
+    },
+    {
+      "source": "gui.main_window",
+      "target": "tests.test_architecture",
+      "type": "import",
+      "line_number": 0,
+      "details": "import re"
+    },
+    {
+      "source": "gui.main_window",
+      "target": "utils",
+      "type": "import",
+      "line_number": 0,
+      "details": "import utils"
+    },
+    {
+      "source": "gui.stats_window",
+      "target": "utils",
+      "type": "import",
+      "line_number": 0,
+      "details": "import utils"
+    },
+    {
+      "source": "gui.stats_window",
+      "target": "gui.chart_windows",
+      "type": "import",
+      "line_number": 0,
+      "details": "import gui.chart_windows"
+    },
+    {
+      "source": "gui.stats_window",
+      "target": "gui.chart_windows",
+      "type": "import",
+      "line_number": 0,
+      "details": "import gui.chart_windows"
+    },
+    {
+      "source": "main",
+      "target": "src.core.architecture_analyzer",
+      "type": "import",
+      "line_number": 0,
+      "details": "import core.architecture_analyzer"
+    },
+    {
+      "source": "main",
+      "target": "src.core.dependency_analyzer",
+      "type": "import",
+      "line_number": 0,
+      "details": "import core.dependency_analyzer"
+    },
+    {
+      "source": "main",
+      "target": "src.core.complexity_analyzer",
+      "type": "import",
+      "line_number": 0,
+      "details": "import core.complexity_analyzer"
+    },
+    {
+      "source": "main",
+      "target": "src.core.code_quality_analyzer",
+      "type": "import",
+      "line_number": 0,
+      "details": "import core.code_quality_analyzer"
+    },
+    {
+      "source": "main",
+      "target": "src.core.scan_service",
+      "type": "import",
+      "line_number": 0,
+      "details": "import core.scan_service"
+    },
+    {
+      "source": "main",
+      "target": "src.core.logging_config",
+      "type": "import",
+      "line_number": 0,
+      "details": "import core.logging_config"
+    },
+    {
+      "source": "main",
+      "target": "gui.main_window",
+      "type": "import",
+      "line_number": 0,
+      "details": "import gui.main_window"
+    },
+    {
+      "source": "src.core.architecture_analyzer",
+      "target": "tests.test_logging",
+      "type": "import",
+      "line_number": 0,
+      "details": "import logging"
+    },
+    {
+      "source": "src.core.architecture_analyzer",
+      "target": "src.core.logging_config",
+      "type": "import",
+      "line_number": 0,
+      "details": "import logging_config"
+    },
+    {
+      "source": "src.core.code_quality_analyzer",
+      "target": "tests.test_architecture",
+      "type": "import",
+      "line_number": 0,
+      "details": "import re"
+    },
+    {
+      "source": "src.core.code_quality_analyzer",
+      "target": "tests.test_logging",
+      "type": "import",
+      "line_number": 0,
+      "details": "import logging"
+    },
+    {
+      "source": "src.core.code_quality_analyzer",
+      "target": "src.core.logging_config",
+      "type": "import",
+      "line_number": 0,
+      "details": "import logging_config"
+    },
+    {
+      "source": "src.core.complexity_analyzer",
+      "target": "tests.test_logging",
+      "type": "import",
+      "line_number": 0,
+      "details": "import logging"
+    },
+    {
+      "source": "src.core.complexity_analyzer",
+      "target": "src.core.logging_config",
+      "type": "import",
+      "line_number": 0,
+      "details": "import logging_config"
+    },
+    {
+      "source": "src.core.configuration",
+      "target": "src.core.interfaces",
+      "type": "import",
+      "line_number": 0,
+      "details": "import interfaces"
+    },
+    {
+      "source": "src.core.data_exporter",
+      "target": "src.core.interfaces",
+      "type": "import",
+      "line_number": 0,
+      "details": "import interfaces"
+    },
+    {
+      "source": "src.core.dependency_analyzer",
+      "target": "tests.test_architecture",
+      "type": "import",
+      "line_number": 0,
+      "details": "import re"
+    },
+    {
+      "source": "src.core.dependency_analyzer",
+      "target": "tests.test_logging",
+      "type": "import",
+      "line_number": 0,
+      "details": "import logging"
+    },
+    {
+      "source": "src.core.dependency_analyzer",
+      "target": "src.core.logging_config",
+      "type": "import",
+      "line_number": 0,
+      "details": "import logging_config"
+    },
+    {
+      "source": "src.core.file_scanner",
+      "target": "src.core.interfaces",
+      "type": "import",
+      "line_number": 0,
+      "details": "import interfaces"
+    },
+    {
+      "source": "src.core.file_scanner",
+      "target": "src.core.import_parser",
+      "type": "import",
+      "line_number": 0,
+      "details": "import import_parser"
+    },
+    {
+      "source": "src.core.file_scanner",
+      "target": "src.core.project_analyzer",
+      "type": "import",
+      "line_number": 0,
+      "details": "import project_analyzer"
+    },
+    {
+      "source": "src.core.file_scanner",
+      "target": "src.core.configuration",
+      "type": "import",
+      "line_number": 0,
+      "details": "import configuration"
+    },
+    {
+      "source": "src.core.file_scanner",
+      "target": "src.core.logging_config",
+      "type": "import",
+      "line_number": 0,
+      "details": "import logging_config"
+    },
+    {
+      "source": "src.core.file_scanner",
+      "target": "src.core.security",
+      "type": "import",
+      "line_number": 0,
+      "details": "import security"
+    },
+    {
+      "source": "src.core.file_scanner",
+      "target": "src.core.performance",
+      "type": "import",
+      "line_number": 0,
+      "details": "import performance"
+    },
+    {
+      "source": "src.core.import_parser",
+      "target": "src.core.interfaces",
+      "type": "import",
+      "line_number": 0,
+      "details": "import interfaces"
+    },
+    {
+      "source": "src.core.import_parser",
+      "target": "src.core.configuration",
+      "type": "import",
+      "line_number": 0,
+      "details": "import configuration"
+    },
+    {
+      "source": "src.core.import_parser",
+      "target": "src.core.logging_config",
+      "type": "import",
+      "line_number": 0,
+      "details": "import logging_config"
+    },
+    {
+      "source": "src.core.import_parser",
+      "target": "src.core.security",
+      "type": "import",
+      "line_number": 0,
+      "details": "import security"
+    },
+    {
+      "source": "src.core.import_parser",
+      "target": "src.core.performance",
+      "type": "import",
+      "line_number": 0,
+      "details": "import performance"
+    },
+    {
+      "source": "src.core.logging_config",
+      "target": "tests.test_logging",
+      "type": "import",
+      "line_number": 0,
+      "details": "import logging"
+    },
+    {
+      "source": "src.core.patterns",
+      "target": "src.core.logging_config",
+      "type": "import",
+      "line_number": 0,
+      "details": "import logging_config"
+    },
+    {
+      "source": "src.core.patterns",
+      "target": "src.core.import_parser",
+      "type": "import",
+      "line_number": 0,
+      "details": "import import_parser"
+    },
+    {
+      "source": "src.core.patterns",
+      "target": "src.core.file_scanner",
+      "type": "import",
+      "line_number": 0,
+      "details": "import file_scanner"
+    },
+    {
+      "source": "src.core.patterns",
+      "target": "src.core.project_analyzer",
+      "type": "import",
+      "line_number": 0,
+      "details": "import project_analyzer"
+    },
+    {
+      "source": "src.core.patterns",
+      "target": "src.core.data_exporter",
+      "type": "import",
+      "line_number": 0,
+      "details": "import data_exporter"
+    },
+    {
+      "source": "src.core.patterns",
+      "target": "src.core.security",
+      "type": "import",
+      "line_number": 0,
+      "details": "import security"
+    },
+    {
+      "source": "src.core.patterns",
+      "target": "src.core.performance",
+      "type": "import",
+      "line_number": 0,
+      "details": "import performance"
+    },
+    {
+      "source": "src.core.patterns",
+      "target": "src.core.logging_config",
+      "type": "import",
+      "line_number": 0,
+      "details": "import logging_config"
+    },
+    {
+      "source": "src.core.performance",
+      "target": "src.core.logging_config",
+      "type": "import",
+      "line_number": 0,
+      "details": "import logging_config"
+    },
+    {
+      "source": "src.core.project_analyzer",
+      "target": "src.core.interfaces",
+      "type": "import",
+      "line_number": 0,
+      "details": "import interfaces"
+    },
+    {
+      "source": "src.core.project_analyzer",
+      "target": "src.core.configuration",
+      "type": "import",
+      "line_number": 0,
+      "details": "import configuration"
+    },
+    {
+      "source": "src.core.scan_service",
+      "target": "src.core.interfaces",
+      "type": "import",
+      "line_number": 0,
+      "details": "import interfaces"
+    },
+    {
+      "source": "src.core.scan_service",
+      "target": "src.core.configuration",
+      "type": "import",
+      "line_number": 0,
+      "details": "import configuration"
+    },
+    {
+      "source": "src.core.scan_service",
+      "target": "src.core.import_parser",
+      "type": "import",
+      "line_number": 0,
+      "details": "import import_parser"
+    },
+    {
+      "source": "src.core.scan_service",
+      "target": "src.core.project_analyzer",
+      "type": "import",
+      "line_number": 0,
+      "details": "import project_analyzer"
+    },
+    {
+      "source": "src.core.scan_service",
+      "target": "src.core.file_scanner",
+      "type": "import",
+      "line_number": 0,
+      "details": "import file_scanner"
+    },
+    {
+      "source": "src.core.scan_service",
+      "target": "src.core.data_exporter",
+      "type": "import",
+      "line_number": 0,
+      "details": "import data_exporter"
+    },
+    {
+      "source": "src.core.scan_service",
+      "target": "src.core.logging_config",
+      "type": "import",
+      "line_number": 0,
+      "details": "import logging_config"
+    },
+    {
+      "source": "src.core.scan_service",
+      "target": "src.core.security",
+      "type": "import",
+      "line_number": 0,
+      "details": "import security"
+    },
+    {
+      "source": "src.core.scan_service",
+      "target": "src.core.performance",
+      "type": "import",
+      "line_number": 0,
+      "details": "import performance"
+    },
+    {
+      "source": "src.core.scan_service",
+      "target": "src.core.patterns",
+      "type": "import",
+      "line_number": 0,
+      "details": "import patterns"
+    },
+    {
+      "source": "src.core.scan_service",
+      "target": "src.core.complexity_analyzer",
+      "type": "import",
+      "line_number": 0,
+      "details": "import complexity_analyzer"
+    },
+    {
+      "source": "src.core.scan_service",
+      "target": "src.core.code_quality_analyzer",
+      "type": "import",
+      "line_number": 0,
+      "details": "import code_quality_analyzer"
+    },
+    {
+      "source": "src.core.scan_service",
+      "target": "src.core.dependency_analyzer",
+      "type": "import",
+      "line_number": 0,
+      "details": "import dependency_analyzer"
+    },
+    {
+      "source": "src.core.scan_service",
+      "target": "src.core.architecture_analyzer",
+      "type": "import",
+      "line_number": 0,
+      "details": "import architecture_analyzer"
+    },
+    {
+      "source": "src.core.scan_service",
+      "target": "src.core.interfaces",
+      "type": "import",
+      "line_number": 0,
+      "details": "import interfaces"
+    },
+    {
+      "source": "src.core.security",
+      "target": "tests.test_architecture",
+      "type": "import",
+      "line_number": 0,
+      "details": "import re"
+    },
+    {
+      "source": "src.core.security",
+      "target": "tests.test_logging",
+      "type": "import",
+      "line_number": 0,
+      "details": "import logging"
+    },
+    {
+      "source": "src.core.security",
+      "target": "src.core.logging_config",
+      "type": "import",
+      "line_number": 0,
+      "details": "import logging_config"
+    },
+    {
+      "source": "src.main_refactored",
+      "target": "src.core.scan_service",
+      "type": "import",
+      "line_number": 0,
+      "details": "import core.scan_service"
+    },
+    {
+      "source": "src.main_refactored",
+      "target": "src.core.logging_config",
+      "type": "import",
+      "line_number": 0,
+      "details": "import core.logging_config"
+    },
+    {
+      "source": "src.main_refactored",
+      "target": "gui.main_window",
+      "type": "import",
+      "line_number": 0,
+      "details": "import gui.main_window"
+    },
+    {
+      "source": "stats_window",
+      "target": "utils",
+      "type": "import",
+      "line_number": 0,
+      "details": "import utils"
+    },
+    {
+      "source": "tests.test_architecture",
+      "target": "src.core.configuration",
+      "type": "import",
+      "line_number": 0,
+      "details": "import core.configuration"
+    },
+    {
+      "source": "tests.test_architecture",
+      "target": "src.core.import_parser",
+      "type": "import",
+      "line_number": 0,
+      "details": "import core.import_parser"
+    },
+    {
+      "source": "tests.test_architecture",
+      "target": "src.core.project_analyzer",
+      "type": "import",
+      "line_number": 0,
+      "details": "import core.project_analyzer"
+    },
+    {
+      "source": "tests.test_architecture",
+      "target": "src.core.file_scanner",
+      "type": "import",
+      "line_number": 0,
+      "details": "import core.file_scanner"
+    },
+    {
+      "source": "tests.test_architecture",
+      "target": "src.core.data_exporter",
+      "type": "import",
+      "line_number": 0,
+      "details": "import core.data_exporter"
+    },
+    {
+      "source": "tests.test_architecture",
+      "target": "src.core.scan_service",
+      "type": "import",
+      "line_number": 0,
+      "details": "import core.scan_service"
+    },
+    {
+      "source": "tests.test_architecture_analyzer",
+      "target": "src.core.architecture_analyzer",
+      "type": "import",
+      "line_number": 0,
+      "details": "import core.architecture_analyzer"
+    },
+    {
+      "source": "tests.test_complexity",
+      "target": "src.core.complexity_analyzer",
+      "type": "import",
+      "line_number": 0,
+      "details": "import core.complexity_analyzer"
+    },
+    {
+      "source": "tests.test_dependency_analyzer",
+      "target": "src.core.dependency_analyzer",
+      "type": "import",
+      "line_number": 0,
+      "details": "import core.dependency_analyzer"
+    },
+    {
+      "source": "tests.test_gui_integration",
+      "target": "src.core.scan_service",
+      "type": "import",
+      "line_number": 0,
+      "details": "import core.scan_service"
+    },
+    {
+      "source": "tests.test_gui_integration",
+      "target": "src.core.configuration",
+      "type": "import",
+      "line_number": 0,
+      "details": "import core.configuration"
+    },
+    {
+      "source": "tests.test_gui_integration",
+      "target": "src.core.complexity_analyzer",
+      "type": "import",
+      "line_number": 0,
+      "details": "import core.complexity_analyzer"
+    },
+    {
+      "source": "tests.test_gui_integration",
+      "target": "src.core.patterns",
+      "type": "import",
+      "line_number": 0,
+      "details": "import core.patterns"
+    },
+    {
+      "source": "tests.test_gui_integration",
+      "target": "src.core.logging_config",
+      "type": "import",
+      "line_number": 0,
+      "details": "import core.logging_config"
+    },
+    {
+      "source": "tests.test_gui_simple",
+      "target": "src.core.interfaces",
+      "type": "import",
+      "line_number": 0,
+      "details": "import core.interfaces"
+    },
+    {
+      "source": "tests.test_gui_simple",
+      "target": "src.core.patterns",
+      "type": "import",
+      "line_number": 0,
+      "details": "import core.patterns"
+    },
+    {
+      "source": "tests.test_gui_simple",
+      "target": "src.core.complexity_analyzer",
+      "type": "import",
+      "line_number": 0,
+      "details": "import core.complexity_analyzer"
+    },
+    {
+      "source": "tests.test_gui_simple",
+      "target": "src.core.logging_config",
+      "type": "import",
+      "line_number": 0,
+      "details": "import core.logging_config"
+    },
+    {
+      "source": "tests.test_gui_simple",
+      "target": "src.core.configuration",
+      "type": "import",
+      "line_number": 0,
+      "details": "import core.configuration"
+    },
+    {
+      "source": "tests.test_gui_simple",
+      "target": "src.core.import_parser",
+      "type": "import",
+      "line_number": 0,
+      "details": "import core.import_parser"
+    },
+    {
+      "source": "tests.test_gui_simple",
+      "target": "src.core.configuration",
+      "type": "import",
+      "line_number": 0,
+      "details": "import core.configuration"
+    },
+    {
+      "source": "tests.test_gui_simple",
+      "target": "src.core.project_analyzer",
+      "type": "import",
+      "line_number": 0,
+      "details": "import core.project_analyzer"
+    },
+    {
+      "source": "tests.test_gui_simple",
+      "target": "src.core.configuration",
+      "type": "import",
+      "line_number": 0,
+      "details": "import core.configuration"
+    },
+    {
+      "source": "tests.test_gui_simple",
+      "target": "src.core.data_exporter",
+      "type": "import",
+      "line_number": 0,
+      "details": "import core.data_exporter"
+    },
+    {
+      "source": "tests.test_gui_simple",
+      "target": "src.core.file_scanner",
+      "type": "import",
+      "line_number": 0,
+      "details": "import core.file_scanner"
+    },
+    {
+      "source": "tests.test_gui_simple",
+      "target": "src.core.configuration",
+      "type": "import",
+      "line_number": 0,
+      "details": "import core.configuration"
+    },
+    {
+      "source": "tests.test_gui_simple",
+      "target": "src.core.import_parser",
+      "type": "import",
+      "line_number": 0,
+      "details": "import core.import_parser"
+    },
+    {
+      "source": "tests.test_gui_simple",
+      "target": "src.core.project_analyzer",
+      "type": "import",
+      "line_number": 0,
+      "details": "import core.project_analyzer"
+    },
+    {
+      "source": "tests.test_logging",
+      "target": "src.core.logging_config",
+      "type": "import",
+      "line_number": 0,
+      "details": "import core.logging_config"
+    },
+    {
+      "source": "tests.test_logging",
+      "target": "tests.test_logging",
+      "type": "import",
+      "line_number": 0,
+      "details": "import logging"
+    },
+    {
+      "source": "tests.test_patterns",
+      "target": "src.core.patterns",
+      "type": "import",
+      "line_number": 0,
+      "details": "import core.patterns"
+    },
+    {
+      "source": "tests.test_patterns",
+      "target": "src.core.configuration",
+      "type": "import",
+      "line_number": 0,
+      "details": "import core.configuration"
+    },
+    {
+      "source": "tests.test_patterns",
+      "target": "src.core.patterns",
+      "type": "import",
+      "line_number": 0,
+      "details": "import core.patterns"
+    },
+    {
+      "source": "tests.test_patterns",
+      "target": "src.core.patterns",
+      "type": "import",
+      "line_number": 0,
+      "details": "import core.patterns"
+    },
+    {
+      "source": "tests.test_performance",
+      "target": "src.core.performance",
+      "type": "import",
+      "line_number": 0,
+      "details": "import src.core.performance"
+    },
+    {
+      "source": "tests.test_quality_analyzer",
+      "target": "src.core.code_quality_analyzer",
+      "type": "import",
+      "line_number": 0,
+      "details": "import core.code_quality_analyzer"
+    },
+    {
+      "source": "tests.test_security",
+      "target": "src.core.security",
+      "type": "import",
+      "line_number": 0,
+      "details": "import core.security"
+    }
+  ],
+  "circular_dependencies": [
+    {
+      "cycle": [
+        "tests.test_logging"
+      ],
+      "cycle_type": "indirect",
+      "severity": "warning",
+      "description": "Косвенная циклическая зависимость через 1 модулей",
+      "suggestions": [
+        "Реорганизуйте архитектуру для устранения промежуточных зависимостей",
+        "Используйте интерфейсы для абстракции зависимостей",
+        "Рассмотрите применение паттерна Mediator"
+      ],
+      "affected_modules": [
+        "src.core.architecture_analyzer",
+        "src.core.logging_config",
+        "src.core.dependency_analyzer",
+        "src.core.security",
+        "tests.test_logging",
+        "src.core.code_quality_analyzer",
+        "src.core.complexity_analyzer"
+      ]
+    },
+    {
+      "cycle": [
+        "src.core.dependency_analyzer",
+        "tests.test_architecture",
+        "src.core.scan_service"
+      ],
+      "cycle_type": "indirect",
+      "severity": "warning",
+      "description": "Косвенная циклическая зависимость через 3 модулей",
+      "suggestions": [
+        "Реорганизуйте архитектуру для устранения промежуточных зависимостей",
+        "Используйте интерфейсы для абстракции зависимостей",
+        "Рассмотрите применение паттерна Mediator"
+      ],
+      "affected_modules": [
+        "examples.architecture_analysis_example",
+        "examples.patterns_example",
+        "tests.test_gui_integration",
+        "examples.dependency_simple_example",
+        "src.core.dependency_analyzer",
+        "examples.dependency_analysis_example",
+        "examples.complexity_example",
+        "examples.logging_example",
+        "src.core.security",
+        "src.core.code_quality_analyzer",
+        "gui.main_window",
+        "tests.test_dependency_analyzer",
+        "main",
+        "src.main_refactored",
+        "tests.test_architecture",
+        "examples.quality_analysis_example",
+        "src.core.scan_service"
+      ]
+    },
+    {
+      "cycle": [
+        "src.core.patterns",
+        "src.core.import_parser",
+        "src.core.security",
+        "tests.test_architecture",
+        "src.core.scan_service"
+      ],
+      "cycle_type": "complex",
+      "severity": "info",
+      "description": "Сложная циклическая зависимость через 5 модулей",
+      "suggestions": [
+        "Проведите полный рефакторинг архитектуры",
+        "Разделите функциональность на независимые слои",
+        "Используйте Event-Driven архитектуру"
+      ],
+      "affected_modules": [
+        "examples.security_example",
+        "examples.patterns_example",
+        "tests.test_security",
+        "src.core.dependency_analyzer",
+        "examples.dependency_analysis_example",
+        "examples.logging_example",
+        "tests.test_patterns",
+        "src.main_refactored",
+        "src.core.import_parser",
+        "src.core.code_quality_analyzer",
+        "gui.main_window",
+        "examples.patterns_simple_example",
+        "tests.test_architecture",
+        "tests.test_gui_simple",
+        "src.core.patterns",
+        "src.core.file_scanner",
+        "examples.architecture_analysis_example",
+        "src.core.scan_service",
+        "tests.test_gui_integration",
+        "examples.complexity_example",
+        "src.core.security",
+        "main",
+        "examples.quality_analysis_example"
+      ]
+    },
+    {
+      "cycle": [
+        "src.core.patterns",
+        "src.core.file_scanner",
+        "src.core.import_parser",
+        "src.core.security",
+        "tests.test_architecture",
+        "src.core.scan_service"
+      ],
+      "cycle_type": "complex",
+      "severity": "info",
+      "description": "Сложная циклическая зависимость через 6 модулей",
+      "suggestions": [
+        "Проведите полный рефакторинг архитектуры",
+        "Разделите функциональность на независимые слои",
+        "Используйте Event-Driven архитектуру"
+      ],
+      "affected_modules": [
+        "examples.security_example",
+        "examples.patterns_example",
+        "tests.test_security",
+        "src.core.dependency_analyzer",
+        "examples.dependency_analysis_example",
+        "examples.logging_example",
+        "tests.test_patterns",
+        "src.main_refactored",
+        "src.core.import_parser",
+        "src.core.code_quality_analyzer",
+        "gui.main_window",
+        "examples.patterns_simple_example",
+        "tests.test_architecture",
+        "tests.test_gui_simple",
+        "src.core.patterns",
+        "src.core.file_scanner",
+        "examples.architecture_analysis_example",
+        "src.core.scan_service",
+        "tests.test_gui_integration",
+        "examples.complexity_example",
+        "src.core.security",
+        "main",
+        "examples.quality_analysis_example"
+      ]
+    },
+    {
+      "cycle": [
+        "src.core.patterns",
+        "src.core.file_scanner",
+        "src.core.security",
+        "tests.test_architecture",
+        "src.core.scan_service"
+      ],
+      "cycle_type": "complex",
+      "severity": "info",
+      "description": "Сложная циклическая зависимость через 5 модулей",
+      "suggestions": [
+        "Проведите полный рефакторинг архитектуры",
+        "Разделите функциональность на независимые слои",
+        "Используйте Event-Driven архитектуру"
+      ],
+      "affected_modules": [
+        "examples.security_example",
+        "examples.patterns_example",
+        "tests.test_security",
+        "src.core.dependency_analyzer",
+        "examples.dependency_analysis_example",
+        "examples.logging_example",
+        "tests.test_patterns",
+        "src.main_refactored",
+        "src.core.import_parser",
+        "src.core.code_quality_analyzer",
+        "gui.main_window",
+        "examples.patterns_simple_example",
+        "tests.test_architecture",
+        "tests.test_gui_simple",
+        "src.core.patterns",
+        "src.core.file_scanner",
+        "examples.architecture_analysis_example",
+        "src.core.scan_service",
+        "tests.test_gui_integration",
+        "examples.complexity_example",
+        "src.core.security",
+        "main",
+        "examples.quality_analysis_example"
+      ]
+    },
+    {
+      "cycle": [
+        "src.core.patterns",
+        "src.core.security",
+        "tests.test_architecture",
+        "src.core.scan_service"
+      ],
+      "cycle_type": "indirect",
+      "severity": "warning",
+      "description": "Косвенная циклическая зависимость через 4 модулей",
+      "suggestions": [
+        "Реорганизуйте архитектуру для устранения промежуточных зависимостей",
+        "Используйте интерфейсы для абстракции зависимостей",
+        "Рассмотрите применение паттерна Mediator"
+      ],
+      "affected_modules": [
+        "examples.security_example",
+        "examples.patterns_example",
+        "tests.test_security",
+        "src.core.dependency_analyzer",
+        "examples.dependency_analysis_example",
+        "examples.logging_example",
+        "tests.test_patterns",
+        "src.main_refactored",
+        "src.core.import_parser",
+        "src.core.code_quality_analyzer",
+        "gui.main_window",
+        "examples.patterns_simple_example",
+        "tests.test_architecture",
+        "tests.test_gui_simple",
+        "src.core.patterns",
+        "src.core.file_scanner",
+        "examples.architecture_analysis_example",
+        "src.core.scan_service",
+        "tests.test_gui_integration",
+        "examples.complexity_example",
+        "src.core.security",
+        "main",
+        "examples.quality_analysis_example"
+      ]
+    },
+    {
+      "cycle": [
+        "src.core.security",
+        "tests.test_architecture",
+        "src.core.import_parser"
+      ],
+      "cycle_type": "indirect",
+      "severity": "warning",
+      "description": "Косвенная циклическая зависимость через 3 модулей",
+      "suggestions": [
+        "Реорганизуйте архитектуру для устранения промежуточных зависимостей",
+        "Используйте интерфейсы для абстракции зависимостей",
+        "Рассмотрите применение паттерна Mediator"
+      ],
+      "affected_modules": [
+        "examples.security_example",
+        "examples.patterns_example",
+        "tests.test_security",
+        "src.core.dependency_analyzer",
+        "src.core.patterns",
+        "tests.test_gui_simple",
+        "src.core.security",
+        "src.core.scan_service",
+        "src.core.file_scanner",
+        "src.core.code_quality_analyzer",
+        "gui.main_window",
+        "examples.patterns_simple_example",
+        "src.core.import_parser",
+        "tests.test_architecture"
+      ]
+    },
+    {
+      "cycle": [
+        "src.core.security",
+        "tests.test_architecture",
+        "src.core.file_scanner",
+        "src.core.import_parser"
+      ],
+      "cycle_type": "indirect",
+      "severity": "warning",
+      "description": "Косвенная циклическая зависимость через 4 модулей",
+      "suggestions": [
+        "Реорганизуйте архитектуру для устранения промежуточных зависимостей",
+        "Используйте интерфейсы для абстракции зависимостей",
+        "Рассмотрите применение паттерна Mediator"
+      ],
+      "affected_modules": [
+        "examples.security_example",
+        "examples.patterns_example",
+        "tests.test_security",
+        "src.core.dependency_analyzer",
+        "src.core.patterns",
+        "tests.test_gui_simple",
+        "src.core.security",
+        "src.core.scan_service",
+        "src.core.file_scanner",
+        "src.core.code_quality_analyzer",
+        "gui.main_window",
+        "examples.patterns_simple_example",
+        "src.core.import_parser",
+        "tests.test_architecture"
+      ]
+    },
+    {
+      "cycle": [
+        "src.core.security",
+        "tests.test_architecture",
+        "src.core.file_scanner"
+      ],
+      "cycle_type": "indirect",
+      "severity": "warning",
+      "description": "Косвенная циклическая зависимость через 3 модулей",
+      "suggestions": [
+        "Реорганизуйте архитектуру для устранения промежуточных зависимостей",
+        "Используйте интерфейсы для абстракции зависимостей",
+        "Рассмотрите применение паттерна Mediator"
+      ],
+      "affected_modules": [
+        "examples.security_example",
+        "examples.patterns_example",
+        "tests.test_security",
+        "src.core.dependency_analyzer",
+        "src.core.patterns",
+        "tests.test_gui_simple",
+        "src.core.security",
+        "src.core.scan_service",
+        "src.core.file_scanner",
+        "src.core.code_quality_analyzer",
+        "gui.main_window",
+        "examples.patterns_simple_example",
+        "src.core.import_parser",
+        "tests.test_architecture"
+      ]
+    },
+    {
+      "cycle": [
+        "src.core.security",
+        "tests.test_architecture",
+        "src.core.scan_service",
+        "src.core.import_parser"
+      ],
+      "cycle_type": "indirect",
+      "severity": "warning",
+      "description": "Косвенная циклическая зависимость через 4 модулей",
+      "suggestions": [
+        "Реорганизуйте архитектуру для устранения промежуточных зависимостей",
+        "Используйте интерфейсы для абстракции зависимостей",
+        "Рассмотрите применение паттерна Mediator"
+      ],
+      "affected_modules": [
+        "examples.security_example",
+        "examples.patterns_example",
+        "tests.test_security",
+        "src.core.dependency_analyzer",
+        "examples.dependency_analysis_example",
+        "examples.logging_example",
+        "src.main_refactored",
+        "src.core.import_parser",
+        "src.core.code_quality_analyzer",
+        "gui.main_window",
+        "examples.patterns_simple_example",
+        "tests.test_architecture",
+        "tests.test_gui_simple",
+        "src.core.patterns",
+        "src.core.file_scanner",
+        "examples.architecture_analysis_example",
+        "src.core.scan_service",
+        "tests.test_gui_integration",
+        "examples.complexity_example",
+        "src.core.security",
+        "main",
+        "examples.quality_analysis_example"
+      ]
+    },
+    {
+      "cycle": [
+        "src.core.security",
+        "tests.test_architecture",
+        "src.core.scan_service",
+        "src.core.file_scanner",
+        "src.core.import_parser"
+      ],
+      "cycle_type": "complex",
+      "severity": "info",
+      "description": "Сложная циклическая зависимость через 5 модулей",
+      "suggestions": [
+        "Проведите полный рефакторинг архитектуры",
+        "Разделите функциональность на независимые слои",
+        "Используйте Event-Driven архитектуру"
+      ],
+      "affected_modules": [
+        "examples.security_example",
+        "examples.patterns_example",
+        "tests.test_security",
+        "src.core.dependency_analyzer",
+        "examples.dependency_analysis_example",
+        "examples.logging_example",
+        "src.main_refactored",
+        "src.core.import_parser",
+        "src.core.code_quality_analyzer",
+        "gui.main_window",
+        "examples.patterns_simple_example",
+        "tests.test_architecture",
+        "tests.test_gui_simple",
+        "src.core.patterns",
+        "src.core.file_scanner",
+        "examples.architecture_analysis_example",
+        "src.core.scan_service",
+        "tests.test_gui_integration",
+        "examples.complexity_example",
+        "src.core.security",
+        "main",
+        "examples.quality_analysis_example"
+      ]
+    },
+    {
+      "cycle": [
+        "src.core.security",
+        "tests.test_architecture",
+        "src.core.scan_service",
+        "src.core.file_scanner"
+      ],
+      "cycle_type": "indirect",
+      "severity": "warning",
+      "description": "Косвенная циклическая зависимость через 4 модулей",
+      "suggestions": [
+        "Реорганизуйте архитектуру для устранения промежуточных зависимостей",
+        "Используйте интерфейсы для абстракции зависимостей",
+        "Рассмотрите применение паттерна Mediator"
+      ],
+      "affected_modules": [
+        "examples.security_example",
+        "examples.patterns_example",
+        "tests.test_security",
+        "src.core.dependency_analyzer",
+        "examples.dependency_analysis_example",
+        "examples.logging_example",
+        "src.main_refactored",
+        "src.core.import_parser",
+        "src.core.code_quality_analyzer",
+        "gui.main_window",
+        "examples.patterns_simple_example",
+        "tests.test_architecture",
+        "tests.test_gui_simple",
+        "src.core.patterns",
+        "src.core.file_scanner",
+        "examples.architecture_analysis_example",
+        "src.core.scan_service",
+        "tests.test_gui_integration",
+        "examples.complexity_example",
+        "src.core.security",
+        "main",
+        "examples.quality_analysis_example"
+      ]
+    },
+    {
+      "cycle": [
+        "src.core.security",
+        "tests.test_architecture",
+        "src.core.scan_service"
+      ],
+      "cycle_type": "indirect",
+      "severity": "warning",
+      "description": "Косвенная циклическая зависимость через 3 модулей",
+      "suggestions": [
+        "Реорганизуйте архитектуру для устранения промежуточных зависимостей",
+        "Используйте интерфейсы для абстракции зависимостей",
+        "Рассмотрите применение паттерна Mediator"
+      ],
+      "affected_modules": [
+        "examples.security_example",
+        "examples.patterns_example",
+        "tests.test_security",
+        "src.core.dependency_analyzer",
+        "examples.dependency_analysis_example",
+        "examples.logging_example",
+        "src.main_refactored",
+        "src.core.import_parser",
+        "src.core.code_quality_analyzer",
+        "gui.main_window",
+        "tests.test_architecture",
+        "src.core.patterns",
+        "src.core.file_scanner",
+        "examples.architecture_analysis_example",
+        "src.core.scan_service",
+        "tests.test_gui_integration",
+        "examples.complexity_example",
+        "src.core.security",
+        "main",
+        "examples.quality_analysis_example"
+      ]
+    },
+    {
+      "cycle": [
+        "src.core.code_quality_analyzer",
+        "tests.test_architecture",
+        "src.core.scan_service"
+      ],
+      "cycle_type": "indirect",
+      "severity": "warning",
+      "description": "Косвенная циклическая зависимость через 3 модулей",
+      "suggestions": [
+        "Реорганизуйте архитектуру для устранения промежуточных зависимостей",
+        "Используйте интерфейсы для абстракции зависимостей",
+        "Рассмотрите применение паттерна Mediator"
+      ],
+      "affected_modules": [
+        "examples.architecture_analysis_example",
+        "examples.patterns_example",
+        "tests.test_gui_integration",
+        "main",
+        "src.core.dependency_analyzer",
+        "examples.complexity_example",
+        "examples.dependency_analysis_example",
+        "examples.logging_example",
+        "src.core.security",
+        "tests.test_quality_analyzer",
+        "src.core.code_quality_analyzer",
+        "gui.main_window",
+        "examples.quality_simple_example",
+        "src.main_refactored",
+        "tests.test_architecture",
+        "examples.quality_analysis_example",
+        "src.core.scan_service"
+      ]
+    },
+    {
+      "cycle": [
+        "src.core.logging_config",
+        "tests.test_logging"
+      ],
+      "cycle_type": "direct",
+      "severity": "critical",
+      "description": "Прямая циклическая зависимость между src.core.logging_config и tests.test_logging",
+      "suggestions": [
+        "Используйте Dependency Injection для разрыва прямой зависимости",
+        "Вынесите общую функциональность в отдельный модуль",
+        "Примените паттерн Observer для слабой связи"
+      ],
+      "affected_modules": [
+        "src.core.architecture_analyzer",
+        "examples.patterns_example",
+        "src.core.logging_config",
+        "src.core.performance",
+        "src.core.dependency_analyzer",
+        "src.core.patterns",
+        "tests.test_gui_integration",
+        "tests.test_gui_simple",
+        "examples.logging_example",
+        "src.core.security",
+        "tests.test_logging",
+        "src.core.file_scanner",
+        "src.main_refactored",
+        "src.core.code_quality_analyzer",
+        "src.core.complexity_analyzer",
+        "main",
+        "src.core.import_parser",
+        "src.core.scan_service"
+      ]
+    }
+  ],
+  "problematic_dependencies": [
+    {
+      "source": "examples.architecture_analysis_example",
+      "target": "src.core.architecture_analyzer",
+      "problem_type": "unstable",
+      "severity": "warning",
+      "description": "Зависимость от нестабильного модуля src.core.architecture_analyzer",
+      "line_number": 0,
+      "suggestions": [
+        "Рассмотрите стабилизацию API модуля",
+        "Используйте версионирование зависимостей"
+      ]
+    },
+    {
+      "source": "examples.architecture_analysis_example",
+      "target": "src.core.scan_service",
+      "problem_type": "unstable",
+      "severity": "warning",
+      "description": "Зависимость от нестабильного модуля src.core.scan_service",
+      "line_number": 0,
+      "suggestions": [
+        "Рассмотрите стабилизацию API модуля",
+        "Используйте версионирование зависимостей"
+      ]
+    },
+    {
+      "source": "examples.architecture_simple_example",
+      "target": "src.core.architecture_analyzer",
+      "problem_type": "unstable",
+      "severity": "warning",
+      "description": "Зависимость от нестабильного модуля src.core.architecture_analyzer",
+      "line_number": 0,
+      "suggestions": [
+        "Рассмотрите стабилизацию API модуля",
+        "Используйте версионирование зависимостей"
+      ]
+    },
+    {
+      "source": "examples.complexity_example",
+      "target": "src.core.scan_service",
+      "problem_type": "unstable",
+      "severity": "warning",
+      "description": "Зависимость от нестабильного модуля src.core.scan_service",
+      "line_number": 0,
+      "suggestions": [
+        "Рассмотрите стабилизацию API модуля",
+        "Используйте версионирование зависимостей"
+      ]
+    },
+    {
+      "source": "examples.complexity_example",
+      "target": "src.core.complexity_analyzer",
+      "problem_type": "unstable",
+      "severity": "warning",
+      "description": "Зависимость от нестабильного модуля src.core.complexity_analyzer",
+      "line_number": 0,
+      "suggestions": [
+        "Рассмотрите стабилизацию API модуля",
+        "Используйте версионирование зависимостей"
+      ]
+    },
+    {
+      "source": "examples.complexity_example",
+      "target": "src.core.configuration",
+      "problem_type": "unstable",
+      "severity": "warning",
+      "description": "Зависимость от нестабильного модуля src.core.configuration",
+      "line_number": 0,
+      "suggestions": [
+        "Рассмотрите стабилизацию API модуля",
+        "Используйте версионирование зависимостей"
+      ]
+    },
+    {
+      "source": "examples.complexity_simple_example",
+      "target": "src.core.complexity_analyzer",
+      "problem_type": "unstable",
+      "severity": "warning",
+      "description": "Зависимость от нестабильного модуля src.core.complexity_analyzer",
+      "line_number": 0,
+      "suggestions": [
+        "Рассмотрите стабилизацию API модуля",
+        "Используйте версионирование зависимостей"
+      ]
+    },
+    {
+      "source": "examples.dependency_analysis_example",
+      "target": "src.core.dependency_analyzer",
+      "problem_type": "unstable",
+      "severity": "warning",
+      "description": "Зависимость от нестабильного модуля src.core.dependency_analyzer",
+      "line_number": 0,
+      "suggestions": [
+        "Рассмотрите стабилизацию API модуля",
+        "Используйте версионирование зависимостей"
+      ]
+    },
+    {
+      "source": "examples.dependency_analysis_example",
+      "target": "src.core.scan_service",
+      "problem_type": "unstable",
+      "severity": "warning",
+      "description": "Зависимость от нестабильного модуля src.core.scan_service",
+      "line_number": 0,
+      "suggestions": [
+        "Рассмотрите стабилизацию API модуля",
+        "Используйте версионирование зависимостей"
+      ]
+    },
+    {
+      "source": "examples.dependency_simple_example",
+      "target": "src.core.dependency_analyzer",
+      "problem_type": "unstable",
+      "severity": "warning",
+      "description": "Зависимость от нестабильного модуля src.core.dependency_analyzer",
+      "line_number": 0,
+      "suggestions": [
+        "Рассмотрите стабилизацию API модуля",
+        "Используйте версионирование зависимостей"
+      ]
+    },
+    {
+      "source": "examples.logging_example",
+      "target": "src.core.logging_config",
+      "problem_type": "unstable",
+      "severity": "warning",
+      "description": "Зависимость от нестабильного модуля src.core.logging_config",
+      "line_number": 0,
+      "suggestions": [
+        "Рассмотрите стабилизацию API модуля",
+        "Используйте версионирование зависимостей"
+      ]
+    },
+    {
+      "source": "examples.logging_example",
+      "target": "src.core.configuration",
+      "problem_type": "unstable",
+      "severity": "warning",
+      "description": "Зависимость от нестабильного модуля src.core.configuration",
+      "line_number": 0,
+      "suggestions": [
+        "Рассмотрите стабилизацию API модуля",
+        "Используйте версионирование зависимостей"
+      ]
+    },
+    {
+      "source": "examples.logging_example",
+      "target": "src.core.scan_service",
+      "problem_type": "unstable",
+      "severity": "warning",
+      "description": "Зависимость от нестабильного модуля src.core.scan_service",
+      "line_number": 0,
+      "suggestions": [
+        "Рассмотрите стабилизацию API модуля",
+        "Используйте версионирование зависимостей"
+      ]
+    },
+    {
+      "source": "examples.patterns_example",
+      "target": "src.core.scan_service",
+      "problem_type": "unstable",
+      "severity": "warning",
+      "description": "Зависимость от нестабильного модуля src.core.scan_service",
+      "line_number": 0,
+      "suggestions": [
+        "Рассмотрите стабилизацию API модуля",
+        "Используйте версионирование зависимостей"
+      ]
+    },
+    {
+      "source": "examples.patterns_example",
+      "target": "src.core.patterns",
+      "problem_type": "unstable",
+      "severity": "warning",
+      "description": "Зависимость от нестабильного модуля src.core.patterns",
+      "line_number": 0,
+      "suggestions": [
+        "Рассмотрите стабилизацию API модуля",
+        "Используйте версионирование зависимостей"
+      ]
+    },
+    {
+      "source": "examples.patterns_example",
+      "target": "src.core.logging_config",
+      "problem_type": "unstable",
+      "severity": "warning",
+      "description": "Зависимость от нестабильного модуля src.core.logging_config",
+      "line_number": 0,
+      "suggestions": [
+        "Рассмотрите стабилизацию API модуля",
+        "Используйте версионирование зависимостей"
+      ]
+    },
+    {
+      "source": "examples.patterns_example",
+      "target": "src.core.configuration",
+      "problem_type": "unstable",
+      "severity": "warning",
+      "description": "Зависимость от нестабильного модуля src.core.configuration",
+      "line_number": 0,
+      "suggestions": [
+        "Рассмотрите стабилизацию API модуля",
+        "Используйте версионирование зависимостей"
+      ]
+    },
+    {
+      "source": "examples.patterns_example",
+      "target": "src.core.configuration",
+      "problem_type": "unstable",
+      "severity": "warning",
+      "description": "Зависимость от нестабильного модуля src.core.configuration",
+      "line_number": 0,
+      "suggestions": [
+        "Рассмотрите стабилизацию API модуля",
+        "Используйте версионирование зависимостей"
+      ]
+    },
+    {
+      "source": "examples.patterns_example",
+      "target": "src.core.import_parser",
+      "problem_type": "unstable",
+      "severity": "warning",
+      "description": "Зависимость от нестабильного модуля src.core.import_parser",
+      "line_number": 0,
+      "suggestions": [
+        "Рассмотрите стабилизацию API модуля",
+        "Используйте версионирование зависимостей"
+      ]
+    },
+    {
+      "source": "examples.patterns_example",
+      "target": "src.core.project_analyzer",
+      "problem_type": "unstable",
+      "severity": "warning",
+      "description": "Зависимость от нестабильного модуля src.core.project_analyzer",
+      "line_number": 0,
+      "suggestions": [
+        "Рассмотрите стабилизацию API модуля",
+        "Используйте версионирование зависимостей"
+      ]
+    },
+    {
+      "source": "examples.patterns_example",
+      "target": "src.core.file_scanner",
+      "problem_type": "unstable",
+      "severity": "warning",
+      "description": "Зависимость от нестабильного модуля src.core.file_scanner",
+      "line_number": 0,
+      "suggestions": [
+        "Рассмотрите стабилизацию API модуля",
+        "Используйте версионирование зависимостей"
+      ]
+    },
+    {
+      "source": "examples.patterns_example",
+      "target": "src.core.patterns",
+      "problem_type": "unstable",
+      "severity": "warning",
+      "description": "Зависимость от нестабильного модуля src.core.patterns",
+      "line_number": 0,
+      "suggestions": [
+        "Рассмотрите стабилизацию API модуля",
+        "Используйте версионирование зависимостей"
+      ]
+    },
+    {
+      "source": "examples.patterns_example",
+      "target": "src.core.configuration",
+      "problem_type": "unstable",
+      "severity": "warning",
+      "description": "Зависимость от нестабильного модуля src.core.configuration",
+      "line_number": 0,
+      "suggestions": [
+        "Рассмотрите стабилизацию API модуля",
+        "Используйте версионирование зависимостей"
+      ]
+    },
+    {
+      "source": "examples.patterns_example",
+      "target": "src.core.file_scanner",
+      "problem_type": "unstable",
+      "severity": "warning",
+      "description": "Зависимость от нестабильного модуля src.core.file_scanner",
+      "line_number": 0,
+      "suggestions": [
+        "Рассмотрите стабилизацию API модуля",
+        "Используйте версионирование зависимостей"
+      ]
+    },
+    {
+      "source": "examples.patterns_example",
+      "target": "src.core.import_parser",
+      "problem_type": "unstable",
+      "severity": "warning",
+      "description": "Зависимость от нестабильного модуля src.core.import_parser",
+      "line_number": 0,
+      "suggestions": [
+        "Рассмотрите стабилизацию API модуля",
+        "Используйте версионирование зависимостей"
+      ]
+    },
+    {
+      "source": "examples.patterns_example",
+      "target": "src.core.project_analyzer",
+      "problem_type": "unstable",
+      "severity": "warning",
+      "description": "Зависимость от нестабильного модуля src.core.project_analyzer",
+      "line_number": 0,
+      "suggestions": [
+        "Рассмотрите стабилизацию API модуля",
+        "Используйте версионирование зависимостей"
+      ]
+    },
+    {
+      "source": "examples.patterns_simple_example",
+      "target": "src.core.patterns",
+      "problem_type": "unstable",
+      "severity": "warning",
+      "description": "Зависимость от нестабильного модуля src.core.patterns",
+      "line_number": 0,
+      "suggestions": [
+        "Рассмотрите стабилизацию API модуля",
+        "Используйте версионирование зависимостей"
+      ]
+    },
+    {
+      "source": "examples.patterns_simple_example",
+      "target": "src.core.configuration",
+      "problem_type": "unstable",
+      "severity": "warning",
+      "description": "Зависимость от нестабильного модуля src.core.configuration",
+      "line_number": 0,
+      "suggestions": [
+        "Рассмотрите стабилизацию API модуля",
+        "Используйте версионирование зависимостей"
+      ]
+    },
+    {
+      "source": "examples.patterns_simple_example",
+      "target": "src.core.configuration",
+      "problem_type": "unstable",
+      "severity": "warning",
+      "description": "Зависимость от нестабильного модуля src.core.configuration",
+      "line_number": 0,
+      "suggestions": [
+        "Рассмотрите стабилизацию API модуля",
+        "Используйте версионирование зависимостей"
+      ]
+    },
+    {
+      "source": "examples.patterns_simple_example",
+      "target": "src.core.import_parser",
+      "problem_type": "unstable",
+      "severity": "warning",
+      "description": "Зависимость от нестабильного модуля src.core.import_parser",
+      "line_number": 0,
+      "suggestions": [
+        "Рассмотрите стабилизацию API модуля",
+        "Используйте версионирование зависимостей"
+      ]
+    },
+    {
+      "source": "examples.patterns_simple_example",
+      "target": "src.core.project_analyzer",
+      "problem_type": "unstable",
+      "severity": "warning",
+      "description": "Зависимость от нестабильного модуля src.core.project_analyzer",
+      "line_number": 0,
+      "suggestions": [
+        "Рассмотрите стабилизацию API модуля",
+        "Используйте версионирование зависимостей"
+      ]
+    },
+    {
+      "source": "examples.patterns_simple_example",
+      "target": "src.core.file_scanner",
+      "problem_type": "unstable",
+      "severity": "warning",
+      "description": "Зависимость от нестабильного модуля src.core.file_scanner",
+      "line_number": 0,
+      "suggestions": [
+        "Рассмотрите стабилизацию API модуля",
+        "Используйте версионирование зависимостей"
+      ]
+    },
+    {
+      "source": "examples.patterns_simple_example",
+      "target": "src.core.patterns",
+      "problem_type": "unstable",
+      "severity": "warning",
+      "description": "Зависимость от нестабильного модуля src.core.patterns",
+      "line_number": 0,
+      "suggestions": [
+        "Рассмотрите стабилизацию API модуля",
+        "Используйте версионирование зависимостей"
+      ]
+    },
+    {
+      "source": "examples.patterns_simple_example",
+      "target": "src.core.configuration",
+      "problem_type": "unstable",
+      "severity": "warning",
+      "description": "Зависимость от нестабильного модуля src.core.configuration",
+      "line_number": 0,
+      "suggestions": [
+        "Рассмотрите стабилизацию API модуля",
+        "Используйте версионирование зависимостей"
+      ]
+    },
+    {
+      "source": "examples.patterns_simple_example",
+      "target": "src.core.file_scanner",
+      "problem_type": "unstable",
+      "severity": "warning",
+      "description": "Зависимость от нестабильного модуля src.core.file_scanner",
+      "line_number": 0,
+      "suggestions": [
+        "Рассмотрите стабилизацию API модуля",
+        "Используйте версионирование зависимостей"
+      ]
+    },
+    {
+      "source": "examples.patterns_simple_example",
+      "target": "src.core.import_parser",
+      "problem_type": "unstable",
+      "severity": "warning",
+      "description": "Зависимость от нестабильного модуля src.core.import_parser",
+      "line_number": 0,
+      "suggestions": [
+        "Рассмотрите стабилизацию API модуля",
+        "Используйте версионирование зависимостей"
+      ]
+    },
+    {
+      "source": "examples.patterns_simple_example",
+      "target": "src.core.project_analyzer",
+      "problem_type": "unstable",
+      "severity": "warning",
+      "description": "Зависимость от нестабильного модуля src.core.project_analyzer",
+      "line_number": 0,
+      "suggestions": [
+        "Рассмотрите стабилизацию API модуля",
+        "Используйте версионирование зависимостей"
+      ]
+    },
+    {
+      "source": "examples.performance_example",
+      "target": "src.core.performance",
+      "problem_type": "unstable",
+      "severity": "warning",
+      "description": "Зависимость от нестабильного модуля src.core.performance",
+      "line_number": 0,
+      "suggestions": [
+        "Рассмотрите стабилизацию API модуля",
+        "Используйте версионирование зависимостей"
+      ]
+    },
+    {
+      "source": "examples.performance_example",
+      "target": "src.core.configuration",
+      "problem_type": "unstable",
+      "severity": "warning",
+      "description": "Зависимость от нестабильного модуля src.core.configuration",
+      "line_number": 0,
+      "suggestions": [
+        "Рассмотрите стабилизацию API модуля",
+        "Используйте версионирование зависимостей"
+      ]
+    },
+    {
+      "source": "examples.quality_analysis_example",
+      "target": "src.core.code_quality_analyzer",
+      "problem_type": "unstable",
+      "severity": "warning",
+      "description": "Зависимость от нестабильного модуля src.core.code_quality_analyzer",
+      "line_number": 0,
+      "suggestions": [
+        "Рассмотрите стабилизацию API модуля",
+        "Используйте версионирование зависимостей"
+      ]
+    },
+    {
+      "source": "examples.quality_analysis_example",
+      "target": "src.core.scan_service",
+      "problem_type": "unstable",
+      "severity": "warning",
+      "description": "Зависимость от нестабильного модуля src.core.scan_service",
+      "line_number": 0,
+      "suggestions": [
+        "Рассмотрите стабилизацию API модуля",
+        "Используйте версионирование зависимостей"
+      ]
+    },
+    {
+      "source": "examples.quality_analysis_example",
+      "target": "src.core.configuration",
+      "problem_type": "unstable",
+      "severity": "warning",
+      "description": "Зависимость от нестабильного модуля src.core.configuration",
+      "line_number": 0,
+      "suggestions": [
+        "Рассмотрите стабилизацию API модуля",
+        "Используйте версионирование зависимостей"
+      ]
+    },
+    {
+      "source": "examples.quality_simple_example",
+      "target": "src.core.code_quality_analyzer",
+      "problem_type": "unstable",
+      "severity": "warning",
+      "description": "Зависимость от нестабильного модуля src.core.code_quality_analyzer",
+      "line_number": 0,
+      "suggestions": [
+        "Рассмотрите стабилизацию API модуля",
+        "Используйте версионирование зависимостей"
+      ]
+    },
+    {
+      "source": "examples.security_example",
+      "target": "src.core.security",
+      "problem_type": "unstable",
+      "severity": "warning",
+      "description": "Зависимость от нестабильного модуля src.core.security",
+      "line_number": 0,
+      "suggestions": [
+        "Рассмотрите стабилизацию API модуля",
+        "Используйте версионирование зависимостей"
+      ]
+    },
+    {
+      "source": "examples.security_example",
+      "target": "src.core.configuration",
+      "problem_type": "unstable",
+      "severity": "warning",
+      "description": "Зависимость от нестабильного модуля src.core.configuration",
+      "line_number": 0,
+      "suggestions": [
+        "Рассмотрите стабилизацию API модуля",
+        "Используйте версионирование зависимостей"
+      ]
+    },
+    {
+      "source": "gui.__init__",
+      "target": "gui.main_window",
+      "problem_type": "unstable",
+      "severity": "warning",
+      "description": "Зависимость от нестабильного модуля gui.main_window",
+      "line_number": 0,
+      "suggestions": [
+        "Рассмотрите стабилизацию API модуля",
+        "Используйте версионирование зависимостей"
+      ]
+    },
+    {
+      "source": "main",
+      "target": "src.core.architecture_analyzer",
+      "problem_type": "unstable",
+      "severity": "warning",
+      "description": "Зависимость от нестабильного модуля src.core.architecture_analyzer",
+      "line_number": 0,
+      "suggestions": [
+        "Рассмотрите стабилизацию API модуля",
+        "Используйте версионирование зависимостей"
+      ]
+    },
+    {
+      "source": "main",
+      "target": "src.core.dependency_analyzer",
+      "problem_type": "unstable",
+      "severity": "warning",
+      "description": "Зависимость от нестабильного модуля src.core.dependency_analyzer",
+      "line_number": 0,
+      "suggestions": [
+        "Рассмотрите стабилизацию API модуля",
+        "Используйте версионирование зависимостей"
+      ]
+    },
+    {
+      "source": "main",
+      "target": "src.core.complexity_analyzer",
+      "problem_type": "unstable",
+      "severity": "warning",
+      "description": "Зависимость от нестабильного модуля src.core.complexity_analyzer",
+      "line_number": 0,
+      "suggestions": [
+        "Рассмотрите стабилизацию API модуля",
+        "Используйте версионирование зависимостей"
+      ]
+    },
+    {
+      "source": "main",
+      "target": "src.core.code_quality_analyzer",
+      "problem_type": "unstable",
+      "severity": "warning",
+      "description": "Зависимость от нестабильного модуля src.core.code_quality_analyzer",
+      "line_number": 0,
+      "suggestions": [
+        "Рассмотрите стабилизацию API модуля",
+        "Используйте версионирование зависимостей"
+      ]
+    },
+    {
+      "source": "main",
+      "target": "src.core.scan_service",
+      "problem_type": "unstable",
+      "severity": "warning",
+      "description": "Зависимость от нестабильного модуля src.core.scan_service",
+      "line_number": 0,
+      "suggestions": [
+        "Рассмотрите стабилизацию API модуля",
+        "Используйте версионирование зависимостей"
+      ]
+    },
+    {
+      "source": "main",
+      "target": "src.core.logging_config",
+      "problem_type": "unstable",
+      "severity": "warning",
+      "description": "Зависимость от нестабильного модуля src.core.logging_config",
+      "line_number": 0,
+      "suggestions": [
+        "Рассмотрите стабилизацию API модуля",
+        "Используйте версионирование зависимостей"
+      ]
+    },
+    {
+      "source": "main",
+      "target": "gui.main_window",
+      "problem_type": "unstable",
+      "severity": "warning",
+      "description": "Зависимость от нестабильного модуля gui.main_window",
+      "line_number": 0,
+      "suggestions": [
+        "Рассмотрите стабилизацию API модуля",
+        "Используйте версионирование зависимостей"
+      ]
+    },
+    {
+      "source": "src.core.architecture_analyzer",
+      "target": "tests.test_logging",
+      "problem_type": "unstable",
+      "severity": "warning",
+      "description": "Зависимость от нестабильного модуля tests.test_logging",
+      "line_number": 0,
+      "suggestions": [
+        "Рассмотрите стабилизацию API модуля",
+        "Используйте версионирование зависимостей"
+      ]
+    },
+    {
+      "source": "src.core.architecture_analyzer",
+      "target": "src.core.logging_config",
+      "problem_type": "unstable",
+      "severity": "warning",
+      "description": "Зависимость от нестабильного модуля src.core.logging_config",
+      "line_number": 0,
+      "suggestions": [
+        "Рассмотрите стабилизацию API модуля",
+        "Используйте версионирование зависимостей"
+      ]
+    },
+    {
+      "source": "src.core.code_quality_analyzer",
+      "target": "tests.test_logging",
+      "problem_type": "unstable",
+      "severity": "warning",
+      "description": "Зависимость от нестабильного модуля tests.test_logging",
+      "line_number": 0,
+      "suggestions": [
+        "Рассмотрите стабилизацию API модуля",
+        "Используйте версионирование зависимостей"
+      ]
+    },
+    {
+      "source": "src.core.code_quality_analyzer",
+      "target": "src.core.logging_config",
+      "problem_type": "unstable",
+      "severity": "warning",
+      "description": "Зависимость от нестабильного модуля src.core.logging_config",
+      "line_number": 0,
+      "suggestions": [
+        "Рассмотрите стабилизацию API модуля",
+        "Используйте версионирование зависимостей"
+      ]
+    },
+    {
+      "source": "src.core.complexity_analyzer",
+      "target": "tests.test_logging",
+      "problem_type": "unstable",
+      "severity": "warning",
+      "description": "Зависимость от нестабильного модуля tests.test_logging",
+      "line_number": 0,
+      "suggestions": [
+        "Рассмотрите стабилизацию API модуля",
+        "Используйте версионирование зависимостей"
+      ]
+    },
+    {
+      "source": "src.core.complexity_analyzer",
+      "target": "src.core.logging_config",
+      "problem_type": "unstable",
+      "severity": "warning",
+      "description": "Зависимость от нестабильного модуля src.core.logging_config",
+      "line_number": 0,
+      "suggestions": [
+        "Рассмотрите стабилизацию API модуля",
+        "Используйте версионирование зависимостей"
+      ]
+    },
+    {
+      "source": "src.core.configuration",
+      "target": "src.core.interfaces",
+      "problem_type": "unstable",
+      "severity": "warning",
+      "description": "Зависимость от нестабильного модуля src.core.interfaces",
+      "line_number": 0,
+      "suggestions": [
+        "Рассмотрите стабилизацию API модуля",
+        "Используйте версионирование зависимостей"
+      ]
+    },
+    {
+      "source": "src.core.data_exporter",
+      "target": "src.core.interfaces",
+      "problem_type": "unstable",
+      "severity": "warning",
+      "description": "Зависимость от нестабильного модуля src.core.interfaces",
+      "line_number": 0,
+      "suggestions": [
+        "Рассмотрите стабилизацию API модуля",
+        "Используйте версионирование зависимостей"
+      ]
+    },
+    {
+      "source": "src.core.dependency_analyzer",
+      "target": "tests.test_logging",
+      "problem_type": "unstable",
+      "severity": "warning",
+      "description": "Зависимость от нестабильного модуля tests.test_logging",
+      "line_number": 0,
+      "suggestions": [
+        "Рассмотрите стабилизацию API модуля",
+        "Используйте версионирование зависимостей"
+      ]
+    },
+    {
+      "source": "src.core.dependency_analyzer",
+      "target": "src.core.logging_config",
+      "problem_type": "unstable",
+      "severity": "warning",
+      "description": "Зависимость от нестабильного модуля src.core.logging_config",
+      "line_number": 0,
+      "suggestions": [
+        "Рассмотрите стабилизацию API модуля",
+        "Используйте версионирование зависимостей"
+      ]
+    },
+    {
+      "source": "src.core.file_scanner",
+      "target": "src.core.interfaces",
+      "problem_type": "unstable",
+      "severity": "warning",
+      "description": "Зависимость от нестабильного модуля src.core.interfaces",
+      "line_number": 0,
+      "suggestions": [
+        "Рассмотрите стабилизацию API модуля",
+        "Используйте версионирование зависимостей"
+      ]
+    },
+    {
+      "source": "src.core.file_scanner",
+      "target": "src.core.import_parser",
+      "problem_type": "unstable",
+      "severity": "warning",
+      "description": "Зависимость от нестабильного модуля src.core.import_parser",
+      "line_number": 0,
+      "suggestions": [
+        "Рассмотрите стабилизацию API модуля",
+        "Используйте версионирование зависимостей"
+      ]
+    },
+    {
+      "source": "src.core.file_scanner",
+      "target": "src.core.project_analyzer",
+      "problem_type": "unstable",
+      "severity": "warning",
+      "description": "Зависимость от нестабильного модуля src.core.project_analyzer",
+      "line_number": 0,
+      "suggestions": [
+        "Рассмотрите стабилизацию API модуля",
+        "Используйте версионирование зависимостей"
+      ]
+    },
+    {
+      "source": "src.core.file_scanner",
+      "target": "src.core.configuration",
+      "problem_type": "unstable",
+      "severity": "warning",
+      "description": "Зависимость от нестабильного модуля src.core.configuration",
+      "line_number": 0,
+      "suggestions": [
+        "Рассмотрите стабилизацию API модуля",
+        "Используйте версионирование зависимостей"
+      ]
+    },
+    {
+      "source": "src.core.file_scanner",
+      "target": "src.core.logging_config",
+      "problem_type": "unstable",
+      "severity": "warning",
+      "description": "Зависимость от нестабильного модуля src.core.logging_config",
+      "line_number": 0,
+      "suggestions": [
+        "Рассмотрите стабилизацию API модуля",
+        "Используйте версионирование зависимостей"
+      ]
+    },
+    {
+      "source": "src.core.file_scanner",
+      "target": "src.core.security",
+      "problem_type": "unstable",
+      "severity": "warning",
+      "description": "Зависимость от нестабильного модуля src.core.security",
+      "line_number": 0,
+      "suggestions": [
+        "Рассмотрите стабилизацию API модуля",
+        "Используйте версионирование зависимостей"
+      ]
+    },
+    {
+      "source": "src.core.file_scanner",
+      "target": "src.core.performance",
+      "problem_type": "unstable",
+      "severity": "warning",
+      "description": "Зависимость от нестабильного модуля src.core.performance",
+      "line_number": 0,
+      "suggestions": [
+        "Рассмотрите стабилизацию API модуля",
+        "Используйте версионирование зависимостей"
+      ]
+    },
+    {
+      "source": "src.core.import_parser",
+      "target": "src.core.interfaces",
+      "problem_type": "unstable",
+      "severity": "warning",
+      "description": "Зависимость от нестабильного модуля src.core.interfaces",
+      "line_number": 0,
+      "suggestions": [
+        "Рассмотрите стабилизацию API модуля",
+        "Используйте версионирование зависимостей"
+      ]
+    },
+    {
+      "source": "src.core.import_parser",
+      "target": "src.core.configuration",
+      "problem_type": "unstable",
+      "severity": "warning",
+      "description": "Зависимость от нестабильного модуля src.core.configuration",
+      "line_number": 0,
+      "suggestions": [
+        "Рассмотрите стабилизацию API модуля",
+        "Используйте версионирование зависимостей"
+      ]
+    },
+    {
+      "source": "src.core.import_parser",
+      "target": "src.core.logging_config",
+      "problem_type": "unstable",
+      "severity": "warning",
+      "description": "Зависимость от нестабильного модуля src.core.logging_config",
+      "line_number": 0,
+      "suggestions": [
+        "Рассмотрите стабилизацию API модуля",
+        "Используйте версионирование зависимостей"
+      ]
+    },
+    {
+      "source": "src.core.import_parser",
+      "target": "src.core.security",
+      "problem_type": "unstable",
+      "severity": "warning",
+      "description": "Зависимость от нестабильного модуля src.core.security",
+      "line_number": 0,
+      "suggestions": [
+        "Рассмотрите стабилизацию API модуля",
+        "Используйте версионирование зависимостей"
+      ]
+    },
+    {
+      "source": "src.core.import_parser",
+      "target": "src.core.performance",
+      "problem_type": "unstable",
+      "severity": "warning",
+      "description": "Зависимость от нестабильного модуля src.core.performance",
+      "line_number": 0,
+      "suggestions": [
+        "Рассмотрите стабилизацию API модуля",
+        "Используйте версионирование зависимостей"
+      ]
+    },
+    {
+      "source": "src.core.logging_config",
+      "target": "tests.test_logging",
+      "problem_type": "unstable",
+      "severity": "warning",
+      "description": "Зависимость от нестабильного модуля tests.test_logging",
+      "line_number": 0,
+      "suggestions": [
+        "Рассмотрите стабилизацию API модуля",
+        "Используйте версионирование зависимостей"
+      ]
+    },
+    {
+      "source": "src.core.patterns",
+      "target": "src.core.logging_config",
+      "problem_type": "unstable",
+      "severity": "warning",
+      "description": "Зависимость от нестабильного модуля src.core.logging_config",
+      "line_number": 0,
+      "suggestions": [
+        "Рассмотрите стабилизацию API модуля",
+        "Используйте версионирование зависимостей"
+      ]
+    },
+    {
+      "source": "src.core.patterns",
+      "target": "src.core.import_parser",
+      "problem_type": "unstable",
+      "severity": "warning",
+      "description": "Зависимость от нестабильного модуля src.core.import_parser",
+      "line_number": 0,
+      "suggestions": [
+        "Рассмотрите стабилизацию API модуля",
+        "Используйте версионирование зависимостей"
+      ]
+    },
+    {
+      "source": "src.core.patterns",
+      "target": "src.core.file_scanner",
+      "problem_type": "unstable",
+      "severity": "warning",
+      "description": "Зависимость от нестабильного модуля src.core.file_scanner",
+      "line_number": 0,
+      "suggestions": [
+        "Рассмотрите стабилизацию API модуля",
+        "Используйте версионирование зависимостей"
+      ]
+    },
+    {
+      "source": "src.core.patterns",
+      "target": "src.core.project_analyzer",
+      "problem_type": "unstable",
+      "severity": "warning",
+      "description": "Зависимость от нестабильного модуля src.core.project_analyzer",
+      "line_number": 0,
+      "suggestions": [
+        "Рассмотрите стабилизацию API модуля",
+        "Используйте версионирование зависимостей"
+      ]
+    },
+    {
+      "source": "src.core.patterns",
+      "target": "src.core.security",
+      "problem_type": "unstable",
+      "severity": "warning",
+      "description": "Зависимость от нестабильного модуля src.core.security",
+      "line_number": 0,
+      "suggestions": [
+        "Рассмотрите стабилизацию API модуля",
+        "Используйте версионирование зависимостей"
+      ]
+    },
+    {
+      "source": "src.core.patterns",
+      "target": "src.core.performance",
+      "problem_type": "unstable",
+      "severity": "warning",
+      "description": "Зависимость от нестабильного модуля src.core.performance",
+      "line_number": 0,
+      "suggestions": [
+        "Рассмотрите стабилизацию API модуля",
+        "Используйте версионирование зависимостей"
+      ]
+    },
+    {
+      "source": "src.core.patterns",
+      "target": "src.core.logging_config",
+      "problem_type": "unstable",
+      "severity": "warning",
+      "description": "Зависимость от нестабильного модуля src.core.logging_config",
+      "line_number": 0,
+      "suggestions": [
+        "Рассмотрите стабилизацию API модуля",
+        "Используйте версионирование зависимостей"
+      ]
+    },
+    {
+      "source": "src.core.performance",
+      "target": "src.core.logging_config",
+      "problem_type": "unstable",
+      "severity": "warning",
+      "description": "Зависимость от нестабильного модуля src.core.logging_config",
+      "line_number": 0,
+      "suggestions": [
+        "Рассмотрите стабилизацию API модуля",
+        "Используйте версионирование зависимостей"
+      ]
+    },
+    {
+      "source": "src.core.project_analyzer",
+      "target": "src.core.interfaces",
+      "problem_type": "unstable",
+      "severity": "warning",
+      "description": "Зависимость от нестабильного модуля src.core.interfaces",
+      "line_number": 0,
+      "suggestions": [
+        "Рассмотрите стабилизацию API модуля",
+        "Используйте версионирование зависимостей"
+      ]
+    },
+    {
+      "source": "src.core.project_analyzer",
+      "target": "src.core.configuration",
+      "problem_type": "unstable",
+      "severity": "warning",
+      "description": "Зависимость от нестабильного модуля src.core.configuration",
+      "line_number": 0,
+      "suggestions": [
+        "Рассмотрите стабилизацию API модуля",
+        "Используйте версионирование зависимостей"
+      ]
+    },
+    {
+      "source": "src.core.scan_service",
+      "target": "src.core.interfaces",
+      "problem_type": "unstable",
+      "severity": "warning",
+      "description": "Зависимость от нестабильного модуля src.core.interfaces",
+      "line_number": 0,
+      "suggestions": [
+        "Рассмотрите стабилизацию API модуля",
+        "Используйте версионирование зависимостей"
+      ]
+    },
+    {
+      "source": "src.core.scan_service",
+      "target": "src.core.configuration",
+      "problem_type": "unstable",
+      "severity": "warning",
+      "description": "Зависимость от нестабильного модуля src.core.configuration",
+      "line_number": 0,
+      "suggestions": [
+        "Рассмотрите стабилизацию API модуля",
+        "Используйте версионирование зависимостей"
+      ]
+    },
+    {
+      "source": "src.core.scan_service",
+      "target": "src.core.import_parser",
+      "problem_type": "unstable",
+      "severity": "warning",
+      "description": "Зависимость от нестабильного модуля src.core.import_parser",
+      "line_number": 0,
+      "suggestions": [
+        "Рассмотрите стабилизацию API модуля",
+        "Используйте версионирование зависимостей"
+      ]
+    },
+    {
+      "source": "src.core.scan_service",
+      "target": "src.core.project_analyzer",
+      "problem_type": "unstable",
+      "severity": "warning",
+      "description": "Зависимость от нестабильного модуля src.core.project_analyzer",
+      "line_number": 0,
+      "suggestions": [
+        "Рассмотрите стабилизацию API модуля",
+        "Используйте версионирование зависимостей"
+      ]
+    },
+    {
+      "source": "src.core.scan_service",
+      "target": "src.core.file_scanner",
+      "problem_type": "unstable",
+      "severity": "warning",
+      "description": "Зависимость от нестабильного модуля src.core.file_scanner",
+      "line_number": 0,
+      "suggestions": [
+        "Рассмотрите стабилизацию API модуля",
+        "Используйте версионирование зависимостей"
+      ]
+    },
+    {
+      "source": "src.core.scan_service",
+      "target": "src.core.logging_config",
+      "problem_type": "unstable",
+      "severity": "warning",
+      "description": "Зависимость от нестабильного модуля src.core.logging_config",
+      "line_number": 0,
+      "suggestions": [
+        "Рассмотрите стабилизацию API модуля",
+        "Используйте версионирование зависимостей"
+      ]
+    },
+    {
+      "source": "src.core.scan_service",
+      "target": "src.core.security",
+      "problem_type": "unstable",
+      "severity": "warning",
+      "description": "Зависимость от нестабильного модуля src.core.security",
+      "line_number": 0,
+      "suggestions": [
+        "Рассмотрите стабилизацию API модуля",
+        "Используйте версионирование зависимостей"
+      ]
+    },
+    {
+      "source": "src.core.scan_service",
+      "target": "src.core.performance",
+      "problem_type": "unstable",
+      "severity": "warning",
+      "description": "Зависимость от нестабильного модуля src.core.performance",
+      "line_number": 0,
+      "suggestions": [
+        "Рассмотрите стабилизацию API модуля",
+        "Используйте версионирование зависимостей"
+      ]
+    },
+    {
+      "source": "src.core.scan_service",
+      "target": "src.core.patterns",
+      "problem_type": "unstable",
+      "severity": "warning",
+      "description": "Зависимость от нестабильного модуля src.core.patterns",
+      "line_number": 0,
+      "suggestions": [
+        "Рассмотрите стабилизацию API модуля",
+        "Используйте версионирование зависимостей"
+      ]
+    },
+    {
+      "source": "src.core.scan_service",
+      "target": "src.core.complexity_analyzer",
+      "problem_type": "unstable",
+      "severity": "warning",
+      "description": "Зависимость от нестабильного модуля src.core.complexity_analyzer",
+      "line_number": 0,
+      "suggestions": [
+        "Рассмотрите стабилизацию API модуля",
+        "Используйте версионирование зависимостей"
+      ]
+    },
+    {
+      "source": "src.core.scan_service",
+      "target": "src.core.code_quality_analyzer",
+      "problem_type": "unstable",
+      "severity": "warning",
+      "description": "Зависимость от нестабильного модуля src.core.code_quality_analyzer",
+      "line_number": 0,
+      "suggestions": [
+        "Рассмотрите стабилизацию API модуля",
+        "Используйте версионирование зависимостей"
+      ]
+    },
+    {
+      "source": "src.core.scan_service",
+      "target": "src.core.dependency_analyzer",
+      "problem_type": "unstable",
+      "severity": "warning",
+      "description": "Зависимость от нестабильного модуля src.core.dependency_analyzer",
+      "line_number": 0,
+      "suggestions": [
+        "Рассмотрите стабилизацию API модуля",
+        "Используйте версионирование зависимостей"
+      ]
+    },
+    {
+      "source": "src.core.scan_service",
+      "target": "src.core.architecture_analyzer",
+      "problem_type": "unstable",
+      "severity": "warning",
+      "description": "Зависимость от нестабильного модуля src.core.architecture_analyzer",
+      "line_number": 0,
+      "suggestions": [
+        "Рассмотрите стабилизацию API модуля",
+        "Используйте версионирование зависимостей"
+      ]
+    },
+    {
+      "source": "src.core.scan_service",
+      "target": "src.core.interfaces",
+      "problem_type": "unstable",
+      "severity": "warning",
+      "description": "Зависимость от нестабильного модуля src.core.interfaces",
+      "line_number": 0,
+      "suggestions": [
+        "Рассмотрите стабилизацию API модуля",
+        "Используйте версионирование зависимостей"
+      ]
+    },
+    {
+      "source": "src.core.security",
+      "target": "tests.test_logging",
+      "problem_type": "unstable",
+      "severity": "warning",
+      "description": "Зависимость от нестабильного модуля tests.test_logging",
+      "line_number": 0,
+      "suggestions": [
+        "Рассмотрите стабилизацию API модуля",
+        "Используйте версионирование зависимостей"
+      ]
+    },
+    {
+      "source": "src.core.security",
+      "target": "src.core.logging_config",
+      "problem_type": "unstable",
+      "severity": "warning",
+      "description": "Зависимость от нестабильного модуля src.core.logging_config",
+      "line_number": 0,
+      "suggestions": [
+        "Рассмотрите стабилизацию API модуля",
+        "Используйте версионирование зависимостей"
+      ]
+    },
+    {
+      "source": "src.main_refactored",
+      "target": "src.core.scan_service",
+      "problem_type": "unstable",
+      "severity": "warning",
+      "description": "Зависимость от нестабильного модуля src.core.scan_service",
+      "line_number": 0,
+      "suggestions": [
+        "Рассмотрите стабилизацию API модуля",
+        "Используйте версионирование зависимостей"
+      ]
+    },
+    {
+      "source": "src.main_refactored",
+      "target": "src.core.logging_config",
+      "problem_type": "unstable",
+      "severity": "warning",
+      "description": "Зависимость от нестабильного модуля src.core.logging_config",
+      "line_number": 0,
+      "suggestions": [
+        "Рассмотрите стабилизацию API модуля",
+        "Используйте версионирование зависимостей"
+      ]
+    },
+    {
+      "source": "src.main_refactored",
+      "target": "gui.main_window",
+      "problem_type": "unstable",
+      "severity": "warning",
+      "description": "Зависимость от нестабильного модуля gui.main_window",
+      "line_number": 0,
+      "suggestions": [
+        "Рассмотрите стабилизацию API модуля",
+        "Используйте версионирование зависимостей"
+      ]
+    },
+    {
+      "source": "tests.test_architecture",
+      "target": "src.core.configuration",
+      "problem_type": "unstable",
+      "severity": "warning",
+      "description": "Зависимость от нестабильного модуля src.core.configuration",
+      "line_number": 0,
+      "suggestions": [
+        "Рассмотрите стабилизацию API модуля",
+        "Используйте версионирование зависимостей"
+      ]
+    },
+    {
+      "source": "tests.test_architecture",
+      "target": "src.core.import_parser",
+      "problem_type": "unstable",
+      "severity": "warning",
+      "description": "Зависимость от нестабильного модуля src.core.import_parser",
+      "line_number": 0,
+      "suggestions": [
+        "Рассмотрите стабилизацию API модуля",
+        "Используйте версионирование зависимостей"
+      ]
+    },
+    {
+      "source": "tests.test_architecture",
+      "target": "src.core.project_analyzer",
+      "problem_type": "unstable",
+      "severity": "warning",
+      "description": "Зависимость от нестабильного модуля src.core.project_analyzer",
+      "line_number": 0,
+      "suggestions": [
+        "Рассмотрите стабилизацию API модуля",
+        "Используйте версионирование зависимостей"
+      ]
+    },
+    {
+      "source": "tests.test_architecture",
+      "target": "src.core.file_scanner",
+      "problem_type": "unstable",
+      "severity": "warning",
+      "description": "Зависимость от нестабильного модуля src.core.file_scanner",
+      "line_number": 0,
+      "suggestions": [
+        "Рассмотрите стабилизацию API модуля",
+        "Используйте версионирование зависимостей"
+      ]
+    },
+    {
+      "source": "tests.test_architecture",
+      "target": "src.core.scan_service",
+      "problem_type": "unstable",
+      "severity": "warning",
+      "description": "Зависимость от нестабильного модуля src.core.scan_service",
+      "line_number": 0,
+      "suggestions": [
+        "Рассмотрите стабилизацию API модуля",
+        "Используйте версионирование зависимостей"
+      ]
+    },
+    {
+      "source": "tests.test_architecture_analyzer",
+      "target": "src.core.architecture_analyzer",
+      "problem_type": "unstable",
+      "severity": "warning",
+      "description": "Зависимость от нестабильного модуля src.core.architecture_analyzer",
+      "line_number": 0,
+      "suggestions": [
+        "Рассмотрите стабилизацию API модуля",
+        "Используйте версионирование зависимостей"
+      ]
+    },
+    {
+      "source": "tests.test_complexity",
+      "target": "src.core.complexity_analyzer",
+      "problem_type": "unstable",
+      "severity": "warning",
+      "description": "Зависимость от нестабильного модуля src.core.complexity_analyzer",
+      "line_number": 0,
+      "suggestions": [
+        "Рассмотрите стабилизацию API модуля",
+        "Используйте версионирование зависимостей"
+      ]
+    },
+    {
+      "source": "tests.test_dependency_analyzer",
+      "target": "src.core.dependency_analyzer",
+      "problem_type": "unstable",
+      "severity": "warning",
+      "description": "Зависимость от нестабильного модуля src.core.dependency_analyzer",
+      "line_number": 0,
+      "suggestions": [
+        "Рассмотрите стабилизацию API модуля",
+        "Используйте версионирование зависимостей"
+      ]
+    },
+    {
+      "source": "tests.test_gui_integration",
+      "target": "src.core.scan_service",
+      "problem_type": "unstable",
+      "severity": "warning",
+      "description": "Зависимость от нестабильного модуля src.core.scan_service",
+      "line_number": 0,
+      "suggestions": [
+        "Рассмотрите стабилизацию API модуля",
+        "Используйте версионирование зависимостей"
+      ]
+    },
+    {
+      "source": "tests.test_gui_integration",
+      "target": "src.core.configuration",
+      "problem_type": "unstable",
+      "severity": "warning",
+      "description": "Зависимость от нестабильного модуля src.core.configuration",
+      "line_number": 0,
+      "suggestions": [
+        "Рассмотрите стабилизацию API модуля",
+        "Используйте версионирование зависимостей"
+      ]
+    },
+    {
+      "source": "tests.test_gui_integration",
+      "target": "src.core.complexity_analyzer",
+      "problem_type": "unstable",
+      "severity": "warning",
+      "description": "Зависимость от нестабильного модуля src.core.complexity_analyzer",
+      "line_number": 0,
+      "suggestions": [
+        "Рассмотрите стабилизацию API модуля",
+        "Используйте версионирование зависимостей"
+      ]
+    },
+    {
+      "source": "tests.test_gui_integration",
+      "target": "src.core.patterns",
+      "problem_type": "unstable",
+      "severity": "warning",
+      "description": "Зависимость от нестабильного модуля src.core.patterns",
+      "line_number": 0,
+      "suggestions": [
+        "Рассмотрите стабилизацию API модуля",
+        "Используйте версионирование зависимостей"
+      ]
+    },
+    {
+      "source": "tests.test_gui_integration",
+      "target": "src.core.logging_config",
+      "problem_type": "unstable",
+      "severity": "warning",
+      "description": "Зависимость от нестабильного модуля src.core.logging_config",
+      "line_number": 0,
+      "suggestions": [
+        "Рассмотрите стабилизацию API модуля",
+        "Используйте версионирование зависимостей"
+      ]
+    },
+    {
+      "source": "tests.test_gui_simple",
+      "target": "src.core.interfaces",
+      "problem_type": "unstable",
+      "severity": "warning",
+      "description": "Зависимость от нестабильного модуля src.core.interfaces",
+      "line_number": 0,
+      "suggestions": [
+        "Рассмотрите стабилизацию API модуля",
+        "Используйте версионирование зависимостей"
+      ]
+    },
+    {
+      "source": "tests.test_gui_simple",
+      "target": "src.core.patterns",
+      "problem_type": "unstable",
+      "severity": "warning",
+      "description": "Зависимость от нестабильного модуля src.core.patterns",
+      "line_number": 0,
+      "suggestions": [
+        "Рассмотрите стабилизацию API модуля",
+        "Используйте версионирование зависимостей"
+      ]
+    },
+    {
+      "source": "tests.test_gui_simple",
+      "target": "src.core.complexity_analyzer",
+      "problem_type": "unstable",
+      "severity": "warning",
+      "description": "Зависимость от нестабильного модуля src.core.complexity_analyzer",
+      "line_number": 0,
+      "suggestions": [
+        "Рассмотрите стабилизацию API модуля",
+        "Используйте версионирование зависимостей"
+      ]
+    },
+    {
+      "source": "tests.test_gui_simple",
+      "target": "src.core.logging_config",
+      "problem_type": "unstable",
+      "severity": "warning",
+      "description": "Зависимость от нестабильного модуля src.core.logging_config",
+      "line_number": 0,
+      "suggestions": [
+        "Рассмотрите стабилизацию API модуля",
+        "Используйте версионирование зависимостей"
+      ]
+    },
+    {
+      "source": "tests.test_gui_simple",
+      "target": "src.core.configuration",
+      "problem_type": "unstable",
+      "severity": "warning",
+      "description": "Зависимость от нестабильного модуля src.core.configuration",
+      "line_number": 0,
+      "suggestions": [
+        "Рассмотрите стабилизацию API модуля",
+        "Используйте версионирование зависимостей"
+      ]
+    },
+    {
+      "source": "tests.test_gui_simple",
+      "target": "src.core.import_parser",
+      "problem_type": "unstable",
+      "severity": "warning",
+      "description": "Зависимость от нестабильного модуля src.core.import_parser",
+      "line_number": 0,
+      "suggestions": [
+        "Рассмотрите стабилизацию API модуля",
+        "Используйте версионирование зависимостей"
+      ]
+    },
+    {
+      "source": "tests.test_gui_simple",
+      "target": "src.core.configuration",
+      "problem_type": "unstable",
+      "severity": "warning",
+      "description": "Зависимость от нестабильного модуля src.core.configuration",
+      "line_number": 0,
+      "suggestions": [
+        "Рассмотрите стабилизацию API модуля",
+        "Используйте версионирование зависимостей"
+      ]
+    },
+    {
+      "source": "tests.test_gui_simple",
+      "target": "src.core.project_analyzer",
+      "problem_type": "unstable",
+      "severity": "warning",
+      "description": "Зависимость от нестабильного модуля src.core.project_analyzer",
+      "line_number": 0,
+      "suggestions": [
+        "Рассмотрите стабилизацию API модуля",
+        "Используйте версионирование зависимостей"
+      ]
+    },
+    {
+      "source": "tests.test_gui_simple",
+      "target": "src.core.configuration",
+      "problem_type": "unstable",
+      "severity": "warning",
+      "description": "Зависимость от нестабильного модуля src.core.configuration",
+      "line_number": 0,
+      "suggestions": [
+        "Рассмотрите стабилизацию API модуля",
+        "Используйте версионирование зависимостей"
+      ]
+    },
+    {
+      "source": "tests.test_gui_simple",
+      "target": "src.core.file_scanner",
+      "problem_type": "unstable",
+      "severity": "warning",
+      "description": "Зависимость от нестабильного модуля src.core.file_scanner",
+      "line_number": 0,
+      "suggestions": [
+        "Рассмотрите стабилизацию API модуля",
+        "Используйте версионирование зависимостей"
+      ]
+    },
+    {
+      "source": "tests.test_gui_simple",
+      "target": "src.core.configuration",
+      "problem_type": "unstable",
+      "severity": "warning",
+      "description": "Зависимость от нестабильного модуля src.core.configuration",
+      "line_number": 0,
+      "suggestions": [
+        "Рассмотрите стабилизацию API модуля",
+        "Используйте версионирование зависимостей"
+      ]
+    },
+    {
+      "source": "tests.test_gui_simple",
+      "target": "src.core.import_parser",
+      "problem_type": "unstable",
+      "severity": "warning",
+      "description": "Зависимость от нестабильного модуля src.core.import_parser",
+      "line_number": 0,
+      "suggestions": [
+        "Рассмотрите стабилизацию API модуля",
+        "Используйте версионирование зависимостей"
+      ]
+    },
+    {
+      "source": "tests.test_gui_simple",
+      "target": "src.core.project_analyzer",
+      "problem_type": "unstable",
+      "severity": "warning",
+      "description": "Зависимость от нестабильного модуля src.core.project_analyzer",
+      "line_number": 0,
+      "suggestions": [
+        "Рассмотрите стабилизацию API модуля",
+        "Используйте версионирование зависимостей"
+      ]
+    },
+    {
+      "source": "tests.test_logging",
+      "target": "src.core.logging_config",
+      "problem_type": "unstable",
+      "severity": "warning",
+      "description": "Зависимость от нестабильного модуля src.core.logging_config",
+      "line_number": 0,
+      "suggestions": [
+        "Рассмотрите стабилизацию API модуля",
+        "Используйте версионирование зависимостей"
+      ]
+    },
+    {
+      "source": "tests.test_logging",
+      "target": "tests.test_logging",
+      "problem_type": "unstable",
+      "severity": "warning",
+      "description": "Зависимость от нестабильного модуля tests.test_logging",
+      "line_number": 0,
+      "suggestions": [
+        "Рассмотрите стабилизацию API модуля",
+        "Используйте версионирование зависимостей"
+      ]
+    },
+    {
+      "source": "tests.test_patterns",
+      "target": "src.core.patterns",
+      "problem_type": "unstable",
+      "severity": "warning",
+      "description": "Зависимость от нестабильного модуля src.core.patterns",
+      "line_number": 0,
+      "suggestions": [
+        "Рассмотрите стабилизацию API модуля",
+        "Используйте версионирование зависимостей"
+      ]
+    },
+    {
+      "source": "tests.test_patterns",
+      "target": "src.core.configuration",
+      "problem_type": "unstable",
+      "severity": "warning",
+      "description": "Зависимость от нестабильного модуля src.core.configuration",
+      "line_number": 0,
+      "suggestions": [
+        "Рассмотрите стабилизацию API модуля",
+        "Используйте версионирование зависимостей"
+      ]
+    },
+    {
+      "source": "tests.test_patterns",
+      "target": "src.core.patterns",
+      "problem_type": "unstable",
+      "severity": "warning",
+      "description": "Зависимость от нестабильного модуля src.core.patterns",
+      "line_number": 0,
+      "suggestions": [
+        "Рассмотрите стабилизацию API модуля",
+        "Используйте версионирование зависимостей"
+      ]
+    },
+    {
+      "source": "tests.test_patterns",
+      "target": "src.core.patterns",
+      "problem_type": "unstable",
+      "severity": "warning",
+      "description": "Зависимость от нестабильного модуля src.core.patterns",
+      "line_number": 0,
+      "suggestions": [
+        "Рассмотрите стабилизацию API модуля",
+        "Используйте версионирование зависимостей"
+      ]
+    },
+    {
+      "source": "tests.test_performance",
+      "target": "src.core.performance",
+      "problem_type": "unstable",
+      "severity": "warning",
+      "description": "Зависимость от нестабильного модуля src.core.performance",
+      "line_number": 0,
+      "suggestions": [
+        "Рассмотрите стабилизацию API модуля",
+        "Используйте версионирование зависимостей"
+      ]
+    },
+    {
+      "source": "tests.test_quality_analyzer",
+      "target": "src.core.code_quality_analyzer",
+      "problem_type": "unstable",
+      "severity": "warning",
+      "description": "Зависимость от нестабильного модуля src.core.code_quality_analyzer",
+      "line_number": 0,
+      "suggestions": [
+        "Рассмотрите стабилизацию API модуля",
+        "Используйте версионирование зависимостей"
+      ]
+    },
+    {
+      "source": "tests.test_security",
+      "target": "src.core.security",
+      "problem_type": "unstable",
+      "severity": "warning",
+      "description": "Зависимость от нестабильного модуля src.core.security",
+      "line_number": 0,
+      "suggestions": [
+        "Рассмотрите стабилизацию API модуля",
+        "Используйте версионирование зависимостей"
+      ]
+    }
+  ],
+  "isolated_modules": [
+    "src.__init__",
+    "src.core.__init__",
+    "tests.__init__"
+  ],
+  "highly_coupled_modules": [
+    "src.core.configuration",
+    "src.core.file_scanner",
+    "src.core.import_parser",
+    "src.core.logging_config",
+    "src.core.patterns",
+    "src.core.scan_service"
+  ],
+  "unstable_modules": [
+    "gui.main_window",
+    "gui.stats_window",
+    "src.core.architecture_analyzer",
+    "src.core.code_quality_analyzer",
+    "src.core.complexity_analyzer",
+    "src.core.configuration",
+    "src.core.dependency_analyzer",
+    "src.core.file_scanner",
+    "src.core.import_parser",
+    "src.core.interfaces",
+    "src.core.logging_config",
+    "src.core.patterns",
+    "src.core.performance",
+    "src.core.project_analyzer",
+    "src.core.scan_service",
+    "src.core.security",
+    "tests.test_architecture_analyzer",
+    "tests.test_logging",
+    "tests.test_patterns",
+    "tests.test_performance",
+    "tests.test_quality_analyzer",
+    "tests.test_security"
+  ],
+  "unused_imports": [],
+  "missing_imports": [],
+  "recommendations": [
+    "📊 Архитектурный скор: 0.0/100",
+    "🔴 КРИТИЧНО: 1 прямых циклических зависимостей",
+    "🟠 ПРЕДУПРЕЖДЕНИЕ: 10 косвенных циклических зависимостей",
+    "🟠 ПРЕДУПРЕЖДЕНИЕ: 140 проблемных зависимостей",
+    "🟡 ВНИМАНИЕ: 22 нестабильных модулей могут вызывать проблемы при изменениях",
+    "🟡 ИЗОЛЯЦИЯ: 3 изолированных модулей могут быть мертвым кодом",
+    "🟠 СВЯЗАННОСТЬ: 6 сильно связанных модулей требуют рефакторинга"
+  ]
+}

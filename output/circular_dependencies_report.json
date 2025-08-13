@@ -1,0 +1,2249 @@
+{
+  "summary": {
+    "total_cycles": 15,
+    "direct_cycles": 1,
+    "indirect_cycles": 10,
+    "complex_cycles": 4,
+    "total_affected_modules": 32
+  },
+  "cycles": [
+    {
+      "cycle": [
+        "tests.test_logging"
+      ],
+      "cycle_type": "indirect",
+      "severity": "warning",
+      "description": "Косвенная циклическая зависимость через 1 модулей",
+      "suggestions": [
+        "Реорганизуйте архитектуру для устранения промежуточных зависимостей",
+        "Используйте интерфейсы для абстракции зависимостей",
+        "Рассмотрите применение паттерна Mediator"
+      ],
+      "affected_modules": [
+        "src.core.complexity_analyzer",
+        "src.core.architecture_analyzer",
+        "src.core.logging_config",
+        "src.core.security",
+        "tests.test_logging",
+        "src.core.code_quality_analyzer",
+        "src.core.dependency_analyzer"
+      ]
+    },
+    {
+      "cycle": [
+        "src.core.patterns",
+        "src.core.import_parser",
+        "src.core.security",
+        "tests.test_architecture",
+        "src.core.scan_service"
+      ],
+      "cycle_type": "complex",
+      "severity": "info",
+      "description": "Сложная циклическая зависимость через 5 модулей",
+      "suggestions": [
+        "Проведите полный рефакторинг архитектуры",
+        "Разделите функциональность на независимые слои",
+        "Используйте Event-Driven архитектуру"
+      ],
+      "affected_modules": [
+        "src.core.scan_service",
+        "examples.security_example",
+        "main",
+        "gui.main_window",
+        "examples.dependency_analysis_example",
+        "examples.complexity_example",
+        "src.core.import_parser",
+        "tests.test_gui_integration",
+        "src.core.dependency_analyzer",
+        "src.core.patterns",
+        "examples.patterns_example",
+        "src.core.security",
+        "src.main_refactored",
+        "src.core.code_quality_analyzer",
+        "examples.patterns_simple_example",
+        "src.core.file_scanner",
+        "tests.test_gui_simple",
+        "examples.quality_analysis_example",
+        "examples.architecture_analysis_example",
+        "examples.logging_example",
+        "tests.test_architecture",
+        "tests.test_patterns",
+        "tests.test_security"
+      ]
+    },
+    {
+      "cycle": [
+        "src.core.patterns",
+        "src.core.file_scanner",
+        "src.core.import_parser",
+        "src.core.security",
+        "tests.test_architecture",
+        "src.core.scan_service"
+      ],
+      "cycle_type": "complex",
+      "severity": "info",
+      "description": "Сложная циклическая зависимость через 6 модулей",
+      "suggestions": [
+        "Проведите полный рефакторинг архитектуры",
+        "Разделите функциональность на независимые слои",
+        "Используйте Event-Driven архитектуру"
+      ],
+      "affected_modules": [
+        "src.core.scan_service",
+        "examples.security_example",
+        "main",
+        "gui.main_window",
+        "examples.dependency_analysis_example",
+        "examples.complexity_example",
+        "src.core.import_parser",
+        "tests.test_gui_integration",
+        "src.core.dependency_analyzer",
+        "src.core.patterns",
+        "examples.patterns_example",
+        "src.core.security",
+        "src.main_refactored",
+        "src.core.code_quality_analyzer",
+        "examples.patterns_simple_example",
+        "src.core.file_scanner",
+        "tests.test_gui_simple",
+        "examples.quality_analysis_example",
+        "examples.architecture_analysis_example",
+        "examples.logging_example",
+        "tests.test_architecture",
+        "tests.test_patterns",
+        "tests.test_security"
+      ]
+    },
+    {
+      "cycle": [
+        "src.core.patterns",
+        "src.core.file_scanner",
+        "src.core.security",
+        "tests.test_architecture",
+        "src.core.scan_service"
+      ],
+      "cycle_type": "complex",
+      "severity": "info",
+      "description": "Сложная циклическая зависимость через 5 модулей",
+      "suggestions": [
+        "Проведите полный рефакторинг архитектуры",
+        "Разделите функциональность на независимые слои",
+        "Используйте Event-Driven архитектуру"
+      ],
+      "affected_modules": [
+        "src.core.scan_service",
+        "examples.security_example",
+        "main",
+        "gui.main_window",
+        "examples.dependency_analysis_example",
+        "examples.complexity_example",
+        "tests.test_gui_integration",
+        "src.core.import_parser",
+        "src.core.dependency_analyzer",
+        "src.core.patterns",
+        "examples.patterns_example",
+        "src.core.security",
+        "src.main_refactored",
+        "src.core.code_quality_analyzer",
+        "examples.patterns_simple_example",
+        "src.core.file_scanner",
+        "tests.test_gui_simple",
+        "examples.quality_analysis_example",
+        "examples.architecture_analysis_example",
+        "examples.logging_example",
+        "tests.test_architecture",
+        "tests.test_patterns",
+        "tests.test_security"
+      ]
+    },
+    {
+      "cycle": [
+        "src.core.patterns",
+        "src.core.security",
+        "tests.test_architecture",
+        "src.core.scan_service"
+      ],
+      "cycle_type": "indirect",
+      "severity": "warning",
+      "description": "Косвенная циклическая зависимость через 4 модулей",
+      "suggestions": [
+        "Реорганизуйте архитектуру для устранения промежуточных зависимостей",
+        "Используйте интерфейсы для абстракции зависимостей",
+        "Рассмотрите применение паттерна Mediator"
+      ],
+      "affected_modules": [
+        "src.core.scan_service",
+        "examples.security_example",
+        "main",
+        "gui.main_window",
+        "examples.dependency_analysis_example",
+        "examples.complexity_example",
+        "tests.test_gui_integration",
+        "src.core.import_parser",
+        "src.core.dependency_analyzer",
+        "src.core.patterns",
+        "examples.patterns_example",
+        "src.core.security",
+        "src.main_refactored",
+        "src.core.code_quality_analyzer",
+        "examples.patterns_simple_example",
+        "src.core.file_scanner",
+        "tests.test_gui_simple",
+        "examples.quality_analysis_example",
+        "examples.architecture_analysis_example",
+        "examples.logging_example",
+        "tests.test_architecture",
+        "tests.test_patterns",
+        "tests.test_security"
+      ]
+    },
+    {
+      "cycle": [
+        "src.core.security",
+        "tests.test_architecture",
+        "src.core.import_parser"
+      ],
+      "cycle_type": "indirect",
+      "severity": "warning",
+      "description": "Косвенная циклическая зависимость через 3 модулей",
+      "suggestions": [
+        "Реорганизуйте архитектуру для устранения промежуточных зависимостей",
+        "Используйте интерфейсы для абстракции зависимостей",
+        "Рассмотрите применение паттерна Mediator"
+      ],
+      "affected_modules": [
+        "src.core.patterns",
+        "examples.patterns_example",
+        "src.core.security",
+        "src.core.scan_service",
+        "examples.security_example",
+        "src.core.import_parser",
+        "src.core.dependency_analyzer",
+        "gui.main_window",
+        "tests.test_security",
+        "src.core.code_quality_analyzer",
+        "tests.test_architecture",
+        "examples.patterns_simple_example",
+        "src.core.file_scanner",
+        "tests.test_gui_simple"
+      ]
+    },
+    {
+      "cycle": [
+        "src.core.security",
+        "tests.test_architecture",
+        "src.core.file_scanner",
+        "src.core.import_parser"
+      ],
+      "cycle_type": "indirect",
+      "severity": "warning",
+      "description": "Косвенная циклическая зависимость через 4 модулей",
+      "suggestions": [
+        "Реорганизуйте архитектуру для устранения промежуточных зависимостей",
+        "Используйте интерфейсы для абстракции зависимостей",
+        "Рассмотрите применение паттерна Mediator"
+      ],
+      "affected_modules": [
+        "src.core.patterns",
+        "examples.patterns_example",
+        "src.core.security",
+        "src.core.scan_service",
+        "examples.security_example",
+        "src.core.import_parser",
+        "src.core.dependency_analyzer",
+        "gui.main_window",
+        "tests.test_security",
+        "src.core.code_quality_analyzer",
+        "tests.test_architecture",
+        "examples.patterns_simple_example",
+        "src.core.file_scanner",
+        "tests.test_gui_simple"
+      ]
+    },
+    {
+      "cycle": [
+        "src.core.security",
+        "tests.test_architecture",
+        "src.core.file_scanner"
+      ],
+      "cycle_type": "indirect",
+      "severity": "warning",
+      "description": "Косвенная циклическая зависимость через 3 модулей",
+      "suggestions": [
+        "Реорганизуйте архитектуру для устранения промежуточных зависимостей",
+        "Используйте интерфейсы для абстракции зависимостей",
+        "Рассмотрите применение паттерна Mediator"
+      ],
+      "affected_modules": [
+        "src.core.patterns",
+        "examples.patterns_example",
+        "src.core.security",
+        "src.core.scan_service",
+        "examples.security_example",
+        "src.core.import_parser",
+        "src.core.dependency_analyzer",
+        "gui.main_window",
+        "tests.test_security",
+        "src.core.code_quality_analyzer",
+        "tests.test_architecture",
+        "examples.patterns_simple_example",
+        "src.core.file_scanner",
+        "tests.test_gui_simple"
+      ]
+    },
+    {
+      "cycle": [
+        "src.core.security",
+        "tests.test_architecture",
+        "src.core.scan_service",
+        "src.core.import_parser"
+      ],
+      "cycle_type": "indirect",
+      "severity": "warning",
+      "description": "Косвенная циклическая зависимость через 4 модулей",
+      "suggestions": [
+        "Реорганизуйте архитектуру для устранения промежуточных зависимостей",
+        "Используйте интерфейсы для абстракции зависимостей",
+        "Рассмотрите применение паттерна Mediator"
+      ],
+      "affected_modules": [
+        "src.core.scan_service",
+        "examples.security_example",
+        "main",
+        "gui.main_window",
+        "examples.dependency_analysis_example",
+        "examples.complexity_example",
+        "src.core.import_parser",
+        "tests.test_gui_integration",
+        "src.core.dependency_analyzer",
+        "src.core.patterns",
+        "examples.patterns_example",
+        "src.core.security",
+        "src.main_refactored",
+        "src.core.code_quality_analyzer",
+        "examples.patterns_simple_example",
+        "src.core.file_scanner",
+        "tests.test_gui_simple",
+        "examples.quality_analysis_example",
+        "examples.architecture_analysis_example",
+        "examples.logging_example",
+        "tests.test_architecture",
+        "tests.test_security"
+      ]
+    },
+    {
+      "cycle": [
+        "src.core.security",
+        "tests.test_architecture",
+        "src.core.scan_service",
+        "src.core.file_scanner",
+        "src.core.import_parser"
+      ],
+      "cycle_type": "complex",
+      "severity": "info",
+      "description": "Сложная циклическая зависимость через 5 модулей",
+      "suggestions": [
+        "Проведите полный рефакторинг архитектуры",
+        "Разделите функциональность на независимые слои",
+        "Используйте Event-Driven архитектуру"
+      ],
+      "affected_modules": [
+        "src.core.scan_service",
+        "examples.security_example",
+        "main",
+        "gui.main_window",
+        "examples.dependency_analysis_example",
+        "examples.complexity_example",
+        "src.core.import_parser",
+        "tests.test_gui_integration",
+        "src.core.dependency_analyzer",
+        "src.core.patterns",
+        "examples.patterns_example",
+        "src.core.security",
+        "src.main_refactored",
+        "src.core.code_quality_analyzer",
+        "examples.patterns_simple_example",
+        "src.core.file_scanner",
+        "tests.test_gui_simple",
+        "examples.quality_analysis_example",
+        "examples.architecture_analysis_example",
+        "examples.logging_example",
+        "tests.test_architecture",
+        "tests.test_security"
+      ]
+    },
+    {
+      "cycle": [
+        "src.core.security",
+        "tests.test_architecture",
+        "src.core.scan_service",
+        "src.core.file_scanner"
+      ],
+      "cycle_type": "indirect",
+      "severity": "warning",
+      "description": "Косвенная циклическая зависимость через 4 модулей",
+      "suggestions": [
+        "Реорганизуйте архитектуру для устранения промежуточных зависимостей",
+        "Используйте интерфейсы для абстракции зависимостей",
+        "Рассмотрите применение паттерна Mediator"
+      ],
+      "affected_modules": [
+        "src.core.scan_service",
+        "examples.security_example",
+        "main",
+        "gui.main_window",
+        "examples.dependency_analysis_example",
+        "examples.complexity_example",
+        "src.core.import_parser",
+        "tests.test_gui_integration",
+        "src.core.dependency_analyzer",
+        "src.core.patterns",
+        "examples.patterns_example",
+        "src.core.security",
+        "src.main_refactored",
+        "src.core.code_quality_analyzer",
+        "examples.patterns_simple_example",
+        "src.core.file_scanner",
+        "tests.test_gui_simple",
+        "examples.quality_analysis_example",
+        "examples.architecture_analysis_example",
+        "examples.logging_example",
+        "tests.test_architecture",
+        "tests.test_security"
+      ]
+    },
+    {
+      "cycle": [
+        "src.core.security",
+        "tests.test_architecture",
+        "src.core.scan_service"
+      ],
+      "cycle_type": "indirect",
+      "severity": "warning",
+      "description": "Косвенная циклическая зависимость через 3 модулей",
+      "suggestions": [
+        "Реорганизуйте архитектуру для устранения промежуточных зависимостей",
+        "Используйте интерфейсы для абстракции зависимостей",
+        "Рассмотрите применение паттерна Mediator"
+      ],
+      "affected_modules": [
+        "src.core.scan_service",
+        "examples.security_example",
+        "main",
+        "gui.main_window",
+        "examples.dependency_analysis_example",
+        "examples.complexity_example",
+        "src.core.import_parser",
+        "tests.test_gui_integration",
+        "src.core.dependency_analyzer",
+        "src.core.patterns",
+        "examples.patterns_example",
+        "src.core.security",
+        "src.main_refactored",
+        "src.core.code_quality_analyzer",
+        "src.core.file_scanner",
+        "examples.quality_analysis_example",
+        "examples.architecture_analysis_example",
+        "examples.logging_example",
+        "tests.test_architecture",
+        "tests.test_security"
+      ]
+    },
+    {
+      "cycle": [
+        "src.core.code_quality_analyzer",
+        "tests.test_architecture",
+        "src.core.scan_service"
+      ],
+      "cycle_type": "indirect",
+      "severity": "warning",
+      "description": "Косвенная циклическая зависимость через 3 модулей",
+      "suggestions": [
+        "Реорганизуйте архитектуру для устранения промежуточных зависимостей",
+        "Используйте интерфейсы для абстракции зависимостей",
+        "Рассмотрите применение паттерна Mediator"
+      ],
+      "affected_modules": [
+        "examples.quality_analysis_example",
+        "examples.patterns_example",
+        "src.core.scan_service",
+        "src.core.security",
+        "tests.test_quality_analyzer",
+        "examples.quality_simple_example",
+        "main",
+        "tests.test_gui_integration",
+        "gui.main_window",
+        "examples.dependency_analysis_example",
+        "examples.complexity_example",
+        "examples.architecture_analysis_example",
+        "examples.logging_example",
+        "src.main_refactored",
+        "src.core.code_quality_analyzer",
+        "tests.test_architecture",
+        "src.core.dependency_analyzer"
+      ]
+    },
+    {
+      "cycle": [
+        "tests.test_architecture",
+        "src.core.scan_service",
+        "src.core.dependency_analyzer"
+      ],
+      "cycle_type": "indirect",
+      "severity": "warning",
+      "description": "Косвенная циклическая зависимость через 3 модулей",
+      "suggestions": [
+        "Реорганизуйте архитектуру для устранения промежуточных зависимостей",
+        "Используйте интерфейсы для абстракции зависимостей",
+        "Рассмотрите применение паттерна Mediator"
+      ],
+      "affected_modules": [
+        "examples.quality_analysis_example",
+        "examples.dependency_simple_example",
+        "examples.patterns_example",
+        "src.core.scan_service",
+        "src.core.security",
+        "tests.test_dependency_analyzer",
+        "main",
+        "tests.test_gui_integration",
+        "gui.main_window",
+        "examples.dependency_analysis_example",
+        "examples.complexity_example",
+        "examples.architecture_analysis_example",
+        "examples.logging_example",
+        "src.main_refactored",
+        "src.core.code_quality_analyzer",
+        "tests.test_architecture",
+        "src.core.dependency_analyzer"
+      ]
+    },
+    {
+      "cycle": [
+        "src.core.logging_config",
+        "tests.test_logging"
+      ],
+      "cycle_type": "direct",
+      "severity": "critical",
+      "description": "Прямая циклическая зависимость между src.core.logging_config и tests.test_logging",
+      "suggestions": [
+        "Используйте Dependency Injection для разрыва прямой зависимости",
+        "Вынесите общую функциональность в отдельный модуль",
+        "Примените паттерн Observer для слабой связи"
+      ],
+      "affected_modules": [
+        "src.core.logging_config",
+        "src.core.architecture_analyzer",
+        "examples.patterns_example",
+        "src.core.complexity_analyzer",
+        "src.core.patterns",
+        "src.core.performance",
+        "src.core.scan_service",
+        "src.core.security",
+        "main",
+        "tests.test_gui_integration",
+        "tests.test_gui_simple",
+        "examples.logging_example",
+        "tests.test_logging",
+        "src.core.code_quality_analyzer",
+        "src.core.import_parser",
+        "src.main_refactored",
+        "src.core.dependency_analyzer",
+        "src.core.file_scanner"
+      ]
+    }
+  ],
+  "problematic_dependencies": [
+    {
+      "source": "examples.architecture_analysis_example",
+      "target": "src.core.architecture_analyzer",
+      "problem_type": "unstable",
+      "severity": "warning",
+      "description": "Зависимость от нестабильного модуля src.core.architecture_analyzer",
+      "line_number": 0,
+      "suggestions": [
+        "Рассмотрите стабилизацию API модуля",
+        "Используйте версионирование зависимостей"
+      ]
+    },
+    {
+      "source": "examples.architecture_analysis_example",
+      "target": "src.core.scan_service",
+      "problem_type": "unstable",
+      "severity": "warning",
+      "description": "Зависимость от нестабильного модуля src.core.scan_service",
+      "line_number": 0,
+      "suggestions": [
+        "Рассмотрите стабилизацию API модуля",
+        "Используйте версионирование зависимостей"
+      ]
+    },
+    {
+      "source": "examples.architecture_simple_example",
+      "target": "src.core.architecture_analyzer",
+      "problem_type": "unstable",
+      "severity": "warning",
+      "description": "Зависимость от нестабильного модуля src.core.architecture_analyzer",
+      "line_number": 0,
+      "suggestions": [
+        "Рассмотрите стабилизацию API модуля",
+        "Используйте версионирование зависимостей"
+      ]
+    },
+    {
+      "source": "examples.circular_dependencies_detector",
+      "target": "src.core.architecture_analyzer",
+      "problem_type": "unstable",
+      "severity": "warning",
+      "description": "Зависимость от нестабильного модуля src.core.architecture_analyzer",
+      "line_number": 0,
+      "suggestions": [
+        "Рассмотрите стабилизацию API модуля",
+        "Используйте версионирование зависимостей"
+      ]
+    },
+    {
+      "source": "examples.complexity_example",
+      "target": "src.core.scan_service",
+      "problem_type": "unstable",
+      "severity": "warning",
+      "description": "Зависимость от нестабильного модуля src.core.scan_service",
+      "line_number": 0,
+      "suggestions": [
+        "Рассмотрите стабилизацию API модуля",
+        "Используйте версионирование зависимостей"
+      ]
+    },
+    {
+      "source": "examples.complexity_example",
+      "target": "src.core.complexity_analyzer",
+      "problem_type": "unstable",
+      "severity": "warning",
+      "description": "Зависимость от нестабильного модуля src.core.complexity_analyzer",
+      "line_number": 0,
+      "suggestions": [
+        "Рассмотрите стабилизацию API модуля",
+        "Используйте версионирование зависимостей"
+      ]
+    },
+    {
+      "source": "examples.complexity_example",
+      "target": "src.core.configuration",
+      "problem_type": "unstable",
+      "severity": "warning",
+      "description": "Зависимость от нестабильного модуля src.core.configuration",
+      "line_number": 0,
+      "suggestions": [
+        "Рассмотрите стабилизацию API модуля",
+        "Используйте версионирование зависимостей"
+      ]
+    },
+    {
+      "source": "examples.complexity_simple_example",
+      "target": "src.core.complexity_analyzer",
+      "problem_type": "unstable",
+      "severity": "warning",
+      "description": "Зависимость от нестабильного модуля src.core.complexity_analyzer",
+      "line_number": 0,
+      "suggestions": [
+        "Рассмотрите стабилизацию API модуля",
+        "Используйте версионирование зависимостей"
+      ]
+    },
+    {
+      "source": "examples.dependency_analysis_example",
+      "target": "src.core.dependency_analyzer",
+      "problem_type": "unstable",
+      "severity": "warning",
+      "description": "Зависимость от нестабильного модуля src.core.dependency_analyzer",
+      "line_number": 0,
+      "suggestions": [
+        "Рассмотрите стабилизацию API модуля",
+        "Используйте версионирование зависимостей"
+      ]
+    },
+    {
+      "source": "examples.dependency_analysis_example",
+      "target": "src.core.scan_service",
+      "problem_type": "unstable",
+      "severity": "warning",
+      "description": "Зависимость от нестабильного модуля src.core.scan_service",
+      "line_number": 0,
+      "suggestions": [
+        "Рассмотрите стабилизацию API модуля",
+        "Используйте версионирование зависимостей"
+      ]
+    },
+    {
+      "source": "examples.dependency_simple_example",
+      "target": "src.core.dependency_analyzer",
+      "problem_type": "unstable",
+      "severity": "warning",
+      "description": "Зависимость от нестабильного модуля src.core.dependency_analyzer",
+      "line_number": 0,
+      "suggestions": [
+        "Рассмотрите стабилизацию API модуля",
+        "Используйте версионирование зависимостей"
+      ]
+    },
+    {
+      "source": "examples.logging_example",
+      "target": "src.core.logging_config",
+      "problem_type": "unstable",
+      "severity": "warning",
+      "description": "Зависимость от нестабильного модуля src.core.logging_config",
+      "line_number": 0,
+      "suggestions": [
+        "Рассмотрите стабилизацию API модуля",
+        "Используйте версионирование зависимостей"
+      ]
+    },
+    {
+      "source": "examples.logging_example",
+      "target": "src.core.configuration",
+      "problem_type": "unstable",
+      "severity": "warning",
+      "description": "Зависимость от нестабильного модуля src.core.configuration",
+      "line_number": 0,
+      "suggestions": [
+        "Рассмотрите стабилизацию API модуля",
+        "Используйте версионирование зависимостей"
+      ]
+    },
+    {
+      "source": "examples.logging_example",
+      "target": "src.core.scan_service",
+      "problem_type": "unstable",
+      "severity": "warning",
+      "description": "Зависимость от нестабильного модуля src.core.scan_service",
+      "line_number": 0,
+      "suggestions": [
+        "Рассмотрите стабилизацию API модуля",
+        "Используйте версионирование зависимостей"
+      ]
+    },
+    {
+      "source": "examples.patterns_example",
+      "target": "src.core.scan_service",
+      "problem_type": "unstable",
+      "severity": "warning",
+      "description": "Зависимость от нестабильного модуля src.core.scan_service",
+      "line_number": 0,
+      "suggestions": [
+        "Рассмотрите стабилизацию API модуля",
+        "Используйте версионирование зависимостей"
+      ]
+    },
+    {
+      "source": "examples.patterns_example",
+      "target": "src.core.patterns",
+      "problem_type": "unstable",
+      "severity": "warning",
+      "description": "Зависимость от нестабильного модуля src.core.patterns",
+      "line_number": 0,
+      "suggestions": [
+        "Рассмотрите стабилизацию API модуля",
+        "Используйте версионирование зависимостей"
+      ]
+    },
+    {
+      "source": "examples.patterns_example",
+      "target": "src.core.logging_config",
+      "problem_type": "unstable",
+      "severity": "warning",
+      "description": "Зависимость от нестабильного модуля src.core.logging_config",
+      "line_number": 0,
+      "suggestions": [
+        "Рассмотрите стабилизацию API модуля",
+        "Используйте версионирование зависимостей"
+      ]
+    },
+    {
+      "source": "examples.patterns_example",
+      "target": "src.core.configuration",
+      "problem_type": "unstable",
+      "severity": "warning",
+      "description": "Зависимость от нестабильного модуля src.core.configuration",
+      "line_number": 0,
+      "suggestions": [
+        "Рассмотрите стабилизацию API модуля",
+        "Используйте версионирование зависимостей"
+      ]
+    },
+    {
+      "source": "examples.patterns_example",
+      "target": "src.core.configuration",
+      "problem_type": "unstable",
+      "severity": "warning",
+      "description": "Зависимость от нестабильного модуля src.core.configuration",
+      "line_number": 0,
+      "suggestions": [
+        "Рассмотрите стабилизацию API модуля",
+        "Используйте версионирование зависимостей"
+      ]
+    },
+    {
+      "source": "examples.patterns_example",
+      "target": "src.core.import_parser",
+      "problem_type": "unstable",
+      "severity": "warning",
+      "description": "Зависимость от нестабильного модуля src.core.import_parser",
+      "line_number": 0,
+      "suggestions": [
+        "Рассмотрите стабилизацию API модуля",
+        "Используйте версионирование зависимостей"
+      ]
+    },
+    {
+      "source": "examples.patterns_example",
+      "target": "src.core.project_analyzer",
+      "problem_type": "unstable",
+      "severity": "warning",
+      "description": "Зависимость от нестабильного модуля src.core.project_analyzer",
+      "line_number": 0,
+      "suggestions": [
+        "Рассмотрите стабилизацию API модуля",
+        "Используйте версионирование зависимостей"
+      ]
+    },
+    {
+      "source": "examples.patterns_example",
+      "target": "src.core.file_scanner",
+      "problem_type": "unstable",
+      "severity": "warning",
+      "description": "Зависимость от нестабильного модуля src.core.file_scanner",
+      "line_number": 0,
+      "suggestions": [
+        "Рассмотрите стабилизацию API модуля",
+        "Используйте версионирование зависимостей"
+      ]
+    },
+    {
+      "source": "examples.patterns_example",
+      "target": "src.core.patterns",
+      "problem_type": "unstable",
+      "severity": "warning",
+      "description": "Зависимость от нестабильного модуля src.core.patterns",
+      "line_number": 0,
+      "suggestions": [
+        "Рассмотрите стабилизацию API модуля",
+        "Используйте версионирование зависимостей"
+      ]
+    },
+    {
+      "source": "examples.patterns_example",
+      "target": "src.core.configuration",
+      "problem_type": "unstable",
+      "severity": "warning",
+      "description": "Зависимость от нестабильного модуля src.core.configuration",
+      "line_number": 0,
+      "suggestions": [
+        "Рассмотрите стабилизацию API модуля",
+        "Используйте версионирование зависимостей"
+      ]
+    },
+    {
+      "source": "examples.patterns_example",
+      "target": "src.core.file_scanner",
+      "problem_type": "unstable",
+      "severity": "warning",
+      "description": "Зависимость от нестабильного модуля src.core.file_scanner",
+      "line_number": 0,
+      "suggestions": [
+        "Рассмотрите стабилизацию API модуля",
+        "Используйте версионирование зависимостей"
+      ]
+    },
+    {
+      "source": "examples.patterns_example",
+      "target": "src.core.import_parser",
+      "problem_type": "unstable",
+      "severity": "warning",
+      "description": "Зависимость от нестабильного модуля src.core.import_parser",
+      "line_number": 0,
+      "suggestions": [
+        "Рассмотрите стабилизацию API модуля",
+        "Используйте версионирование зависимостей"
+      ]
+    },
+    {
+      "source": "examples.patterns_example",
+      "target": "src.core.project_analyzer",
+      "problem_type": "unstable",
+      "severity": "warning",
+      "description": "Зависимость от нестабильного модуля src.core.project_analyzer",
+      "line_number": 0,
+      "suggestions": [
+        "Рассмотрите стабилизацию API модуля",
+        "Используйте версионирование зависимостей"
+      ]
+    },
+    {
+      "source": "examples.patterns_simple_example",
+      "target": "src.core.patterns",
+      "problem_type": "unstable",
+      "severity": "warning",
+      "description": "Зависимость от нестабильного модуля src.core.patterns",
+      "line_number": 0,
+      "suggestions": [
+        "Рассмотрите стабилизацию API модуля",
+        "Используйте версионирование зависимостей"
+      ]
+    },
+    {
+      "source": "examples.patterns_simple_example",
+      "target": "src.core.configuration",
+      "problem_type": "unstable",
+      "severity": "warning",
+      "description": "Зависимость от нестабильного модуля src.core.configuration",
+      "line_number": 0,
+      "suggestions": [
+        "Рассмотрите стабилизацию API модуля",
+        "Используйте версионирование зависимостей"
+      ]
+    },
+    {
+      "source": "examples.patterns_simple_example",
+      "target": "src.core.configuration",
+      "problem_type": "unstable",
+      "severity": "warning",
+      "description": "Зависимость от нестабильного модуля src.core.configuration",
+      "line_number": 0,
+      "suggestions": [
+        "Рассмотрите стабилизацию API модуля",
+        "Используйте версионирование зависимостей"
+      ]
+    },
+    {
+      "source": "examples.patterns_simple_example",
+      "target": "src.core.import_parser",
+      "problem_type": "unstable",
+      "severity": "warning",
+      "description": "Зависимость от нестабильного модуля src.core.import_parser",
+      "line_number": 0,
+      "suggestions": [
+        "Рассмотрите стабилизацию API модуля",
+        "Используйте версионирование зависимостей"
+      ]
+    },
+    {
+      "source": "examples.patterns_simple_example",
+      "target": "src.core.project_analyzer",
+      "problem_type": "unstable",
+      "severity": "warning",
+      "description": "Зависимость от нестабильного модуля src.core.project_analyzer",
+      "line_number": 0,
+      "suggestions": [
+        "Рассмотрите стабилизацию API модуля",
+        "Используйте версионирование зависимостей"
+      ]
+    },
+    {
+      "source": "examples.patterns_simple_example",
+      "target": "src.core.file_scanner",
+      "problem_type": "unstable",
+      "severity": "warning",
+      "description": "Зависимость от нестабильного модуля src.core.file_scanner",
+      "line_number": 0,
+      "suggestions": [
+        "Рассмотрите стабилизацию API модуля",
+        "Используйте версионирование зависимостей"
+      ]
+    },
+    {
+      "source": "examples.patterns_simple_example",
+      "target": "src.core.patterns",
+      "problem_type": "unstable",
+      "severity": "warning",
+      "description": "Зависимость от нестабильного модуля src.core.patterns",
+      "line_number": 0,
+      "suggestions": [
+        "Рассмотрите стабилизацию API модуля",
+        "Используйте версионирование зависимостей"
+      ]
+    },
+    {
+      "source": "examples.patterns_simple_example",
+      "target": "src.core.configuration",
+      "problem_type": "unstable",
+      "severity": "warning",
+      "description": "Зависимость от нестабильного модуля src.core.configuration",
+      "line_number": 0,
+      "suggestions": [
+        "Рассмотрите стабилизацию API модуля",
+        "Используйте версионирование зависимостей"
+      ]
+    },
+    {
+      "source": "examples.patterns_simple_example",
+      "target": "src.core.file_scanner",
+      "problem_type": "unstable",
+      "severity": "warning",
+      "description": "Зависимость от нестабильного модуля src.core.file_scanner",
+      "line_number": 0,
+      "suggestions": [
+        "Рассмотрите стабилизацию API модуля",
+        "Используйте версионирование зависимостей"
+      ]
+    },
+    {
+      "source": "examples.patterns_simple_example",
+      "target": "src.core.import_parser",
+      "problem_type": "unstable",
+      "severity": "warning",
+      "description": "Зависимость от нестабильного модуля src.core.import_parser",
+      "line_number": 0,
+      "suggestions": [
+        "Рассмотрите стабилизацию API модуля",
+        "Используйте версионирование зависимостей"
+      ]
+    },
+    {
+      "source": "examples.patterns_simple_example",
+      "target": "src.core.project_analyzer",
+      "problem_type": "unstable",
+      "severity": "warning",
+      "description": "Зависимость от нестабильного модуля src.core.project_analyzer",
+      "line_number": 0,
+      "suggestions": [
+        "Рассмотрите стабилизацию API модуля",
+        "Используйте версионирование зависимостей"
+      ]
+    },
+    {
+      "source": "examples.performance_example",
+      "target": "src.core.performance",
+      "problem_type": "unstable",
+      "severity": "warning",
+      "description": "Зависимость от нестабильного модуля src.core.performance",
+      "line_number": 0,
+      "suggestions": [
+        "Рассмотрите стабилизацию API модуля",
+        "Используйте версионирование зависимостей"
+      ]
+    },
+    {
+      "source": "examples.performance_example",
+      "target": "src.core.configuration",
+      "problem_type": "unstable",
+      "severity": "warning",
+      "description": "Зависимость от нестабильного модуля src.core.configuration",
+      "line_number": 0,
+      "suggestions": [
+        "Рассмотрите стабилизацию API модуля",
+        "Используйте версионирование зависимостей"
+      ]
+    },
+    {
+      "source": "examples.quality_analysis_example",
+      "target": "src.core.code_quality_analyzer",
+      "problem_type": "unstable",
+      "severity": "warning",
+      "description": "Зависимость от нестабильного модуля src.core.code_quality_analyzer",
+      "line_number": 0,
+      "suggestions": [
+        "Рассмотрите стабилизацию API модуля",
+        "Используйте версионирование зависимостей"
+      ]
+    },
+    {
+      "source": "examples.quality_analysis_example",
+      "target": "src.core.scan_service",
+      "problem_type": "unstable",
+      "severity": "warning",
+      "description": "Зависимость от нестабильного модуля src.core.scan_service",
+      "line_number": 0,
+      "suggestions": [
+        "Рассмотрите стабилизацию API модуля",
+        "Используйте версионирование зависимостей"
+      ]
+    },
+    {
+      "source": "examples.quality_analysis_example",
+      "target": "src.core.configuration",
+      "problem_type": "unstable",
+      "severity": "warning",
+      "description": "Зависимость от нестабильного модуля src.core.configuration",
+      "line_number": 0,
+      "suggestions": [
+        "Рассмотрите стабилизацию API модуля",
+        "Используйте версионирование зависимостей"
+      ]
+    },
+    {
+      "source": "examples.quality_simple_example",
+      "target": "src.core.code_quality_analyzer",
+      "problem_type": "unstable",
+      "severity": "warning",
+      "description": "Зависимость от нестабильного модуля src.core.code_quality_analyzer",
+      "line_number": 0,
+      "suggestions": [
+        "Рассмотрите стабилизацию API модуля",
+        "Используйте версионирование зависимостей"
+      ]
+    },
+    {
+      "source": "examples.security_example",
+      "target": "src.core.security",
+      "problem_type": "unstable",
+      "severity": "warning",
+      "description": "Зависимость от нестабильного модуля src.core.security",
+      "line_number": 0,
+      "suggestions": [
+        "Рассмотрите стабилизацию API модуля",
+        "Используйте версионирование зависимостей"
+      ]
+    },
+    {
+      "source": "examples.security_example",
+      "target": "src.core.configuration",
+      "problem_type": "unstable",
+      "severity": "warning",
+      "description": "Зависимость от нестабильного модуля src.core.configuration",
+      "line_number": 0,
+      "suggestions": [
+        "Рассмотрите стабилизацию API модуля",
+        "Используйте версионирование зависимостей"
+      ]
+    },
+    {
+      "source": "gui.__init__",
+      "target": "gui.main_window",
+      "problem_type": "unstable",
+      "severity": "warning",
+      "description": "Зависимость от нестабильного модуля gui.main_window",
+      "line_number": 0,
+      "suggestions": [
+        "Рассмотрите стабилизацию API модуля",
+        "Используйте версионирование зависимостей"
+      ]
+    },
+    {
+      "source": "main",
+      "target": "src.core.architecture_analyzer",
+      "problem_type": "unstable",
+      "severity": "warning",
+      "description": "Зависимость от нестабильного модуля src.core.architecture_analyzer",
+      "line_number": 0,
+      "suggestions": [
+        "Рассмотрите стабилизацию API модуля",
+        "Используйте версионирование зависимостей"
+      ]
+    },
+    {
+      "source": "main",
+      "target": "src.core.dependency_analyzer",
+      "problem_type": "unstable",
+      "severity": "warning",
+      "description": "Зависимость от нестабильного модуля src.core.dependency_analyzer",
+      "line_number": 0,
+      "suggestions": [
+        "Рассмотрите стабилизацию API модуля",
+        "Используйте версионирование зависимостей"
+      ]
+    },
+    {
+      "source": "main",
+      "target": "src.core.complexity_analyzer",
+      "problem_type": "unstable",
+      "severity": "warning",
+      "description": "Зависимость от нестабильного модуля src.core.complexity_analyzer",
+      "line_number": 0,
+      "suggestions": [
+        "Рассмотрите стабилизацию API модуля",
+        "Используйте версионирование зависимостей"
+      ]
+    },
+    {
+      "source": "main",
+      "target": "src.core.code_quality_analyzer",
+      "problem_type": "unstable",
+      "severity": "warning",
+      "description": "Зависимость от нестабильного модуля src.core.code_quality_analyzer",
+      "line_number": 0,
+      "suggestions": [
+        "Рассмотрите стабилизацию API модуля",
+        "Используйте версионирование зависимостей"
+      ]
+    },
+    {
+      "source": "main",
+      "target": "src.core.scan_service",
+      "problem_type": "unstable",
+      "severity": "warning",
+      "description": "Зависимость от нестабильного модуля src.core.scan_service",
+      "line_number": 0,
+      "suggestions": [
+        "Рассмотрите стабилизацию API модуля",
+        "Используйте версионирование зависимостей"
+      ]
+    },
+    {
+      "source": "main",
+      "target": "src.core.logging_config",
+      "problem_type": "unstable",
+      "severity": "warning",
+      "description": "Зависимость от нестабильного модуля src.core.logging_config",
+      "line_number": 0,
+      "suggestions": [
+        "Рассмотрите стабилизацию API модуля",
+        "Используйте версионирование зависимостей"
+      ]
+    },
+    {
+      "source": "main",
+      "target": "gui.main_window",
+      "problem_type": "unstable",
+      "severity": "warning",
+      "description": "Зависимость от нестабильного модуля gui.main_window",
+      "line_number": 0,
+      "suggestions": [
+        "Рассмотрите стабилизацию API модуля",
+        "Используйте версионирование зависимостей"
+      ]
+    },
+    {
+      "source": "src.core.architecture_analyzer",
+      "target": "tests.test_logging",
+      "problem_type": "unstable",
+      "severity": "warning",
+      "description": "Зависимость от нестабильного модуля tests.test_logging",
+      "line_number": 0,
+      "suggestions": [
+        "Рассмотрите стабилизацию API модуля",
+        "Используйте версионирование зависимостей"
+      ]
+    },
+    {
+      "source": "src.core.architecture_analyzer",
+      "target": "src.core.logging_config",
+      "problem_type": "unstable",
+      "severity": "warning",
+      "description": "Зависимость от нестабильного модуля src.core.logging_config",
+      "line_number": 0,
+      "suggestions": [
+        "Рассмотрите стабилизацию API модуля",
+        "Используйте версионирование зависимостей"
+      ]
+    },
+    {
+      "source": "src.core.code_quality_analyzer",
+      "target": "tests.test_logging",
+      "problem_type": "unstable",
+      "severity": "warning",
+      "description": "Зависимость от нестабильного модуля tests.test_logging",
+      "line_number": 0,
+      "suggestions": [
+        "Рассмотрите стабилизацию API модуля",
+        "Используйте версионирование зависимостей"
+      ]
+    },
+    {
+      "source": "src.core.code_quality_analyzer",
+      "target": "src.core.logging_config",
+      "problem_type": "unstable",
+      "severity": "warning",
+      "description": "Зависимость от нестабильного модуля src.core.logging_config",
+      "line_number": 0,
+      "suggestions": [
+        "Рассмотрите стабилизацию API модуля",
+        "Используйте версионирование зависимостей"
+      ]
+    },
+    {
+      "source": "src.core.complexity_analyzer",
+      "target": "tests.test_logging",
+      "problem_type": "unstable",
+      "severity": "warning",
+      "description": "Зависимость от нестабильного модуля tests.test_logging",
+      "line_number": 0,
+      "suggestions": [
+        "Рассмотрите стабилизацию API модуля",
+        "Используйте версионирование зависимостей"
+      ]
+    },
+    {
+      "source": "src.core.complexity_analyzer",
+      "target": "src.core.logging_config",
+      "problem_type": "unstable",
+      "severity": "warning",
+      "description": "Зависимость от нестабильного модуля src.core.logging_config",
+      "line_number": 0,
+      "suggestions": [
+        "Рассмотрите стабилизацию API модуля",
+        "Используйте версионирование зависимостей"
+      ]
+    },
+    {
+      "source": "src.core.configuration",
+      "target": "src.core.interfaces",
+      "problem_type": "unstable",
+      "severity": "warning",
+      "description": "Зависимость от нестабильного модуля src.core.interfaces",
+      "line_number": 0,
+      "suggestions": [
+        "Рассмотрите стабилизацию API модуля",
+        "Используйте версионирование зависимостей"
+      ]
+    },
+    {
+      "source": "src.core.data_exporter",
+      "target": "src.core.interfaces",
+      "problem_type": "unstable",
+      "severity": "warning",
+      "description": "Зависимость от нестабильного модуля src.core.interfaces",
+      "line_number": 0,
+      "suggestions": [
+        "Рассмотрите стабилизацию API модуля",
+        "Используйте версионирование зависимостей"
+      ]
+    },
+    {
+      "source": "src.core.dependency_analyzer",
+      "target": "tests.test_logging",
+      "problem_type": "unstable",
+      "severity": "warning",
+      "description": "Зависимость от нестабильного модуля tests.test_logging",
+      "line_number": 0,
+      "suggestions": [
+        "Рассмотрите стабилизацию API модуля",
+        "Используйте версионирование зависимостей"
+      ]
+    },
+    {
+      "source": "src.core.dependency_analyzer",
+      "target": "src.core.logging_config",
+      "problem_type": "unstable",
+      "severity": "warning",
+      "description": "Зависимость от нестабильного модуля src.core.logging_config",
+      "line_number": 0,
+      "suggestions": [
+        "Рассмотрите стабилизацию API модуля",
+        "Используйте версионирование зависимостей"
+      ]
+    },
+    {
+      "source": "src.core.file_scanner",
+      "target": "src.core.interfaces",
+      "problem_type": "unstable",
+      "severity": "warning",
+      "description": "Зависимость от нестабильного модуля src.core.interfaces",
+      "line_number": 0,
+      "suggestions": [
+        "Рассмотрите стабилизацию API модуля",
+        "Используйте версионирование зависимостей"
+      ]
+    },
+    {
+      "source": "src.core.file_scanner",
+      "target": "src.core.import_parser",
+      "problem_type": "unstable",
+      "severity": "warning",
+      "description": "Зависимость от нестабильного модуля src.core.import_parser",
+      "line_number": 0,
+      "suggestions": [
+        "Рассмотрите стабилизацию API модуля",
+        "Используйте версионирование зависимостей"
+      ]
+    },
+    {
+      "source": "src.core.file_scanner",
+      "target": "src.core.project_analyzer",
+      "problem_type": "unstable",
+      "severity": "warning",
+      "description": "Зависимость от нестабильного модуля src.core.project_analyzer",
+      "line_number": 0,
+      "suggestions": [
+        "Рассмотрите стабилизацию API модуля",
+        "Используйте версионирование зависимостей"
+      ]
+    },
+    {
+      "source": "src.core.file_scanner",
+      "target": "src.core.configuration",
+      "problem_type": "unstable",
+      "severity": "warning",
+      "description": "Зависимость от нестабильного модуля src.core.configuration",
+      "line_number": 0,
+      "suggestions": [
+        "Рассмотрите стабилизацию API модуля",
+        "Используйте версионирование зависимостей"
+      ]
+    },
+    {
+      "source": "src.core.file_scanner",
+      "target": "src.core.logging_config",
+      "problem_type": "unstable",
+      "severity": "warning",
+      "description": "Зависимость от нестабильного модуля src.core.logging_config",
+      "line_number": 0,
+      "suggestions": [
+        "Рассмотрите стабилизацию API модуля",
+        "Используйте версионирование зависимостей"
+      ]
+    },
+    {
+      "source": "src.core.file_scanner",
+      "target": "src.core.security",
+      "problem_type": "unstable",
+      "severity": "warning",
+      "description": "Зависимость от нестабильного модуля src.core.security",
+      "line_number": 0,
+      "suggestions": [
+        "Рассмотрите стабилизацию API модуля",
+        "Используйте версионирование зависимостей"
+      ]
+    },
+    {
+      "source": "src.core.file_scanner",
+      "target": "src.core.performance",
+      "problem_type": "unstable",
+      "severity": "warning",
+      "description": "Зависимость от нестабильного модуля src.core.performance",
+      "line_number": 0,
+      "suggestions": [
+        "Рассмотрите стабилизацию API модуля",
+        "Используйте версионирование зависимостей"
+      ]
+    },
+    {
+      "source": "src.core.import_parser",
+      "target": "src.core.interfaces",
+      "problem_type": "unstable",
+      "severity": "warning",
+      "description": "Зависимость от нестабильного модуля src.core.interfaces",
+      "line_number": 0,
+      "suggestions": [
+        "Рассмотрите стабилизацию API модуля",
+        "Используйте версионирование зависимостей"
+      ]
+    },
+    {
+      "source": "src.core.import_parser",
+      "target": "src.core.configuration",
+      "problem_type": "unstable",
+      "severity": "warning",
+      "description": "Зависимость от нестабильного модуля src.core.configuration",
+      "line_number": 0,
+      "suggestions": [
+        "Рассмотрите стабилизацию API модуля",
+        "Используйте версионирование зависимостей"
+      ]
+    },
+    {
+      "source": "src.core.import_parser",
+      "target": "src.core.logging_config",
+      "problem_type": "unstable",
+      "severity": "warning",
+      "description": "Зависимость от нестабильного модуля src.core.logging_config",
+      "line_number": 0,
+      "suggestions": [
+        "Рассмотрите стабилизацию API модуля",
+        "Используйте версионирование зависимостей"
+      ]
+    },
+    {
+      "source": "src.core.import_parser",
+      "target": "src.core.security",
+      "problem_type": "unstable",
+      "severity": "warning",
+      "description": "Зависимость от нестабильного модуля src.core.security",
+      "line_number": 0,
+      "suggestions": [
+        "Рассмотрите стабилизацию API модуля",
+        "Используйте версионирование зависимостей"
+      ]
+    },
+    {
+      "source": "src.core.import_parser",
+      "target": "src.core.performance",
+      "problem_type": "unstable",
+      "severity": "warning",
+      "description": "Зависимость от нестабильного модуля src.core.performance",
+      "line_number": 0,
+      "suggestions": [
+        "Рассмотрите стабилизацию API модуля",
+        "Используйте версионирование зависимостей"
+      ]
+    },
+    {
+      "source": "src.core.logging_config",
+      "target": "tests.test_logging",
+      "problem_type": "unstable",
+      "severity": "warning",
+      "description": "Зависимость от нестабильного модуля tests.test_logging",
+      "line_number": 0,
+      "suggestions": [
+        "Рассмотрите стабилизацию API модуля",
+        "Используйте версионирование зависимостей"
+      ]
+    },
+    {
+      "source": "src.core.patterns",
+      "target": "src.core.logging_config",
+      "problem_type": "unstable",
+      "severity": "warning",
+      "description": "Зависимость от нестабильного модуля src.core.logging_config",
+      "line_number": 0,
+      "suggestions": [
+        "Рассмотрите стабилизацию API модуля",
+        "Используйте версионирование зависимостей"
+      ]
+    },
+    {
+      "source": "src.core.patterns",
+      "target": "src.core.import_parser",
+      "problem_type": "unstable",
+      "severity": "warning",
+      "description": "Зависимость от нестабильного модуля src.core.import_parser",
+      "line_number": 0,
+      "suggestions": [
+        "Рассмотрите стабилизацию API модуля",
+        "Используйте версионирование зависимостей"
+      ]
+    },
+    {
+      "source": "src.core.patterns",
+      "target": "src.core.file_scanner",
+      "problem_type": "unstable",
+      "severity": "warning",
+      "description": "Зависимость от нестабильного модуля src.core.file_scanner",
+      "line_number": 0,
+      "suggestions": [
+        "Рассмотрите стабилизацию API модуля",
+        "Используйте версионирование зависимостей"
+      ]
+    },
+    {
+      "source": "src.core.patterns",
+      "target": "src.core.project_analyzer",
+      "problem_type": "unstable",
+      "severity": "warning",
+      "description": "Зависимость от нестабильного модуля src.core.project_analyzer",
+      "line_number": 0,
+      "suggestions": [
+        "Рассмотрите стабилизацию API модуля",
+        "Используйте версионирование зависимостей"
+      ]
+    },
+    {
+      "source": "src.core.patterns",
+      "target": "src.core.security",
+      "problem_type": "unstable",
+      "severity": "warning",
+      "description": "Зависимость от нестабильного модуля src.core.security",
+      "line_number": 0,
+      "suggestions": [
+        "Рассмотрите стабилизацию API модуля",
+        "Используйте версионирование зависимостей"
+      ]
+    },
+    {
+      "source": "src.core.patterns",
+      "target": "src.core.performance",
+      "problem_type": "unstable",
+      "severity": "warning",
+      "description": "Зависимость от нестабильного модуля src.core.performance",
+      "line_number": 0,
+      "suggestions": [
+        "Рассмотрите стабилизацию API модуля",
+        "Используйте версионирование зависимостей"
+      ]
+    },
+    {
+      "source": "src.core.patterns",
+      "target": "src.core.logging_config",
+      "problem_type": "unstable",
+      "severity": "warning",
+      "description": "Зависимость от нестабильного модуля src.core.logging_config",
+      "line_number": 0,
+      "suggestions": [
+        "Рассмотрите стабилизацию API модуля",
+        "Используйте версионирование зависимостей"
+      ]
+    },
+    {
+      "source": "src.core.performance",
+      "target": "src.core.logging_config",
+      "problem_type": "unstable",
+      "severity": "warning",
+      "description": "Зависимость от нестабильного модуля src.core.logging_config",
+      "line_number": 0,
+      "suggestions": [
+        "Рассмотрите стабилизацию API модуля",
+        "Используйте версионирование зависимостей"
+      ]
+    },
+    {
+      "source": "src.core.project_analyzer",
+      "target": "src.core.interfaces",
+      "problem_type": "unstable",
+      "severity": "warning",
+      "description": "Зависимость от нестабильного модуля src.core.interfaces",
+      "line_number": 0,
+      "suggestions": [
+        "Рассмотрите стабилизацию API модуля",
+        "Используйте версионирование зависимостей"
+      ]
+    },
+    {
+      "source": "src.core.project_analyzer",
+      "target": "src.core.configuration",
+      "problem_type": "unstable",
+      "severity": "warning",
+      "description": "Зависимость от нестабильного модуля src.core.configuration",
+      "line_number": 0,
+      "suggestions": [
+        "Рассмотрите стабилизацию API модуля",
+        "Используйте версионирование зависимостей"
+      ]
+    },
+    {
+      "source": "src.core.scan_service",
+      "target": "src.core.interfaces",
+      "problem_type": "unstable",
+      "severity": "warning",
+      "description": "Зависимость от нестабильного модуля src.core.interfaces",
+      "line_number": 0,
+      "suggestions": [
+        "Рассмотрите стабилизацию API модуля",
+        "Используйте версионирование зависимостей"
+      ]
+    },
+    {
+      "source": "src.core.scan_service",
+      "target": "src.core.configuration",
+      "problem_type": "unstable",
+      "severity": "warning",
+      "description": "Зависимость от нестабильного модуля src.core.configuration",
+      "line_number": 0,
+      "suggestions": [
+        "Рассмотрите стабилизацию API модуля",
+        "Используйте версионирование зависимостей"
+      ]
+    },
+    {
+      "source": "src.core.scan_service",
+      "target": "src.core.import_parser",
+      "problem_type": "unstable",
+      "severity": "warning",
+      "description": "Зависимость от нестабильного модуля src.core.import_parser",
+      "line_number": 0,
+      "suggestions": [
+        "Рассмотрите стабилизацию API модуля",
+        "Используйте версионирование зависимостей"
+      ]
+    },
+    {
+      "source": "src.core.scan_service",
+      "target": "src.core.project_analyzer",
+      "problem_type": "unstable",
+      "severity": "warning",
+      "description": "Зависимость от нестабильного модуля src.core.project_analyzer",
+      "line_number": 0,
+      "suggestions": [
+        "Рассмотрите стабилизацию API модуля",
+        "Используйте версионирование зависимостей"
+      ]
+    },
+    {
+      "source": "src.core.scan_service",
+      "target": "src.core.file_scanner",
+      "problem_type": "unstable",
+      "severity": "warning",
+      "description": "Зависимость от нестабильного модуля src.core.file_scanner",
+      "line_number": 0,
+      "suggestions": [
+        "Рассмотрите стабилизацию API модуля",
+        "Используйте версионирование зависимостей"
+      ]
+    },
+    {
+      "source": "src.core.scan_service",
+      "target": "src.core.logging_config",
+      "problem_type": "unstable",
+      "severity": "warning",
+      "description": "Зависимость от нестабильного модуля src.core.logging_config",
+      "line_number": 0,
+      "suggestions": [
+        "Рассмотрите стабилизацию API модуля",
+        "Используйте версионирование зависимостей"
+      ]
+    },
+    {
+      "source": "src.core.scan_service",
+      "target": "src.core.security",
+      "problem_type": "unstable",
+      "severity": "warning",
+      "description": "Зависимость от нестабильного модуля src.core.security",
+      "line_number": 0,
+      "suggestions": [
+        "Рассмотрите стабилизацию API модуля",
+        "Используйте версионирование зависимостей"
+      ]
+    },
+    {
+      "source": "src.core.scan_service",
+      "target": "src.core.performance",
+      "problem_type": "unstable",
+      "severity": "warning",
+      "description": "Зависимость от нестабильного модуля src.core.performance",
+      "line_number": 0,
+      "suggestions": [
+        "Рассмотрите стабилизацию API модуля",
+        "Используйте версионирование зависимостей"
+      ]
+    },
+    {
+      "source": "src.core.scan_service",
+      "target": "src.core.patterns",
+      "problem_type": "unstable",
+      "severity": "warning",
+      "description": "Зависимость от нестабильного модуля src.core.patterns",
+      "line_number": 0,
+      "suggestions": [
+        "Рассмотрите стабилизацию API модуля",
+        "Используйте версионирование зависимостей"
+      ]
+    },
+    {
+      "source": "src.core.scan_service",
+      "target": "src.core.complexity_analyzer",
+      "problem_type": "unstable",
+      "severity": "warning",
+      "description": "Зависимость от нестабильного модуля src.core.complexity_analyzer",
+      "line_number": 0,
+      "suggestions": [
+        "Рассмотрите стабилизацию API модуля",
+        "Используйте версионирование зависимостей"
+      ]
+    },
+    {
+      "source": "src.core.scan_service",
+      "target": "src.core.code_quality_analyzer",
+      "problem_type": "unstable",
+      "severity": "warning",
+      "description": "Зависимость от нестабильного модуля src.core.code_quality_analyzer",
+      "line_number": 0,
+      "suggestions": [
+        "Рассмотрите стабилизацию API модуля",
+        "Используйте версионирование зависимостей"
+      ]
+    },
+    {
+      "source": "src.core.scan_service",
+      "target": "src.core.dependency_analyzer",
+      "problem_type": "unstable",
+      "severity": "warning",
+      "description": "Зависимость от нестабильного модуля src.core.dependency_analyzer",
+      "line_number": 0,
+      "suggestions": [
+        "Рассмотрите стабилизацию API модуля",
+        "Используйте версионирование зависимостей"
+      ]
+    },
+    {
+      "source": "src.core.scan_service",
+      "target": "src.core.architecture_analyzer",
+      "problem_type": "unstable",
+      "severity": "warning",
+      "description": "Зависимость от нестабильного модуля src.core.architecture_analyzer",
+      "line_number": 0,
+      "suggestions": [
+        "Рассмотрите стабилизацию API модуля",
+        "Используйте версионирование зависимостей"
+      ]
+    },
+    {
+      "source": "src.core.scan_service",
+      "target": "src.core.interfaces",
+      "problem_type": "unstable",
+      "severity": "warning",
+      "description": "Зависимость от нестабильного модуля src.core.interfaces",
+      "line_number": 0,
+      "suggestions": [
+        "Рассмотрите стабилизацию API модуля",
+        "Используйте версионирование зависимостей"
+      ]
+    },
+    {
+      "source": "src.core.security",
+      "target": "tests.test_logging",
+      "problem_type": "unstable",
+      "severity": "warning",
+      "description": "Зависимость от нестабильного модуля tests.test_logging",
+      "line_number": 0,
+      "suggestions": [
+        "Рассмотрите стабилизацию API модуля",
+        "Используйте версионирование зависимостей"
+      ]
+    },
+    {
+      "source": "src.core.security",
+      "target": "src.core.logging_config",
+      "problem_type": "unstable",
+      "severity": "warning",
+      "description": "Зависимость от нестабильного модуля src.core.logging_config",
+      "line_number": 0,
+      "suggestions": [
+        "Рассмотрите стабилизацию API модуля",
+        "Используйте версионирование зависимостей"
+      ]
+    },
+    {
+      "source": "src.main_refactored",
+      "target": "src.core.scan_service",
+      "problem_type": "unstable",
+      "severity": "warning",
+      "description": "Зависимость от нестабильного модуля src.core.scan_service",
+      "line_number": 0,
+      "suggestions": [
+        "Рассмотрите стабилизацию API модуля",
+        "Используйте версионирование зависимостей"
+      ]
+    },
+    {
+      "source": "src.main_refactored",
+      "target": "src.core.logging_config",
+      "problem_type": "unstable",
+      "severity": "warning",
+      "description": "Зависимость от нестабильного модуля src.core.logging_config",
+      "line_number": 0,
+      "suggestions": [
+        "Рассмотрите стабилизацию API модуля",
+        "Используйте версионирование зависимостей"
+      ]
+    },
+    {
+      "source": "src.main_refactored",
+      "target": "gui.main_window",
+      "problem_type": "unstable",
+      "severity": "warning",
+      "description": "Зависимость от нестабильного модуля gui.main_window",
+      "line_number": 0,
+      "suggestions": [
+        "Рассмотрите стабилизацию API модуля",
+        "Используйте версионирование зависимостей"
+      ]
+    },
+    {
+      "source": "tests.test_architecture",
+      "target": "src.core.configuration",
+      "problem_type": "unstable",
+      "severity": "warning",
+      "description": "Зависимость от нестабильного модуля src.core.configuration",
+      "line_number": 0,
+      "suggestions": [
+        "Рассмотрите стабилизацию API модуля",
+        "Используйте версионирование зависимостей"
+      ]
+    },
+    {
+      "source": "tests.test_architecture",
+      "target": "src.core.import_parser",
+      "problem_type": "unstable",
+      "severity": "warning",
+      "description": "Зависимость от нестабильного модуля src.core.import_parser",
+      "line_number": 0,
+      "suggestions": [
+        "Рассмотрите стабилизацию API модуля",
+        "Используйте версионирование зависимостей"
+      ]
+    },
+    {
+      "source": "tests.test_architecture",
+      "target": "src.core.project_analyzer",
+      "problem_type": "unstable",
+      "severity": "warning",
+      "description": "Зависимость от нестабильного модуля src.core.project_analyzer",
+      "line_number": 0,
+      "suggestions": [
+        "Рассмотрите стабилизацию API модуля",
+        "Используйте версионирование зависимостей"
+      ]
+    },
+    {
+      "source": "tests.test_architecture",
+      "target": "src.core.file_scanner",
+      "problem_type": "unstable",
+      "severity": "warning",
+      "description": "Зависимость от нестабильного модуля src.core.file_scanner",
+      "line_number": 0,
+      "suggestions": [
+        "Рассмотрите стабилизацию API модуля",
+        "Используйте версионирование зависимостей"
+      ]
+    },
+    {
+      "source": "tests.test_architecture",
+      "target": "src.core.scan_service",
+      "problem_type": "unstable",
+      "severity": "warning",
+      "description": "Зависимость от нестабильного модуля src.core.scan_service",
+      "line_number": 0,
+      "suggestions": [
+        "Рассмотрите стабилизацию API модуля",
+        "Используйте версионирование зависимостей"
+      ]
+    },
+    {
+      "source": "tests.test_architecture_analyzer",
+      "target": "src.core.architecture_analyzer",
+      "problem_type": "unstable",
+      "severity": "warning",
+      "description": "Зависимость от нестабильного модуля src.core.architecture_analyzer",
+      "line_number": 0,
+      "suggestions": [
+        "Рассмотрите стабилизацию API модуля",
+        "Используйте версионирование зависимостей"
+      ]
+    },
+    {
+      "source": "tests.test_complexity",
+      "target": "src.core.complexity_analyzer",
+      "problem_type": "unstable",
+      "severity": "warning",
+      "description": "Зависимость от нестабильного модуля src.core.complexity_analyzer",
+      "line_number": 0,
+      "suggestions": [
+        "Рассмотрите стабилизацию API модуля",
+        "Используйте версионирование зависимостей"
+      ]
+    },
+    {
+      "source": "tests.test_dependency_analyzer",
+      "target": "src.core.dependency_analyzer",
+      "problem_type": "unstable",
+      "severity": "warning",
+      "description": "Зависимость от нестабильного модуля src.core.dependency_analyzer",
+      "line_number": 0,
+      "suggestions": [
+        "Рассмотрите стабилизацию API модуля",
+        "Используйте версионирование зависимостей"
+      ]
+    },
+    {
+      "source": "tests.test_gui_integration",
+      "target": "src.core.scan_service",
+      "problem_type": "unstable",
+      "severity": "warning",
+      "description": "Зависимость от нестабильного модуля src.core.scan_service",
+      "line_number": 0,
+      "suggestions": [
+        "Рассмотрите стабилизацию API модуля",
+        "Используйте версионирование зависимостей"
+      ]
+    },
+    {
+      "source": "tests.test_gui_integration",
+      "target": "src.core.configuration",
+      "problem_type": "unstable",
+      "severity": "warning",
+      "description": "Зависимость от нестабильного модуля src.core.configuration",
+      "line_number": 0,
+      "suggestions": [
+        "Рассмотрите стабилизацию API модуля",
+        "Используйте версионирование зависимостей"
+      ]
+    },
+    {
+      "source": "tests.test_gui_integration",
+      "target": "src.core.complexity_analyzer",
+      "problem_type": "unstable",
+      "severity": "warning",
+      "description": "Зависимость от нестабильного модуля src.core.complexity_analyzer",
+      "line_number": 0,
+      "suggestions": [
+        "Рассмотрите стабилизацию API модуля",
+        "Используйте версионирование зависимостей"
+      ]
+    },
+    {
+      "source": "tests.test_gui_integration",
+      "target": "src.core.patterns",
+      "problem_type": "unstable",
+      "severity": "warning",
+      "description": "Зависимость от нестабильного модуля src.core.patterns",
+      "line_number": 0,
+      "suggestions": [
+        "Рассмотрите стабилизацию API модуля",
+        "Используйте версионирование зависимостей"
+      ]
+    },
+    {
+      "source": "tests.test_gui_integration",
+      "target": "src.core.logging_config",
+      "problem_type": "unstable",
+      "severity": "warning",
+      "description": "Зависимость от нестабильного модуля src.core.logging_config",
+      "line_number": 0,
+      "suggestions": [
+        "Рассмотрите стабилизацию API модуля",
+        "Используйте версионирование зависимостей"
+      ]
+    },
+    {
+      "source": "tests.test_gui_simple",
+      "target": "src.core.interfaces",
+      "problem_type": "unstable",
+      "severity": "warning",
+      "description": "Зависимость от нестабильного модуля src.core.interfaces",
+      "line_number": 0,
+      "suggestions": [
+        "Рассмотрите стабилизацию API модуля",
+        "Используйте версионирование зависимостей"
+      ]
+    },
+    {
+      "source": "tests.test_gui_simple",
+      "target": "src.core.patterns",
+      "problem_type": "unstable",
+      "severity": "warning",
+      "description": "Зависимость от нестабильного модуля src.core.patterns",
+      "line_number": 0,
+      "suggestions": [
+        "Рассмотрите стабилизацию API модуля",
+        "Используйте версионирование зависимостей"
+      ]
+    },
+    {
+      "source": "tests.test_gui_simple",
+      "target": "src.core.complexity_analyzer",
+      "problem_type": "unstable",
+      "severity": "warning",
+      "description": "Зависимость от нестабильного модуля src.core.complexity_analyzer",
+      "line_number": 0,
+      "suggestions": [
+        "Рассмотрите стабилизацию API модуля",
+        "Используйте версионирование зависимостей"
+      ]
+    },
+    {
+      "source": "tests.test_gui_simple",
+      "target": "src.core.logging_config",
+      "problem_type": "unstable",
+      "severity": "warning",
+      "description": "Зависимость от нестабильного модуля src.core.logging_config",
+      "line_number": 0,
+      "suggestions": [
+        "Рассмотрите стабилизацию API модуля",
+        "Используйте версионирование зависимостей"
+      ]
+    },
+    {
+      "source": "tests.test_gui_simple",
+      "target": "src.core.configuration",
+      "problem_type": "unstable",
+      "severity": "warning",
+      "description": "Зависимость от нестабильного модуля src.core.configuration",
+      "line_number": 0,
+      "suggestions": [
+        "Рассмотрите стабилизацию API модуля",
+        "Используйте версионирование зависимостей"
+      ]
+    },
+    {
+      "source": "tests.test_gui_simple",
+      "target": "src.core.import_parser",
+      "problem_type": "unstable",
+      "severity": "warning",
+      "description": "Зависимость от нестабильного модуля src.core.import_parser",
+      "line_number": 0,
+      "suggestions": [
+        "Рассмотрите стабилизацию API модуля",
+        "Используйте версионирование зависимостей"
+      ]
+    },
+    {
+      "source": "tests.test_gui_simple",
+      "target": "src.core.configuration",
+      "problem_type": "unstable",
+      "severity": "warning",
+      "description": "Зависимость от нестабильного модуля src.core.configuration",
+      "line_number": 0,
+      "suggestions": [
+        "Рассмотрите стабилизацию API модуля",
+        "Используйте версионирование зависимостей"
+      ]
+    },
+    {
+      "source": "tests.test_gui_simple",
+      "target": "src.core.project_analyzer",
+      "problem_type": "unstable",
+      "severity": "warning",
+      "description": "Зависимость от нестабильного модуля src.core.project_analyzer",
+      "line_number": 0,
+      "suggestions": [
+        "Рассмотрите стабилизацию API модуля",
+        "Используйте версионирование зависимостей"
+      ]
+    },
+    {
+      "source": "tests.test_gui_simple",
+      "target": "src.core.configuration",
+      "problem_type": "unstable",
+      "severity": "warning",
+      "description": "Зависимость от нестабильного модуля src.core.configuration",
+      "line_number": 0,
+      "suggestions": [
+        "Рассмотрите стабилизацию API модуля",
+        "Используйте версионирование зависимостей"
+      ]
+    },
+    {
+      "source": "tests.test_gui_simple",
+      "target": "src.core.file_scanner",
+      "problem_type": "unstable",
+      "severity": "warning",
+      "description": "Зависимость от нестабильного модуля src.core.file_scanner",
+      "line_number": 0,
+      "suggestions": [
+        "Рассмотрите стабилизацию API модуля",
+        "Используйте версионирование зависимостей"
+      ]
+    },
+    {
+      "source": "tests.test_gui_simple",
+      "target": "src.core.configuration",
+      "problem_type": "unstable",
+      "severity": "warning",
+      "description": "Зависимость от нестабильного модуля src.core.configuration",
+      "line_number": 0,
+      "suggestions": [
+        "Рассмотрите стабилизацию API модуля",
+        "Используйте версионирование зависимостей"
+      ]
+    },
+    {
+      "source": "tests.test_gui_simple",
+      "target": "src.core.import_parser",
+      "problem_type": "unstable",
+      "severity": "warning",
+      "description": "Зависимость от нестабильного модуля src.core.import_parser",
+      "line_number": 0,
+      "suggestions": [
+        "Рассмотрите стабилизацию API модуля",
+        "Используйте версионирование зависимостей"
+      ]
+    },
+    {
+      "source": "tests.test_gui_simple",
+      "target": "src.core.project_analyzer",
+      "problem_type": "unstable",
+      "severity": "warning",
+      "description": "Зависимость от нестабильного модуля src.core.project_analyzer",
+      "line_number": 0,
+      "suggestions": [
+        "Рассмотрите стабилизацию API модуля",
+        "Используйте версионирование зависимостей"
+      ]
+    },
+    {
+      "source": "tests.test_logging",
+      "target": "src.core.logging_config",
+      "problem_type": "unstable",
+      "severity": "warning",
+      "description": "Зависимость от нестабильного модуля src.core.logging_config",
+      "line_number": 0,
+      "suggestions": [
+        "Рассмотрите стабилизацию API модуля",
+        "Используйте версионирование зависимостей"
+      ]
+    },
+    {
+      "source": "tests.test_logging",
+      "target": "tests.test_logging",
+      "problem_type": "unstable",
+      "severity": "warning",
+      "description": "Зависимость от нестабильного модуля tests.test_logging",
+      "line_number": 0,
+      "suggestions": [
+        "Рассмотрите стабилизацию API модуля",
+        "Используйте версионирование зависимостей"
+      ]
+    },
+    {
+      "source": "tests.test_patterns",
+      "target": "src.core.patterns",
+      "problem_type": "unstable",
+      "severity": "warning",
+      "description": "Зависимость от нестабильного модуля src.core.patterns",
+      "line_number": 0,
+      "suggestions": [
+        "Рассмотрите стабилизацию API модуля",
+        "Используйте версионирование зависимостей"
+      ]
+    },
+    {
+      "source": "tests.test_patterns",
+      "target": "src.core.configuration",
+      "problem_type": "unstable",
+      "severity": "warning",
+      "description": "Зависимость от нестабильного модуля src.core.configuration",
+      "line_number": 0,
+      "suggestions": [
+        "Рассмотрите стабилизацию API модуля",
+        "Используйте версионирование зависимостей"
+      ]
+    },
+    {
+      "source": "tests.test_patterns",
+      "target": "src.core.patterns",
+      "problem_type": "unstable",
+      "severity": "warning",
+      "description": "Зависимость от нестабильного модуля src.core.patterns",
+      "line_number": 0,
+      "suggestions": [
+        "Рассмотрите стабилизацию API модуля",
+        "Используйте версионирование зависимостей"
+      ]
+    },
+    {
+      "source": "tests.test_patterns",
+      "target": "src.core.patterns",
+      "problem_type": "unstable",
+      "severity": "warning",
+      "description": "Зависимость от нестабильного модуля src.core.patterns",
+      "line_number": 0,
+      "suggestions": [
+        "Рассмотрите стабилизацию API модуля",
+        "Используйте версионирование зависимостей"
+      ]
+    },
+    {
+      "source": "tests.test_performance",
+      "target": "src.core.performance",
+      "problem_type": "unstable",
+      "severity": "warning",
+      "description": "Зависимость от нестабильного модуля src.core.performance",
+      "line_number": 0,
+      "suggestions": [
+        "Рассмотрите стабилизацию API модуля",
+        "Используйте версионирование зависимостей"
+      ]
+    },
+    {
+      "source": "tests.test_quality_analyzer",
+      "target": "src.core.code_quality_analyzer",
+      "problem_type": "unstable",
+      "severity": "warning",
+      "description": "Зависимость от нестабильного модуля src.core.code_quality_analyzer",
+      "line_number": 0,
+      "suggestions": [
+        "Рассмотрите стабилизацию API модуля",
+        "Используйте версионирование зависимостей"
+      ]
+    },
+    {
+      "source": "tests.test_security",
+      "target": "src.core.security",
+      "problem_type": "unstable",
+      "severity": "warning",
+      "description": "Зависимость от нестабильного модуля src.core.security",
+      "line_number": 0,
+      "suggestions": [
+        "Рассмотрите стабилизацию API модуля",
+        "Используйте версионирование зависимостей"
+      ]
+    }
+  ]
+}
