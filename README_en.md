@@ -4,19 +4,6 @@
 [![License](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Platform](https://img.shields.io/badge/Platform-Windows%20%7C%20Linux%20%7C%20macOS-critical)]()
 
-## 🔄 Latest Update — v2.3.0
-
-> 📅 Release Date: 2025-01-27
-
-- 🌍 **New Feature**: English localization in the graphical interface
-- ⚡ Ultra-fast performance optimization
-- 📈 Project creation time charts
-- 🚀 Technical optimizations
-- 📊 Interface improvements, modernization to PySide6
-- 🔧 Architectural improvements
-- 📊 Enhanced data visualization
-- ➡ View full [Changelog](CHANGELOG.md)
-
 #
 
 <div align="center">
@@ -49,7 +36,7 @@ The program provides functionality for visualizing the data in the form of histo
 - Generates statistics on imports.
 - Displays histograms and pie charts using `matplotlib`.
 - Option to copy statistics to the clipboard.
-- 🌍 **Multi-language support**: English and Russian interface localization.
+-  **Multi-language support**: English and Russian interface localization.
 
 ## Installation
 
@@ -88,7 +75,7 @@ The program provides functionality for visualizing the data in the form of histo
    - Buttons to select the folder
    - Statistics on the imports
    - A histogram and pie chart displaying the frequency of library usage
-   - 🌍 Language selection option for interface localization
+   -  Language selection option for interface localization
 
 **Interface Features:**
 
