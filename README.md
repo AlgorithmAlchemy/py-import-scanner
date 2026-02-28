@@ -6,15 +6,6 @@
 
 #
 
-<div align="center">
-  <a href="README.md" style="text-decoration: none;">
-    <button style="background: linear-gradient(45deg, #2196F3, #1976D2); color: white; padding: 12px 24px; text-align: center; display: inline-block; font-size: 16px; margin: 8px 4px; cursor: pointer; border: none; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.2); transition: all 0.3s ease;">
-      <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/f3/Flag_of_Russia.svg/32px-Flag_of_Russia.svg.png" alt="Russian" style="vertical-align: middle; padding-right: 8px;" />
-      📖 Русский README
-    </button>
-  </a>
-</div>
-
 # py-import-scanner
 
 ## Description
