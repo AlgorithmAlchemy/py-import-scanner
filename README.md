@@ -13,7 +13,6 @@
 The program provides functionality for visualizing the data in the form of histograms and pie charts, showing the count of different imported libraries and their usage in the project. This allows developers to see which libraries they actively use and improve dependency management.
 
 **Program provides**:
-<img src="data/ezgif.com-animated-gif-maker.gif" style="width: 80%;" />
 
 ## Operating principle
 <img src="https://github.com/user-attachments/assets/2a8bd464-d3ed-41d0-88bc-ce51682ba76e" style="width: 50%;" />
